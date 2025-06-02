@@ -9,6 +9,7 @@ import { ErrorCapture } from './error-capture.js';
 import { ErrorAttribution } from './error-attribution.js';
 import { ErrorReporter } from './error-reporter.js';
 import { ConsentManager } from './consent-manager.js';
+import { ErrorReporterWelcomeDialog } from './welcome-dialog.js';
 
 // Global namespace for the module
 window.ErrorsAndEchoes = {
@@ -39,7 +40,7 @@ Hooks.once('ready', async () => {
   // Show welcome dialog if needed
   if (ConsentManager.shouldShowWelcome()) {
     setTimeout(() => {
-      showWelcomeDialog();
+      ErrorReporterWelcomeDialog.show();
     }, 2000); // Delay to let Foundry fully load
   }
   
@@ -190,75 +191,6 @@ function setupPublicAPI() {
   console.log('Errors and Echoes | Public API registered');
 }
 
-/**
- * Show the welcome dialog for first-time users
- */
-function showWelcomeDialog() {
-  new Dialog({
-    title: game.i18n.localize('ERRORS_AND_ECHOES.Welcome.Title'),
-    content: `
-      <div class="errors-and-echoes-welcome">
-        <div class="welcome-header">
-          <i class="fas fa-shield-alt"></i>
-          <h2>${game.i18n.localize('ERRORS_AND_ECHOES.Welcome.Title')}</h2>
-        </div>
-
-        <div class="welcome-content">
-          <div class="data-included">
-            <h3>${game.i18n.localize('ERRORS_AND_ECHOES.Welcome.DataIncluded')}</h3>
-            <ul>
-              <li>✅ Error messages and stack traces</li>
-              <li>✅ Foundry version and active modules</li>
-              <li>✅ Game system information</li>
-            </ul>
-          </div>
-
-          <div class="data-excluded">
-            <h3>${game.i18n.localize('ERRORS_AND_ECHOES.Welcome.DataExcluded')}</h3>
-            <ul>
-              <li>❌ Your world data or character information</li>
-              <li>❌ Chat messages or journal entries</li>
-              <li>❌ Personal information or IP addresses</li>
-              <li>❌ Module settings or configurations</li>
-            </ul>
-          </div>
-
-          <p class="privacy-note">
-            ${game.i18n.localize('ERRORS_AND_ECHOES.Welcome.PrivacyNote')}
-          </p>
-        </div>
-      </div>
-    `,
-    buttons: {
-      enable: {
-        icon: '<i class="fas fa-check"></i>',
-        label: game.i18n.localize('ERRORS_AND_ECHOES.Welcome.EnableButton'),
-        callback: () => {
-          ConsentManager.setConsent(true, 'standard');
-        }
-      },
-      decline: {
-        icon: '<i class="fas fa-times"></i>',
-        label: game.i18n.localize('ERRORS_AND_ECHOES.Welcome.DeclineButton'),
-        callback: () => {
-          ConsentManager.setConsent(false);
-        }
-      },
-      later: {
-        icon: '<i class="fas fa-clock"></i>',
-        label: 'Ask Me Later',
-        callback: () => {
-          // Don't set hasShownWelcome, so we'll ask again next time
-          console.log('Errors and Echoes | User chose to decide later');
-        }
-      }
-    },
-    default: 'enable'
-  }, {
-    width: 600,
-    classes: ['errors-and-echoes-welcome-dialog']
-  }).render(true);
-}
 
 /**
  * Get the module ID of the calling code (helper function)
@@ -299,4 +231,4 @@ function getEndpointForModule(moduleId) {
 }
 
 // Export for debugging/testing
-window.ErrorsAndEchoes.showWelcomeDialog = showWelcomeDialog;
+window.ErrorsAndEchoes.showWelcomeDialog = () => ErrorReporterWelcomeDialog.show();

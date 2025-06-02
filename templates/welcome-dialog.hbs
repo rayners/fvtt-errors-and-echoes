@@ -1,0 +1,65 @@
+<div class="errors-and-echoes-welcome">
+  <div class="welcome-header">
+    <i class="fas fa-shield-alt"></i>
+    <h2>{{localize "ERRORS_AND_ECHOES.Welcome.Title"}}</h2>
+  </div>
+
+  <div class="welcome-content">
+    <div class="data-included">
+      <h3>{{localize "ERRORS_AND_ECHOES.Welcome.DataIncluded"}}</h3>
+      <ul>
+        <li>✅ {{localize "ERRORS_AND_ECHOES.Welcome.IncludedItems.ErrorMessages"}}</li>
+        <li>✅ {{localize "ERRORS_AND_ECHOES.Welcome.IncludedItems.FoundryVersion"}}</li>
+        <li>✅ {{localize "ERRORS_AND_ECHOES.Welcome.IncludedItems.SystemInfo"}}</li>
+      </ul>
+    </div>
+
+    <div class="data-excluded">
+      <h3>{{localize "ERRORS_AND_ECHOES.Welcome.DataExcluded"}}</h3>
+      <ul>
+        <li>❌ {{localize "ERRORS_AND_ECHOES.Welcome.ExcludedItems.WorldData"}}</li>
+        <li>❌ {{localize "ERRORS_AND_ECHOES.Welcome.ExcludedItems.ChatMessages"}}</li>
+        <li>❌ {{localize "ERRORS_AND_ECHOES.Welcome.ExcludedItems.PersonalInfo"}}</li>
+        <li>❌ {{localize "ERRORS_AND_ECHOES.Welcome.ExcludedItems.ModuleSettings"}}</li>
+      </ul>
+    </div>
+
+    <p class="privacy-note">
+      {{localize "ERRORS_AND_ECHOES.Welcome.PrivacyNote"}}
+    </p>
+
+    <div class="privacy-levels">
+      <h3>{{localize "ERRORS_AND_ECHOES.Welcome.PrivacyLevels.Title"}}</h3>
+      <div class="privacy-level-option">
+        <label>
+          <input type="radio" name="privacy-level" value="minimal">
+          <strong>Minimal</strong> - {{localize "ERRORS_AND_ECHOES.Welcome.PrivacyLevels.Minimal"}}
+        </label>
+      </div>
+      <div class="privacy-level-option">
+        <label>
+          <input type="radio" name="privacy-level" value="standard" checked>
+          <strong>Standard</strong> - {{localize "ERRORS_AND_ECHOES.Welcome.PrivacyLevels.Standard"}}
+        </label>
+      </div>
+      <div class="privacy-level-option">
+        <label>
+          <input type="radio" name="privacy-level" value="detailed">
+          <strong>Detailed</strong> - {{localize "ERRORS_AND_ECHOES.Welcome.PrivacyLevels.Detailed"}}
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="welcome-actions">
+    <button type="button" class="btn btn-primary" data-action="enable">
+      <i class="fas fa-check"></i> {{localize "ERRORS_AND_ECHOES.Welcome.EnableButton"}}
+    </button>
+    <button type="button" class="btn btn-secondary" data-action="decline">
+      {{localize "ERRORS_AND_ECHOES.Welcome.DeclineButton"}}
+    </button>
+    <button type="button" class="btn btn-info" data-action="learn-more">
+      <i class="fas fa-info-circle"></i> {{localize "ERRORS_AND_ECHOES.Welcome.LearnMoreButton"}}
+    </button>
+  </div>
+</div>

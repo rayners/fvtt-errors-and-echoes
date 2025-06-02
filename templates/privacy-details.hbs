@@ -1,0 +1,94 @@
+<div class="errors-and-echoes-privacy-details">
+  <div class="privacy-header">
+    <i class="fas fa-shield-alt"></i>
+    <h2>{{localize "ERRORS_AND_ECHOES.PrivacyDetails.Title"}}</h2>
+  </div>
+
+  <div class="privacy-content">
+    <div class="section">
+      <h3>{{localize "ERRORS_AND_ECHOES.PrivacyDetails.WhatCollected"}}</h3>
+      
+      <div class="privacy-level">
+        <h4>{{localize "ERRORS_AND_ECHOES.PrivacyDetails.MinimalLevel"}}</h4>
+        <ul>
+          <li>{{localize "ERRORS_AND_ECHOES.PrivacyDetails.MinimalItems.ErrorMessage"}}</li>
+          <li>{{localize "ERRORS_AND_ECHOES.PrivacyDetails.MinimalItems.StackTrace"}}</li>
+          <li>{{localize "ERRORS_AND_ECHOES.PrivacyDetails.MinimalItems.ErrorType"}}</li>
+          <li>{{localize "ERRORS_AND_ECHOES.PrivacyDetails.MinimalItems.Timestamp"}}</li>
+        </ul>
+      </div>
+
+      <div class="privacy-level">
+        <h4>{{localize "ERRORS_AND_ECHOES.PrivacyDetails.StandardLevel"}}</h4>
+        <ul>
+          <li>{{localize "ERRORS_AND_ECHOES.PrivacyDetails.StandardItems.FromMinimal"}}</li>
+          <li>{{localize "ERRORS_AND_ECHOES.PrivacyDetails.StandardItems.FoundryVersion"}}</li>
+          <li>{{localize "ERRORS_AND_ECHOES.PrivacyDetails.StandardItems.SystemInfo"}}</li>
+          <li>{{localize "ERRORS_AND_ECHOES.PrivacyDetails.StandardItems.ModuleList"}}</li>
+          <li>{{localize "ERRORS_AND_ECHOES.PrivacyDetails.StandardItems.SessionId"}}</li>
+        </ul>
+      </div>
+
+      <div class="privacy-level">
+        <h4>{{localize "ERRORS_AND_ECHOES.PrivacyDetails.DetailedLevel"}}</h4>
+        <ul>
+          <li>{{localize "ERRORS_AND_ECHOES.PrivacyDetails.DetailedItems.FromStandard"}}</li>
+          <li>{{localize "ERRORS_AND_ECHOES.PrivacyDetails.DetailedItems.BrowserInfo"}}</li>
+          <li>{{localize "ERRORS_AND_ECHOES.PrivacyDetails.DetailedItems.SceneName"}}</li>
+          <li>{{localize "ERRORS_AND_ECHOES.PrivacyDetails.DetailedItems.ErrorContext"}}</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3>{{localize "ERRORS_AND_ECHOES.PrivacyDetails.WhatNotCollected"}}</h3>
+      <ul>
+        <li>❌ {{localize "ERRORS_AND_ECHOES.PrivacyDetails.NotCollectedItems.IpAddress"}}</li>
+        <li>❌ {{localize "ERRORS_AND_ECHOES.PrivacyDetails.NotCollectedItems.WorldData"}}</li>
+        <li>❌ {{localize "ERRORS_AND_ECHOES.PrivacyDetails.NotCollectedItems.ChatMessages"}}</li>
+        <li>❌ {{localize "ERRORS_AND_ECHOES.PrivacyDetails.NotCollectedItems.ModuleSettings"}}</li>
+        <li>❌ {{localize "ERRORS_AND_ECHOES.PrivacyDetails.NotCollectedItems.UserAccounts"}}</li>
+        <li>❌ {{localize "ERRORS_AND_ECHOES.PrivacyDetails.NotCollectedItems.PersonalInfo"}}</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h3>{{localize "ERRORS_AND_ECHOES.PrivacyDetails.ExampleReport"}}</h3>
+      <pre class="example-payload">{{examplePayload}}</pre>
+    </div>
+
+    <div class="section">
+      <h3>{{localize "ERRORS_AND_ECHOES.PrivacyDetails.HowDataUsed"}}</h3>
+      <ul>
+        <li>✅ {{localize "ERRORS_AND_ECHOES.PrivacyDetails.DataUsageItems.HelpAuthors"}}</li>
+        <li>✅ {{localize "ERRORS_AND_ECHOES.PrivacyDetails.DataUsageItems.ImproveQuality"}}</li>
+        <li>✅ {{localize "ERRORS_AND_ECHOES.PrivacyDetails.DataUsageItems.ProvideContext"}}</li>
+        <li>❌ {{localize "ERRORS_AND_ECHOES.PrivacyDetails.DataUsageItems.NoTracking"}}</li>
+        <li>❌ {{localize "ERRORS_AND_ECHOES.PrivacyDetails.DataUsageItems.NoSelling"}}</li>
+        <li>❌ {{localize "ERRORS_AND_ECHOES.PrivacyDetails.DataUsageItems.NoIdentification"}}</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h3>{{localize "ERRORS_AND_ECHOES.PrivacyDetails.YourRights"}}</h3>
+      <ul>
+        <li>{{localize "ERRORS_AND_ECHOES.PrivacyDetails.RightsItems.OptOut"}}</li>
+        <li>{{localize "ERRORS_AND_ECHOES.PrivacyDetails.RightsItems.ChangePrivacy"}}</li>
+        <li>{{localize "ERRORS_AND_ECHOES.PrivacyDetails.RightsItems.DisableEndpoints"}}</li>
+        <li>{{localize "ERRORS_AND_ECHOES.PrivacyDetails.RightsItems.Anonymous"}}</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="privacy-actions">
+    <button type="button" class="btn btn-primary" data-action="enable-reporting">
+      <i class="fas fa-check"></i> {{localize "ERRORS_AND_ECHOES.PrivacyDetails.Buttons.EnableReporting"}}
+    </button>
+    <button type="button" class="btn btn-secondary" data-action="change-privacy">
+      <i class="fas fa-cog"></i> {{localize "ERRORS_AND_ECHOES.PrivacyDetails.Buttons.ChangePrivacyLevel"}}
+    </button>
+    <button type="button" class="btn btn-secondary" data-action="close">
+      {{localize "ERRORS_AND_ECHOES.PrivacyDetails.Buttons.Close"}}
+    </button>
+  </div>
+</div>

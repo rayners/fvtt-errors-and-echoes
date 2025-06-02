@@ -25,10 +25,84 @@
       "Title": "Help improve Foundry modules by reporting errors",
       "DataIncluded": "What gets reported:",
       "DataExcluded": "What's NOT reported:",
+      "IncludedItems": {
+        "ErrorMessages": "Error messages and stack traces",
+        "FoundryVersion": "Foundry version and active modules",
+        "SystemInfo": "Game system information"
+      },
+      "ExcludedItems": {
+        "WorldData": "Your world data or character information",
+        "ChatMessages": "Chat messages or journal entries",
+        "PersonalInfo": "Personal information or IP addresses",
+        "ModuleSettings": "Module settings or configurations"
+      },
+      "PrivacyLevels": {
+        "Title": "Privacy Levels:",
+        "Minimal": "Only error message and stack trace",
+        "Standard": "Error + Foundry version + active modules",
+        "Detailed": "Standard + browser info + scene context"
+      },
       "PrivacyNote": "All reports are anonymous and help module authors fix bugs faster. You can change this setting anytime in Module Settings.",
       "EnableButton": "Enable Error Reporting",
       "DeclineButton": "Not Now",
       "LearnMoreButton": "Learn More"
+    },
+    "PrivacyDetails": {
+      "Title": "Error Reporting Privacy Details",
+      "WhatCollected": "What Information is Collected?",
+      "WhatNotCollected": "What is NOT Collected:",
+      "HowDataUsed": "How is Data Used?",
+      "YourRights": "Your Rights:",
+      "ExampleReport": "Example Report (Standard Level):",
+      "MinimalLevel": "Minimal Level:",
+      "StandardLevel": "Standard Level (Recommended):",
+      "DetailedLevel": "Detailed Level:",
+      "MinimalItems": {
+        "ErrorMessage": "Error message text",
+        "StackTrace": "Stack trace (showing where the error occurred)",
+        "ErrorType": "Error type (TypeError, ReferenceError, etc.)",
+        "Timestamp": "Timestamp of when error occurred"
+      },
+      "StandardItems": {
+        "FromMinimal": "Everything from Minimal level",
+        "FoundryVersion": "Foundry VTT version number",
+        "SystemInfo": "Game system name and version",
+        "ModuleList": "List of active modules (names and versions only)",
+        "SessionId": "Anonymous session ID (rotates daily)"
+      },
+      "DetailedItems": {
+        "FromStandard": "Everything from Standard level",
+        "BrowserInfo": "Browser name and version (e.g., \"Chrome/120\")",
+        "SceneName": "Current scene name (if applicable)",
+        "ErrorContext": "Error context (filename, line number if available)"
+      },
+      "NotCollectedItems": {
+        "IpAddress": "Your IP address or location",
+        "WorldData": "World data, actors, items, or scenes content",
+        "ChatMessages": "Chat messages or journal entries",
+        "ModuleSettings": "Module settings or configurations",
+        "UserAccounts": "User accounts or login information",
+        "PersonalInfo": "Any personally identifiable information"
+      },
+      "DataUsageItems": {
+        "HelpAuthors": "Help module authors identify and fix bugs",
+        "ImproveQuality": "Improve overall module quality",
+        "ProvideContext": "Provide context for debugging issues",
+        "NoTracking": "NO tracking or profiling of users",
+        "NoSelling": "NO data selling or marketing use",
+        "NoIdentification": "NO individual user identification"
+      },
+      "RightsItems": {
+        "OptOut": "You can opt-out at any time",
+        "ChangePrivacy": "You can change your privacy level anytime",
+        "DisableEndpoints": "You can disable reporting for specific endpoints",
+        "Anonymous": "All reports are anonymous by design"
+      },
+      "Buttons": {
+        "EnableReporting": "Enable Error Reporting",
+        "ChangePrivacyLevel": "Change Privacy Level",
+        "Close": "Close"
+      }
     },
     "Notifications": {
       "Enabled": "Error reporting enabled. Thank you for helping improve Foundry modules!",
