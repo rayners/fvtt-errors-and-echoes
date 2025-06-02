@@ -1,0 +1,41 @@
+{
+  "ERRORS_AND_ECHOES": {
+    "Title": "Errors and Echoes",
+    "Settings": {
+      "GlobalEnabled": {
+        "Name": "Enable Error Reporting",
+        "Hint": "Send anonymous error reports to help module authors fix bugs. You can change this at any time."
+      },
+      "PrivacyLevel": {
+        "Name": "Privacy Level",
+        "Hint": "Control how much information is included in error reports",
+        "Choices": {
+          "minimal": "Minimal - Error message only",
+          "standard": "Standard - Error + Foundry version + modules",
+          "detailed": "Detailed - Standard + browser info + scene context"
+        }
+      },
+      "EndpointConfig": {
+        "Name": "Configure Error Endpoints",
+        "Label": "Configure Endpoints",
+        "Hint": "Set up error reporting endpoints for different module authors"
+      }
+    },
+    "Welcome": {
+      "Title": "Help improve Foundry modules by reporting errors",
+      "DataIncluded": "What gets reported:",
+      "DataExcluded": "What's NOT reported:",
+      "PrivacyNote": "All reports are anonymous and help module authors fix bugs faster. You can change this setting anytime in Module Settings.",
+      "EnableButton": "Enable Error Reporting",
+      "DeclineButton": "Not Now",
+      "LearnMoreButton": "Learn More"
+    },
+    "Notifications": {
+      "Enabled": "Error reporting enabled. Thank you for helping improve Foundry modules!",
+      "Disabled": "Error reporting disabled.",
+      "TestSuccess": "Endpoint test successful: {name}",
+      "TestFailedStatus": "Endpoint test failed: {name} ({status})",
+      "TestFailedError": "Endpoint test failed: {name} ({error})"
+    }
+  }
+}
