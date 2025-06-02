@@ -10,9 +10,45 @@ import { ErrorAttribution } from './error-attribution.js';
 import { ErrorReporter } from './error-reporter.js';
 import { ConsentManager } from './consent-manager.js';
 import { ErrorReporterWelcomeDialog } from './welcome-dialog.js';
+import { EndpointConfigDialog } from './settings-ui.js';
+
+// Types for the module
+interface ErrorsAndEchoesAPI {
+  register: (config: ModuleRegistrationConfig) => void;
+  report: (error: Error, options?: ReportOptions) => void;
+  hasConsent: () => boolean;
+  getPrivacyLevel: () => string;
+  getStats: () => ReportStats;
+}
+
+interface ModuleRegistrationConfig {
+  moduleId: string;
+  contextProvider?: () => Record<string, any>;
+  errorFilter?: (error: Error) => boolean;
+  endpoint?: EndpointConfig;
+}
+
+interface ReportOptions {
+  module?: string;
+  context?: Record<string, any>;
+}
+
+interface ReportStats {
+  totalReports: number;
+  recentReports: number;
+  lastReportTime?: string | undefined;
+}
+
+interface EndpointConfig {
+  name: string;
+  url: string;
+  author?: string;
+  modules?: string[];
+  enabled: boolean;
+}
 
 // Global namespace for the module
-window.ErrorsAndEchoes = {
+(window as any).ErrorsAndEchoes = {
   ErrorCapture,
   ErrorAttribution,
   ErrorReporter,
@@ -22,7 +58,7 @@ window.ErrorsAndEchoes = {
 /**
  * Initialize the module
  */
-Hooks.once('init', () => {
+Hooks.once('init', (): void => {
   console.log('Errors and Echoes | Initializing error reporting module');
   
   registerSettings();
@@ -34,27 +70,27 @@ Hooks.once('init', () => {
 /**
  * Start error capture when ready (if user has consented)
  */
-Hooks.once('ready', async () => {
+Hooks.once('ready', async (): Promise<void> => {
   console.log('Errors and Echoes | Module ready');
-  
-  // Show welcome dialog if needed
-  if (ConsentManager.shouldShowWelcome()) {
-    setTimeout(() => {
-      ErrorReporterWelcomeDialog.show();
-    }, 2000); // Delay to let Foundry fully load
-  }
   
   // Start error capture if user has consented
   if (ConsentManager.hasConsent()) {
     ErrorCapture.startListening();
     console.log('Errors and Echoes | Error capture started (user has consented)');
   }
+  
+  // Show welcome dialog if needed - do this after everything else is set up
+  if (ConsentManager.shouldShowWelcome()) {
+    // Wait for next tick to ensure UI is fully rendered
+    await new Promise(resolve => setTimeout(resolve, 100));
+    ErrorReporterWelcomeDialog.show();
+  }
 });
 
 /**
  * Register module settings
  */
-function registerSettings() {
+function registerSettings(): void {
   // Global enable/disable setting
   game.settings.register('errors-and-echoes', 'globalEnabled', {
     name: game.i18n.localize('ERRORS_AND_ECHOES.Settings.GlobalEnabled.Name'),
@@ -63,7 +99,7 @@ function registerSettings() {
     config: true,
     type: Boolean,
     default: false,
-    onChange: async (enabled) => {
+    onChange: async (enabled: boolean): Promise<void> => {
       if (enabled) {
         ErrorCapture.startListening();
         console.log('Errors and Echoes | Error capture enabled via settings');
@@ -93,7 +129,7 @@ function registerSettings() {
   game.settings.register('errors-and-echoes', 'endpoints', {
     name: 'Error Reporting Endpoints',
     scope: 'client',
-    config: false, // Will use custom UI later
+    config: false, // Will use custom UI
     type: Object,
     default: [
       {
@@ -128,8 +164,7 @@ function registerSettings() {
     default: {}
   });
 
-  // Custom settings menu for endpoint configuration (will implement later)
-  /*
+  // Custom settings menu for endpoint configuration
   game.settings.registerMenu('errors-and-echoes', 'endpointConfig', {
     name: game.i18n.localize('ERRORS_AND_ECHOES.Settings.EndpointConfig.Name'),
     label: game.i18n.localize('ERRORS_AND_ECHOES.Settings.EndpointConfig.Label'),
@@ -138,34 +173,33 @@ function registerSettings() {
     type: EndpointConfigDialog,
     restricted: false
   });
-  */
 }
 
 /**
  * Set up public API for other modules to integrate
  */
-function setupPublicAPI() {
+function setupPublicAPI(): void {
   const errorReporterModule = game.modules.get('errors-and-echoes');
   if (!errorReporterModule) return;
   
   // Create API object
-  const api = {
+  const api: ErrorsAndEchoesAPI = {
     // For modules to register for enhanced reporting
-    register: (config) => {
+    register: (config: ModuleRegistrationConfig): void => {
       console.log(`Errors and Echoes | API registration for ${config.moduleId}`);
       // Will implement the full API later
     },
     
     // For manual error reporting
-    report: (error, options = {}) => {
+    report: (error: Error, options: ReportOptions = {}): void => {
       if (!ConsentManager.hasConsent()) return;
       
       const moduleId = options.module || getCallingModule();
       const attribution = {
         moduleId,
-        confidence: 'manual',
-        method: 'api-call',
-        source: 'manual'
+        confidence: 'none' as const,
+        method: 'unknown' as const,
+        source: 'manual' as const
       };
 
       const endpoint = getEndpointForModule(moduleId);
@@ -175,27 +209,26 @@ function setupPublicAPI() {
     },
     
     // Check consent status
-    hasConsent: () => ConsentManager.hasConsent(),
+    hasConsent: (): boolean => ConsentManager.hasConsent(),
     
     // Get privacy level
-    getPrivacyLevel: () => ConsentManager.getPrivacyLevel(),
+    getPrivacyLevel: (): string => ConsentManager.getPrivacyLevel(),
     
     // For debugging - get report statistics
-    getStats: () => ErrorReporter.getReportStats()
+    getStats: (): ReportStats => ErrorReporter.getReportStats()
   };
   
   // Expose API
   errorReporterModule.api = api;
-  window.ErrorsAndEchoes.API = api;
+  (window as any).ErrorsAndEchoes.API = api;
   
   console.log('Errors and Echoes | Public API registered');
 }
 
-
 /**
  * Get the module ID of the calling code (helper function)
  */
-function getCallingModule() {
+function getCallingModule(): string {
   const stack = new Error().stack;
   const moduleMatch = stack?.match(/\/modules\/([^\/]+)\//);
   return moduleMatch?.[1] || 'unknown';
@@ -204,9 +237,9 @@ function getCallingModule() {
 /**
  * Get the endpoint configuration for a specific module
  */
-function getEndpointForModule(moduleId) {
+function getEndpointForModule(moduleId: string): EndpointConfig | undefined {
   try {
-    const endpoints = game.settings.get('errors-and-echoes', 'endpoints') || [];
+    const endpoints: EndpointConfig[] = game.settings.get('errors-and-echoes', 'endpoints') || [];
     
     return endpoints.find(endpoint => {
       if (!endpoint.enabled) return false;
@@ -226,9 +259,9 @@ function getEndpointForModule(moduleId) {
     });
   } catch (error) {
     console.warn('Errors and Echoes: Failed to get endpoint for module:', error);
-    return null;
+    return undefined;
   }
 }
 
 // Export for debugging/testing
-window.ErrorsAndEchoes.showWelcomeDialog = () => ErrorReporterWelcomeDialog.show();
+(window as any).ErrorsAndEchoes.showWelcomeDialog = (): ErrorReporterWelcomeDialog | null => ErrorReporterWelcomeDialog.show();

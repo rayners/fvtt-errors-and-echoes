@@ -1,0 +1,125 @@
+<div class="errors-and-echoes-config">
+  <div class="config-section">
+    <h2><i class="fas fa-shield-alt"></i> {{i18n.endpointConfig}}</h2>
+    <p class="config-description">
+      {{localize "ERRORS_AND_ECHOES.Settings.EndpointConfig.Description"}}
+    </p>
+  </div>
+
+  <form class="endpoint-config-form">
+    <div class="endpoints-container">
+      <div class="endpoints-header">
+        <h3>{{localize "ERRORS_AND_ECHOES.Settings.EndpointConfig.EndpointsTitle"}}</h3>
+        <button type="button" class="btn btn-primary" data-action="add-endpoint">
+          <i class="fas fa-plus"></i> {{i18n.addEndpoint}}
+        </button>
+      </div>
+
+      {{#if endpoints}}
+        {{#each endpoints}}
+        <div class="endpoint-config" data-index="{{index}}">
+          <div class="endpoint-header">
+            <div class="endpoint-controls">
+              <label class="checkbox-label">
+                <input type="checkbox" class="endpoint-enabled" data-index="{{index}}" {{#if enabled}}checked{{/if}}>
+                {{../i18n.enabled}}
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" class="endpoint-consent" data-index="{{index}}" {{#if hasConsent}}checked{{/if}}>
+                {{../i18n.consent}}
+              </label>
+              <button type="button" class="btn btn-secondary btn-sm" data-action="test-endpoint" data-index="{{index}}">
+                <i class="fas fa-check-circle"></i> {{../i18n.testEndpoint}}
+              </button>
+              <button type="button" class="btn btn-danger btn-sm" data-action="remove-endpoint" data-index="{{index}}">
+                <i class="fas fa-trash"></i> {{../i18n.removeEndpoint}}
+              </button>
+            </div>
+          </div>
+
+          <div class="endpoint-details">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="endpoint-name-{{index}}">{{../i18n.endpointName}}</label>
+                <input type="text" id="endpoint-name-{{index}}" name="endpoint-name-{{index}}" value="{{name}}" placeholder="{{localize 'ERRORS_AND_ECHOES.Settings.EndpointConfig.NamePlaceholder'}}">
+              </div>
+              <div class="form-group">
+                <label for="endpoint-url-{{index}}">{{../i18n.endpointUrl}}</label>
+                <input type="url" id="endpoint-url-{{index}}" name="endpoint-url-{{index}}" value="{{url}}" placeholder="https://errors.example.com/report/author">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="endpoint-author-{{index}}">{{../i18n.author}}</label>
+                <input type="text" id="endpoint-author-{{index}}" name="endpoint-author-{{index}}" value="{{author}}" placeholder="{{localize 'ERRORS_AND_ECHOES.Settings.EndpointConfig.AuthorPlaceholder'}}">
+                <p class="hint">{{localize "ERRORS_AND_ECHOES.Settings.EndpointConfig.AuthorHint"}}</p>
+              </div>
+              <div class="form-group">
+                <label for="endpoint-modules-{{index}}">{{../i18n.modules}}</label>
+                <input type="text" id="endpoint-modules-{{index}}" name="endpoint-modules-{{index}}" value="{{#each modules}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}" placeholder="module-1, module-2, module-3">
+                <p class="hint">{{localize "ERRORS_AND_ECHOES.Settings.EndpointConfig.ModulesHint"}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        {{/each}}
+      {{else}}
+        <div class="no-endpoints">
+          <p><i class="fas fa-info-circle"></i> {{localize "ERRORS_AND_ECHOES.Settings.EndpointConfig.NoEndpoints"}}</p>
+        </div>
+      {{/if}}
+    </div>
+
+    {{#if installedModules}}
+    <div class="monitored-modules-section">
+      <h3>{{i18n.monitoredModules}}</h3>
+      <div class="modules-grid">
+        {{#each installedModules}}
+        <div class="module-card {{#unless enabled}}disabled{{/unless}}">
+          <div class="module-header">
+            <h4>{{title}}</h4>
+            <span class="module-version">v{{version}}</span>
+            {{#unless enabled}}
+            <span class="module-status disabled">{{localize "ERRORS_AND_ECHOES.Settings.EndpointConfig.ModuleDisabled"}}</span>
+            {{/unless}}
+          </div>
+          <div class="module-details">
+            <p><strong>ID:</strong> {{id}}</p>
+            {{#if authors}}
+            <p><strong>{{localize "ERRORS_AND_ECHOES.Settings.EndpointConfig.Authors"}}:</strong> {{authors}}</p>
+            {{/if}}
+          </div>
+        </div>
+        {{/each}}
+      </div>
+    </div>
+    {{/if}}
+
+    <div class="form-footer">
+      <div class="global-status">
+        <p>
+          <strong>{{localize "ERRORS_AND_ECHOES.Settings.EndpointConfig.GlobalStatus"}}:</strong>
+          {{#if globalEnabled}}
+            <span class="status-enabled"><i class="fas fa-check-circle"></i> {{localize "ERRORS_AND_ECHOES.Settings.EndpointConfig.StatusEnabled"}}</span>
+          {{else}}
+            <span class="status-disabled"><i class="fas fa-times-circle"></i> {{localize "ERRORS_AND_ECHOES.Settings.EndpointConfig.StatusDisabled"}}</span>
+          {{/if}}
+        </p>
+        <p>
+          <strong>{{localize "ERRORS_AND_ECHOES.Settings.EndpointConfig.PrivacyLevel"}}:</strong>
+          <span class="privacy-level">{{privacyLevel}}</span>
+        </p>
+      </div>
+
+      <div class="form-buttons">
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-save"></i> {{i18n.save}}
+        </button>
+        <button type="button" class="btn btn-secondary" data-action="close">
+          <i class="fas fa-times"></i> {{i18n.cancel}}
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

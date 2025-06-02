@@ -1,0 +1,382 @@
+/**
+ * Error Reporter System
+ * 
+ * Handles sending error reports to configured endpoints with rate limiting,
+ * deduplication, and privacy controls.
+ */
+
+import { ConsentManager, type PrivacyLevel } from './consent-manager.js';
+import type { Attribution } from './error-attribution.js';
+
+interface EndpointConfig {
+  name: string;
+  url: string;
+  author?: string;
+  modules?: string[];
+  enabled: boolean;
+}
+
+interface ReportPayload {
+  error: {
+    message: string;
+    stack?: string | undefined;
+    type: string;
+    source: string;
+  };
+  attribution: Attribution;
+  foundry: {
+    version: string;
+    system?: {
+      id: string;
+      version: string;
+    };
+    modules?: Array<{
+      id: string;
+      version: string;
+    }>;
+    scene?: string;
+  };
+  client?: {
+    sessionId: string;
+    browser?: string;
+  };
+  meta: {
+    timestamp: string;
+    privacyLevel: PrivacyLevel;
+    reporterVersion: string;
+  };
+  moduleContext?: Record<string, any>;
+}
+
+interface ReportStats {
+  totalReports: number;
+  recentReports: number;
+  lastReportTime?: string | undefined;
+}
+
+export class ErrorReporter {
+  private static recentReports = new Map<string, number>(); // For deduplication
+  private static reportCount = 0;
+  private static lastReportTime: string | null = null;
+  private static readonly maxReportsPerHour = 50; // Rate limiting
+  private static readonly deduplicationWindow = 60000; // 1 minute
+
+  /**
+   * Send an error report to the specified endpoint
+   */
+  static async sendReport(
+    error: Error, 
+    attribution: Attribution, 
+    endpoint: EndpointConfig, 
+    moduleContext: Record<string, any> = {}
+  ): Promise<void> {
+    // Check rate limiting
+    if (!this.shouldSendReport(error, attribution)) {
+      return;
+    }
+
+    // Check endpoint consent
+    if (!ConsentManager.hasEndpointConsent(endpoint.url)) {
+      return;
+    }
+
+    const privacyLevel = ConsentManager.getPrivacyLevel();
+    const payload = this.buildPayload(error, attribution, privacyLevel, moduleContext);
+    
+    try {
+      const response = await fetch(endpoint.url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Foundry-Version': game.version,
+          'X-Module-Version': this.getModuleVersion(),
+          'X-Privacy-Level': privacyLevel,
+          'User-Agent': this.getUserAgent()
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      // Track successful report for rate limiting and user transparency
+      this.recordSuccessfulReport(attribution.moduleId, error);
+
+    } catch (reportingError) {
+      console.warn('Errors and Echoes: Failed to send error report:', reportingError);
+      // CRITICAL: NEVER re-throw - don't let reporting errors affect the game
+    }
+  }
+
+  /**
+   * Build the payload for error reporting based on privacy level
+   */
+  private static buildPayload(
+    error: Error, 
+    attribution: Attribution, 
+    privacyLevel: PrivacyLevel,
+    moduleContext: Record<string, any>
+  ): ReportPayload {
+    const payload: ReportPayload = {
+      // Always included - core error information
+      error: {
+        message: error.message,
+        stack: error.stack,
+        type: error.constructor.name,
+        source: attribution.source
+      },
+      
+      // Always included - attribution
+      attribution,
+      
+      // Always included - basic Foundry context
+      foundry: {
+        version: game.version
+      },
+      
+      // Always included - timestamp and privacy info
+      meta: {
+        timestamp: new Date().toISOString(),
+        privacyLevel,
+        reporterVersion: this.getModuleVersion()
+      }
+    };
+
+    // Add more context based on privacy level
+    if (privacyLevel === 'standard' || privacyLevel === 'detailed') {
+      payload.foundry.system = {
+        id: game.system.id,
+        version: game.system.version
+      };
+
+      payload.foundry.modules = game.modules.contents
+        .filter(m => m.active)
+        .map(m => ({ id: m.id, version: m.version }));
+
+      payload.client = {
+        sessionId: this.getAnonymousSessionId()
+      };
+    }
+
+    if (privacyLevel === 'detailed') {
+      // Add browser info (just name/version, not full user agent)
+      if (payload.client) {
+        payload.client.browser = this.getBrowserInfo();
+      }
+      
+      // Add current scene name if available
+      if (canvas.scene) {
+        payload.foundry.scene = canvas.scene.name;
+      }
+    }
+
+    // Add module-specific context if available
+    if (moduleContext && Object.keys(moduleContext).length > 0) {
+      payload.moduleContext = moduleContext;
+    }
+
+    return payload;
+  }
+
+  /**
+   * Check if this error should be reported (rate limiting and deduplication)
+   */
+  private static shouldSendReport(error: Error, attribution: Attribution): boolean {
+    // Deduplication - don't send identical errors repeatedly
+    const errorKey = `${attribution.moduleId}:${error.message}:${this.getStackSignature(error.stack)}`;
+    const lastSent = this.recentReports.get(errorKey);
+    
+    if (lastSent && (Date.now() - lastSent) < this.deduplicationWindow) {
+      return false;
+    }
+
+    // Rate limiting - max reports per hour
+    const hourAgo = Date.now() - 3600000;
+    const recentCount = Array.from(this.recentReports.values())
+      .filter(timestamp => timestamp > hourAgo).length;
+    
+    if (recentCount >= this.maxReportsPerHour) {
+      console.warn(`Errors and Echoes: Rate limit reached (${this.maxReportsPerHour} reports/hour)`);
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * Record a successful report for rate limiting and statistics
+   */
+  private static recordSuccessfulReport(moduleId: string, error: Error): void {
+    const errorKey = `${moduleId}:${error.message}:${this.getStackSignature(error.stack)}`;
+    this.recentReports.set(errorKey, Date.now());
+    this.reportCount++;
+    this.lastReportTime = new Date().toISOString();
+
+    // Clean up old entries
+    this.cleanupOldReports();
+
+    // Optional: Show user feedback for debugging
+    if (game.settings.get('errors-and-echoes', 'showReportNotifications')) {
+      console.log(`Errors and Echoes: Reported error from ${moduleId}`);
+    }
+  }
+
+  /**
+   * Clean up old report entries to prevent memory leaks
+   */
+  private static cleanupOldReports(): void {
+    const hourAgo = Date.now() - 3600000;
+    
+    for (const [key, timestamp] of this.recentReports.entries()) {
+      if (timestamp < hourAgo) {
+        this.recentReports.delete(key);
+      }
+    }
+  }
+
+  /**
+   * Create a short signature from stack trace for deduplication
+   */
+  private static getStackSignature(stack?: string): string {
+    if (!stack) return 'no-stack';
+    
+    try {
+      // Use first 100 characters of stack trace as signature
+      return btoa(stack.substring(0, 100)).substring(0, 10);
+    } catch (error) {
+      return 'invalid-stack';
+    }
+  }
+
+  /**
+   * Generate a daily-rotating anonymous session ID
+   */
+  private static getAnonymousSessionId(): string {
+    const today = new Date().toDateString();
+    const storageKey = 'errors-and-echoes-session';
+    
+    try {
+      const stored = localStorage.getItem(storageKey);
+      
+      if (stored) {
+        const [date, id] = stored.split('|');
+        if (date === today) {
+          return id;
+        }
+      }
+
+      // Generate new session ID for today
+      const newId = 'anon-' + Math.random().toString(36).substring(2, 15);
+      localStorage.setItem(storageKey, `${today}|${newId}`);
+      return newId;
+    } catch (error) {
+      // Fallback if localStorage is not available
+      return 'anon-' + Math.random().toString(36).substring(2, 15);
+    }
+  }
+
+  /**
+   * Get the module version
+   */
+  private static getModuleVersion(): string {
+    const module = game.modules.get('errors-and-echoes');
+    return module?.version || '1.0.0';
+  }
+
+  /**
+   * Get simplified browser information
+   */
+  private static getBrowserInfo(): string {
+    try {
+      const userAgent = navigator.userAgent;
+      
+      // Extract just browser name and version
+      if (userAgent.includes('Chrome/')) {
+        const match = userAgent.match(/Chrome\/(\d+)/);
+        return match ? `Chrome/${match[1]}` : 'Chrome';
+      }
+      
+      if (userAgent.includes('Firefox/')) {
+        const match = userAgent.match(/Firefox\/(\d+)/);
+        return match ? `Firefox/${match[1]}` : 'Firefox';
+      }
+      
+      if (userAgent.includes('Safari/') && !userAgent.includes('Chrome')) {
+        const match = userAgent.match(/Version\/(\d+)/);
+        return match ? `Safari/${match[1]}` : 'Safari';
+      }
+      
+      if (userAgent.includes('Edge/')) {
+        const match = userAgent.match(/Edge\/(\d+)/);
+        return match ? `Edge/${match[1]}` : 'Edge';
+      }
+      
+      return 'Unknown';
+    } catch (error) {
+      return 'Unknown';
+    }
+  }
+
+  /**
+   * Get user agent for API requests
+   */
+  private static getUserAgent(): string {
+    const moduleVersion = this.getModuleVersion();
+    const foundryVersion = game.version;
+    return `ErrorsAndEchoes/${moduleVersion} FoundryVTT/${foundryVersion}`;
+  }
+
+  /**
+   * Get report statistics for debugging and transparency
+   */
+  static getReportStats(): ReportStats {
+    const hourAgo = Date.now() - 3600000;
+    const recentCount = Array.from(this.recentReports.values())
+      .filter(timestamp => timestamp > hourAgo).length;
+
+    return {
+      totalReports: this.reportCount,
+      recentReports: recentCount,
+      lastReportTime: this.lastReportTime || undefined
+    };
+  }
+
+  /**
+   * Clear all report statistics (for testing/debugging)
+   */
+  static clearStats(): void {
+    this.recentReports.clear();
+    this.reportCount = 0;
+    this.lastReportTime = null;
+  }
+
+  /**
+   * Test an endpoint URL
+   */
+  static async testEndpoint(url: string): Promise<boolean> {
+    try {
+      // Create test URL by replacing '/report/' with '/test/'
+      const testUrl = url.replace('/report/', '/test/');
+      
+      const response = await fetch(testUrl, {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'X-Foundry-Version': game.version,
+          'X-Module-Version': this.getModuleVersion()
+        },
+        body: JSON.stringify({ 
+          test: true,
+          timestamp: new Date().toISOString(),
+          source: 'endpoint-test'
+        })
+      });
+
+      return response.ok;
+    } catch (error) {
+      console.warn('Endpoint test failed:', error);
+      return false;
+    }
+  }
+}
