@@ -1,51 +1,50 @@
 <div class="errors-and-echoes-welcome">
   <div class="welcome-header">
     <i class="fas fa-shield-alt"></i>
-    <h2>{{localize "ERRORS_AND_ECHOES.Welcome.Title"}}</h2>
+    <h2>{{title}}</h2>
   </div>
 
   <div class="welcome-content">
     <div class="data-included">
-      <h3>{{localize "ERRORS_AND_ECHOES.Welcome.DataIncluded"}}</h3>
+      <h3>What gets reported:</h3>
       <ul>
-        <li>✅ {{localize "ERRORS_AND_ECHOES.Welcome.IncludedItems.ErrorMessages"}}</li>
-        <li>✅ {{localize "ERRORS_AND_ECHOES.Welcome.IncludedItems.FoundryVersion"}}</li>
-        <li>✅ {{localize "ERRORS_AND_ECHOES.Welcome.IncludedItems.SystemInfo"}}</li>
+        {{#each includedItems}}
+        <li>✅ {{this}}</li>
+        {{/each}}
       </ul>
     </div>
 
     <div class="data-excluded">
-      <h3>{{localize "ERRORS_AND_ECHOES.Welcome.DataExcluded"}}</h3>
+      <h3>What's NOT reported:</h3>
       <ul>
-        <li>❌ {{localize "ERRORS_AND_ECHOES.Welcome.ExcludedItems.WorldData"}}</li>
-        <li>❌ {{localize "ERRORS_AND_ECHOES.Welcome.ExcludedItems.ChatMessages"}}</li>
-        <li>❌ {{localize "ERRORS_AND_ECHOES.Welcome.ExcludedItems.PersonalInfo"}}</li>
-        <li>❌ {{localize "ERRORS_AND_ECHOES.Welcome.ExcludedItems.ModuleSettings"}}</li>
+        {{#each excludedItems}}
+        <li>❌ {{this}}</li>
+        {{/each}}
       </ul>
     </div>
 
     <p class="privacy-note">
-      {{localize "ERRORS_AND_ECHOES.Welcome.PrivacyNote"}}
+      {{privacyNote}}
     </p>
 
     <div class="privacy-levels">
-      <h3>{{localize "ERRORS_AND_ECHOES.Welcome.PrivacyLevels.Title"}}</h3>
+      <h3>Privacy Levels:</h3>
       <div class="privacy-level-option">
         <label>
           <input type="radio" name="privacy-level" value="minimal">
-          <strong>Minimal</strong> - {{localize "ERRORS_AND_ECHOES.Welcome.PrivacyLevels.Minimal"}}
+          <strong>Minimal</strong> - Only error message and stack trace
         </label>
       </div>
       <div class="privacy-level-option">
         <label>
           <input type="radio" name="privacy-level" value="standard" checked>
-          <strong>Standard</strong> - {{localize "ERRORS_AND_ECHOES.Welcome.PrivacyLevels.Standard"}}
+          <strong>Standard</strong> - Error + Foundry version + active modules
         </label>
       </div>
       <div class="privacy-level-option">
         <label>
           <input type="radio" name="privacy-level" value="detailed">
-          <strong>Detailed</strong> - {{localize "ERRORS_AND_ECHOES.Welcome.PrivacyLevels.Detailed"}}
+          <strong>Detailed</strong> - Standard + browser info + scene context
         </label>
       </div>
     </div>
@@ -53,13 +52,13 @@
 
   <div class="welcome-actions">
     <button type="button" class="btn btn-primary" data-action="enable">
-      <i class="fas fa-check"></i> {{localize "ERRORS_AND_ECHOES.Welcome.EnableButton"}}
+      <i class="fas fa-check"></i> {{buttons.enable}}
     </button>
     <button type="button" class="btn btn-secondary" data-action="decline">
-      {{localize "ERRORS_AND_ECHOES.Welcome.DeclineButton"}}
+      {{buttons.decline}}
     </button>
     <button type="button" class="btn btn-info" data-action="learn-more">
-      <i class="fas fa-info-circle"></i> {{localize "ERRORS_AND_ECHOES.Welcome.LearnMoreButton"}}
+      <i class="fas fa-info-circle"></i> {{buttons.learnMore}}
     </button>
   </div>
 </div>

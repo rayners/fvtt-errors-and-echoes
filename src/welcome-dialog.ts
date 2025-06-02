@@ -12,6 +12,12 @@ interface WelcomeDialogData {
   includedItems: string[];
   excludedItems: string[];
   privacyNote: string;
+  privacyLevels: {
+    title: string;
+    minimal: string;
+    standard: string;
+    detailed: string;
+  };
   buttons: {
     enable: string;
     decline: string;
@@ -69,6 +75,12 @@ export class ErrorReporterWelcomeDialog extends Dialog {
         game.i18n.localize('ERRORS_AND_ECHOES.Welcome.ExcludedItems.ModuleSettings')
       ],
       privacyNote: game.i18n.localize('ERRORS_AND_ECHOES.Welcome.PrivacyNote'),
+      privacyLevels: {
+        title: game.i18n.localize('ERRORS_AND_ECHOES.Welcome.PrivacyLevels.Title'),
+        minimal: game.i18n.localize('ERRORS_AND_ECHOES.Welcome.PrivacyLevels.Minimal'),
+        standard: game.i18n.localize('ERRORS_AND_ECHOES.Welcome.PrivacyLevels.Standard'),
+        detailed: game.i18n.localize('ERRORS_AND_ECHOES.Welcome.PrivacyLevels.Detailed')
+      },
       buttons: {
         enable: game.i18n.localize('ERRORS_AND_ECHOES.Welcome.EnableButton'),
         decline: game.i18n.localize('ERRORS_AND_ECHOES.Welcome.DeclineButton'),
