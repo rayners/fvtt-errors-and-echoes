@@ -20,9 +20,9 @@ export default {
     copy({
       targets: [
         { src: 'module.json', dest: 'dist/' },
-        { src: 'languages/**/*', dest: 'dist/' },
-        { src: 'templates/**/*', dest: 'dist/' },
-        { src: 'styles/**/*', dest: 'dist/' }
+        { src: 'templates/*.hbs', dest: 'dist/templates/' },
+        { src: 'languages/*.json', dest: 'dist/languages/' },
+        { src: 'styles/*.css', dest: 'dist/' }
       ]
     })
   ],

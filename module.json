@@ -16,10 +16,10 @@
     "maximum": "13.999.999"
   },
   "esmodules": [
-    "src/module.js"
+    "module.js"
   ],
   "styles": [
-    "styles/errors-and-echoes.css"
+    "errors-and-echoes.css"
   ],
   "languages": [
     {
