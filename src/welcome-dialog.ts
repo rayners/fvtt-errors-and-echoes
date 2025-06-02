@@ -25,20 +25,36 @@ interface WelcomeDialogData {
   };
 }
 
-export class ErrorReporterWelcomeDialog extends Dialog {
+export class ErrorReporterWelcomeDialog extends foundry.applications.api.HandlebarsApplicationMixin(foundry.applications.api.ApplicationV2) {
   
-  static override get defaultOptions(): FormApplicationOptions {
-    return foundry.utils.mergeObject(super.defaultOptions, {
-      title: game.i18n.localize('ERRORS_AND_ECHOES.Welcome.Title'),
-      template: 'modules/errors-and-echoes/templates/welcome-dialog.hbs',
+  static DEFAULT_OPTIONS = {
+    id: 'errors-and-echoes-welcome',
+    classes: ['errors-and-echoes', 'welcome-dialog'],
+    tag: 'div',
+    window: {
+      frame: true,
+      positioned: true,
+      title: 'ERRORS_AND_ECHOES.Welcome.Title',
+      resizable: false
+    },
+    position: {
       width: 600,
-      height: 'auto',
-      classes: ['errors-and-echoes-welcome-dialog'],
-      resizable: false,
-      closeOnSubmit: false,
-      id: 'errors-and-echoes-welcome'
-    });
-  }
+      height: 'auto'
+    },
+    actions: {
+      enable: ErrorReporterWelcomeDialog.prototype._onEnable,
+      decline: ErrorReporterWelcomeDialog.prototype._onDecline,
+      learnMore: ErrorReporterWelcomeDialog.prototype._onLearnMore,
+      selectPrivacyLevel: ErrorReporterWelcomeDialog.prototype._onSelectPrivacyLevel
+    }
+  };
+
+  static PARTS = {
+    main: {
+      id: 'main',
+      template: 'modules/errors-and-echoes/templates/welcome-dialog.hbs'
+    }
+  };
 
   /**
    * Show the welcome dialog if it hasn't been shown before
@@ -48,20 +64,18 @@ export class ErrorReporterWelcomeDialog extends Dialog {
       return null;
     }
 
-    const dialog = new this({}, {});
+    const dialog = new this();
     dialog.render(true);
     return dialog;
   }
 
-  constructor(data: any = {}, options: Partial<FormApplicationOptions> = {}) {
-    super(data, options);
-  }
-
   /**
-   * Get data for the template
+   * Prepare context data for the template
    */
-  override getData(): WelcomeDialogData {
-    return {
+  async _prepareContext(options = {}): Promise<WelcomeDialogData> {
+    const context = await super._prepareContext(options);
+    
+    return Object.assign(context, {
       title: game.i18n.localize('ERRORS_AND_ECHOES.Welcome.Title'),
       includedItems: [
         game.i18n.localize('ERRORS_AND_ECHOES.Welcome.IncludedItems.ErrorMessages'),
@@ -86,39 +100,13 @@ export class ErrorReporterWelcomeDialog extends Dialog {
         decline: game.i18n.localize('ERRORS_AND_ECHOES.Welcome.DeclineButton'),
         learnMore: game.i18n.localize('ERRORS_AND_ECHOES.Welcome.LearnMoreButton')
       }
-    };
-  }
-
-  /**
-   * Activate event listeners
-   */
-  override activateListeners(html: JQuery): void {
-    super.activateListeners(html);
-    
-    html.find('[data-action="enable"]').click(async () => {
-      await this.handleEnableReporting();
-    });
-
-    html.find('[data-action="decline"]').click(async () => {
-      await this.handleDeclineReporting();
-    });
-
-    html.find('[data-action="learn-more"]').click(async () => {
-      await this.handleLearnMore();
-    });
-
-    // Privacy level selection
-    html.find('input[name="privacy-level"]').change((event) => {
-      const target = event.target as HTMLInputElement;
-      const level = $(target).val() as PrivacyLevel;
-      this.updatePrivacyPreview(html, level);
     });
   }
 
   /**
    * Handle enabling error reporting
    */
-  private async handleEnableReporting(): Promise<void> {
+  async _onEnable(event: Event, target: HTMLElement): Promise<void> {
     try {
       const privacyLevel = this.getSelectedPrivacyLevel();
       await ConsentManager.setConsent(true, privacyLevel);
@@ -134,7 +122,7 @@ export class ErrorReporterWelcomeDialog extends Dialog {
   /**
    * Handle declining error reporting
    */
-  private async handleDeclineReporting(): Promise<void> {
+  async _onDecline(event: Event, target: HTMLElement): Promise<void> {
     try {
       await ConsentManager.setConsent(false);
       this.close();
@@ -146,7 +134,7 @@ export class ErrorReporterWelcomeDialog extends Dialog {
   /**
    * Handle learn more button - show privacy details dialog
    */
-  private async handleLearnMore(): Promise<void> {
+  async _onLearnMore(event: Event, target: HTMLElement): Promise<void> {
     try {
       // Dynamic import to avoid circular dependencies
       const { PrivacyDetailsDialog } = await import('./privacy-details-dialog.js');
@@ -158,10 +146,19 @@ export class ErrorReporterWelcomeDialog extends Dialog {
   }
 
   /**
+   * Handle privacy level selection
+   */
+  async _onSelectPrivacyLevel(event: Event, target: HTMLElement): Promise<void> {
+    const input = target as HTMLInputElement;
+    const level = input.value as PrivacyLevel;
+    this.updatePrivacyPreview(level);
+  }
+
+  /**
    * Get the selected privacy level from the form
    */
   private getSelectedPrivacyLevel(): PrivacyLevel {
-    const formElement = this.element?.find('form').get(0) as HTMLFormElement;
+    const formElement = this.element?.querySelector('form') as HTMLFormElement;
     if (!formElement) return 'standard';
 
     const formData = new FormDataExtended(formElement);
@@ -172,9 +169,9 @@ export class ErrorReporterWelcomeDialog extends Dialog {
   /**
    * Update the privacy preview based on selected level
    */
-  private updatePrivacyPreview(html: JQuery, level: PrivacyLevel): void {
-    const previewElement = html.find('.privacy-preview');
-    if (!previewElement.length) return;
+  private updatePrivacyPreview(level: PrivacyLevel): void {
+    const previewElement = this.element?.querySelector('.privacy-preview');
+    if (!previewElement) return;
 
     let previewText = '';
     
@@ -190,13 +187,13 @@ export class ErrorReporterWelcomeDialog extends Dialog {
         break;
     }
 
-    previewElement.text(previewText);
+    previewElement.textContent = previewText;
   }
 
   /**
    * Override close to mark welcome as shown
    */
-  override async close(): Promise<void> {
+  override async close(options: any = {}): Promise<this> {
     try {
       // Mark welcome as shown even if user just closes the dialog
       if (ConsentManager.shouldShowWelcome()) {
@@ -206,7 +203,7 @@ export class ErrorReporterWelcomeDialog extends Dialog {
       console.warn('Failed to mark welcome as shown:', error);
     }
     
-    return super.close();
+    return super.close(options);
   }
 
   /**

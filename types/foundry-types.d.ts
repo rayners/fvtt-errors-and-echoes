@@ -185,6 +185,66 @@ declare global {
     object: Record<string, any>;
   }
 
+  // ApplicationV2 and HandlebarsApplicationMixin types
+  namespace foundry {
+    namespace applications {
+      namespace api {
+        interface ApplicationV2Options {
+          id?: string;
+          classes?: string[];
+          tag?: string;
+          window?: {
+            frame?: boolean;
+            positioned?: boolean;
+            title?: string;
+            icon?: string;
+            minimizable?: boolean;
+            resizable?: boolean;
+          };
+          position?: {
+            width?: number;
+            height?: number | 'auto';
+            top?: number;
+            left?: number;
+          };
+          actions?: Record<string, Function>;
+        }
+
+        interface ApplicationV2Part {
+          id: string;
+          template?: string;
+          scrollable?: string[];
+        }
+
+        class ApplicationV2 {
+          static DEFAULT_OPTIONS: ApplicationV2Options;
+          static PARTS: Record<string, ApplicationV2Part>;
+          
+          element?: HTMLElement;
+          rendered: boolean;
+          
+          constructor(options?: Partial<ApplicationV2Options>);
+          render(force?: boolean): Promise<this>;
+          close(options?: any): Promise<this>;
+          _prepareContext(options?: any): Promise<any>;
+          _attachPartListeners(partId: string, htmlElement: HTMLElement, options: any): void;
+        }
+
+        function HandlebarsApplicationMixin<T extends new (...args: any[]) => ApplicationV2>(
+          base: T
+        ): T & {
+          new (...args: any[]): ApplicationV2 & {
+            _prepareContext(options?: any): Promise<any>;
+          };
+        };
+      }
+    }
+
+    namespace utils {
+      function mergeObject(original: any, other: any, options?: any): any;
+    }
+  }
+
   // Global variables
   declare const game: Game;
   declare const canvas: Canvas;
@@ -193,7 +253,13 @@ declare global {
   declare const foundry: {
     utils: {
       mergeObject(original: any, other: any, options?: any): any;
-    }
+    };
+    applications: {
+      api: {
+        ApplicationV2: typeof foundry.applications.api.ApplicationV2;
+        HandlebarsApplicationMixin: typeof foundry.applications.api.HandlebarsApplicationMixin;
+      };
+    };
   };
 
   // jQuery types for Foundry

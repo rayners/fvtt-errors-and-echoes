@@ -31,22 +31,23 @@
       <h3>Privacy Levels:</h3>
       <div class="privacy-level-option">
         <label>
-          <input type="radio" name="privacy-level" value="minimal">
+          <input type="radio" name="privacy-level" value="minimal" data-action="selectPrivacyLevel">
           <strong>Minimal</strong> - Only error message and stack trace
         </label>
       </div>
       <div class="privacy-level-option">
         <label>
-          <input type="radio" name="privacy-level" value="standard" checked>
+          <input type="radio" name="privacy-level" value="standard" checked data-action="selectPrivacyLevel">
           <strong>Standard</strong> - Error + Foundry version + active modules
         </label>
       </div>
       <div class="privacy-level-option">
         <label>
-          <input type="radio" name="privacy-level" value="detailed">
+          <input type="radio" name="privacy-level" value="detailed" data-action="selectPrivacyLevel">
           <strong>Detailed</strong> - Standard + browser info + scene context
         </label>
       </div>
+      <div class="privacy-preview"></div>
     </div>
   </div>
 
@@ -57,7 +58,7 @@
     <button type="button" class="btn btn-secondary" data-action="decline">
       {{buttons.decline}}
     </button>
-    <button type="button" class="btn btn-info" data-action="learn-more">
+    <button type="button" class="btn btn-info" data-action="learnMore">
       <i class="fas fa-info-circle"></i> {{buttons.learnMore}}
     </button>
   </div>

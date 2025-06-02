@@ -29,15 +29,15 @@
     "removeComments": false,
     "preserveConstEnums": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "typeRoots": [
+      "types",
+      "node_modules/@types"
+    ]
   },
   "include": [
     "src/**/*",
     "types/**/*"
-  ],
-  "typeRoots": [
-    "types",
-    "node_modules/@types"
   ],
   "exclude": [
     "node_modules",
