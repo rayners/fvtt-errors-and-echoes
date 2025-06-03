@@ -112,8 +112,8 @@ export class ConsentManager {
       const hasShown = game.settings.get('errors-and-echoes', 'hasShownWelcome');
       const hasConsent = this.hasConsent();
       
-      // Show welcome if not shown before and user hasn't already consented
-      return !hasShown && !hasConsent;
+      // Show welcome if not shown before, user hasn't already consented, and user is a GM
+      return !hasShown && !hasConsent && game.user.isGM;
     } catch (error) {
       console.warn('Errors and Echoes: Failed to check welcome status:', error);
       return false;

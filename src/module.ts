@@ -171,7 +171,7 @@ function registerSettings(): void {
     hint: game.i18n.localize('ERRORS_AND_ECHOES.Settings.EndpointConfig.Hint'),
     icon: 'fas fa-cogs',
     type: EndpointConfigDialog,
-    restricted: false
+    restricted: true
   });
 }
 
