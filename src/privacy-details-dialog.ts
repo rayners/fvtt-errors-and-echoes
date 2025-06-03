@@ -37,34 +37,48 @@ interface ExamplePayload {
   };
 }
 
-export class PrivacyDetailsDialog extends Dialog {
+export class PrivacyDetailsDialog extends foundry.applications.api.HandlebarsApplicationMixin(foundry.applications.api.ApplicationV2) {
   
-  static override get defaultOptions(): FormApplicationOptions {
-    return foundry.utils.mergeObject(super.defaultOptions, {
-      title: game.i18n.localize('ERRORS_AND_ECHOES.PrivacyDetails.Title'),
-      template: 'modules/errors-and-echoes/templates/privacy-details.hbs',
+  static DEFAULT_OPTIONS = {
+    id: 'errors-and-echoes-privacy-details',
+    classes: ['errors-and-echoes', 'privacy-details'],
+    tag: 'div',
+    window: {
+      frame: true,
+      positioned: true,
+      title: 'ERRORS_AND_ECHOES.PrivacyDetails.Title',
+      resizable: true
+    },
+    position: {
       width: 800,
-      height: 600,
-      classes: ['errors-and-echoes-privacy'],
-      resizable: true,
-      closeOnSubmit: false,
-      id: 'errors-and-echoes-privacy-details'
-    });
-  }
+      height: 600
+    },
+    actions: {
+      enableReporting: PrivacyDetailsDialog.prototype._onEnableReporting,
+      changePrivacy: PrivacyDetailsDialog.prototype._onChangePrivacy,
+      disableReporting: PrivacyDetailsDialog.prototype._onDisableReporting,
+      revokeConsent: PrivacyDetailsDialog.prototype._onRevokeConsent,
+      refreshExample: PrivacyDetailsDialog.prototype._onRefreshExample
+    }
+  };
 
-  constructor(data: any = {}, options: Partial<FormApplicationOptions> = {}) {
-    super(data, options);
-  }
+  static PARTS = {
+    main: {
+      id: 'main',
+      template: 'modules/errors-and-echoes/templates/privacy-details.hbs'
+    }
+  };
 
   /**
-   * Get data for the template
+   * Prepare context data for the template
    */
-  override getData(): any {
+  async _prepareContext(options = {}): Promise<any> {
+    const context = await super._prepareContext(options);
     const currentPrivacyLevel = ConsentManager.getPrivacyLevel();
     const examplePayload = this.generateExamplePayload(currentPrivacyLevel);
     
-    return {
-      examplePayload: JSON.stringify(examplePayload, null, 2),
+    return Object.assign(context, {
+      examplePayload: this.formatJsonWithSyntaxHighlighting(JSON.stringify(examplePayload, null, 2)),
       privacyLevel: currentPrivacyLevel,
       endpoints: this.getConfiguredEndpoints(),
       hasConsent: ConsentManager.hasConsent(),
@@ -110,7 +124,7 @@ export class PrivacyDetailsDialog extends Dialog {
         game.i18n.localize('ERRORS_AND_ECHOES.PrivacyDetails.RightsItems.DisableEndpoints'),
         game.i18n.localize('ERRORS_AND_ECHOES.PrivacyDetails.RightsItems.Anonymous')
       ]
-    };
+    });
   }
 
   /**
@@ -157,6 +171,31 @@ export class PrivacyDetailsDialog extends Dialog {
   }
 
   /**
+   * Format JSON string with basic syntax highlighting
+   */
+  private formatJsonWithSyntaxHighlighting(json: string): string {
+    return json
+      // Highlight strings (including keys)
+      .replace(/"([^"\\]*(\\.[^"\\]*)*)"/g, (match, content) => {
+        if (match.endsWith('":')) {
+          // It's a key
+          return `<span class="json-key">${match}</span>`;
+        } else {
+          // It's a string value
+          return `<span class="json-string">${match}</span>`;
+        }
+      })
+      // Highlight numbers
+      .replace(/\b(-?\d+\.?\d*)\b/g, '<span class="json-number">$1</span>')
+      // Highlight booleans and null
+      .replace(/\b(true|false|null)\b/g, '<span class="json-boolean">$1</span>')
+      // Highlight punctuation
+      .replace(/([,:])/g, '<span class="json-punctuation">$1</span>')
+      // Highlight brackets
+      .replace(/([{}[\]])/g, '<span class="json-bracket">$1</span>');
+  }
+
+  /**
    * Get configured endpoints for display
    */
   private getConfiguredEndpoints(): Array<{name: string, url: string, enabled: boolean}> {
@@ -172,37 +211,11 @@ export class PrivacyDetailsDialog extends Dialog {
     }
   }
 
-  /**
-   * Activate event listeners
-   */
-  override activateListeners(html: JQuery): void {
-    super.activateListeners(html);
-
-    html.find('[data-action="enable-reporting"]').click(async () => {
-      await this.handleEnableReporting();
-    });
-
-    html.find('[data-action="change-privacy"]').click(async () => {
-      await this.handleChangePrivacyLevel();
-    });
-
-    html.find('[data-action="disable-reporting"]').click(async () => {
-      await this.handleDisableReporting();
-    });
-
-    html.find('[data-action="revoke-consent"]').click(async () => {
-      await this.handleRevokeConsent();
-    });
-
-    html.find('[data-action="refresh-example"]').click(() => {
-      this.render(true); // Refresh to show updated example
-    });
-  }
 
   /**
    * Handle enabling error reporting
    */
-  private async handleEnableReporting(): Promise<void> {
+  async _onEnableReporting(event: Event, target: HTMLElement): Promise<void> {
     try {
       await ConsentManager.setConsent(true, 'standard');
       this.render(true); // Refresh to show updated status
@@ -215,7 +228,7 @@ export class PrivacyDetailsDialog extends Dialog {
   /**
    * Handle changing privacy level
    */
-  private async handleChangePrivacyLevel(): Promise<void> {
+  async _onChangePrivacy(event: Event, target: HTMLElement): Promise<void> {
     try {
       // Import welcome dialog for privacy level selection
       const { ErrorReporterWelcomeDialog } = await import('./welcome-dialog.js');
@@ -235,7 +248,7 @@ export class PrivacyDetailsDialog extends Dialog {
   /**
    * Handle disabling error reporting
    */
-  private async handleDisableReporting(): Promise<void> {
+  async _onDisableReporting(event: Event, target: HTMLElement): Promise<void> {
     try {
       await ConsentManager.setConsent(false);
       this.render(true); // Refresh to show updated status
@@ -248,7 +261,7 @@ export class PrivacyDetailsDialog extends Dialog {
   /**
    * Handle revoking all consent
    */
-  private async handleRevokeConsent(): Promise<void> {
+  async _onRevokeConsent(event: Event, target: HTMLElement): Promise<void> {
     const confirmed = await Dialog.confirm({
       title: 'Revoke All Consent',
       content: '<p>Are you sure you want to revoke all error reporting consent? This will disable all error reporting and clear your consent preferences.</p>'
@@ -264,6 +277,14 @@ export class PrivacyDetailsDialog extends Dialog {
         ui.notifications.error('Failed to revoke consent');
       }
     }
+  }
+
+  /**
+   * Handle refreshing the example payload
+   */
+  async _onRefreshExample(event: Event, target: HTMLElement): Promise<void> {
+    // Re-render to get fresh example with current privacy level
+    this.render(true);
   }
 
   /**

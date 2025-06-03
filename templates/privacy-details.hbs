@@ -8,7 +8,7 @@
     <div class="section">
       <h3>{{localize "ERRORS_AND_ECHOES.PrivacyDetails.WhatCollected"}}</h3>
       
-      <div class="privacy-level">
+      <div class="privacy-level" data-type="minimal">
         <h4>{{localize "ERRORS_AND_ECHOES.PrivacyDetails.MinimalLevel"}}</h4>
         <ul>
           <li>{{localize "ERRORS_AND_ECHOES.PrivacyDetails.MinimalItems.ErrorMessage"}}</li>
@@ -18,7 +18,7 @@
         </ul>
       </div>
 
-      <div class="privacy-level">
+      <div class="privacy-level" data-type="standard">
         <h4>{{localize "ERRORS_AND_ECHOES.PrivacyDetails.StandardLevel"}}</h4>
         <ul>
           <li>{{localize "ERRORS_AND_ECHOES.PrivacyDetails.StandardItems.FromMinimal"}}</li>
@@ -29,7 +29,7 @@
         </ul>
       </div>
 
-      <div class="privacy-level">
+      <div class="privacy-level" data-type="detailed">
         <h4>{{localize "ERRORS_AND_ECHOES.PrivacyDetails.DetailedLevel"}}</h4>
         <ul>
           <li>{{localize "ERRORS_AND_ECHOES.PrivacyDetails.DetailedItems.FromStandard"}}</li>
@@ -43,29 +43,29 @@
     <div class="section">
       <h3>{{localize "ERRORS_AND_ECHOES.PrivacyDetails.WhatNotCollected"}}</h3>
       <ul>
-        <li>❌ {{localize "ERRORS_AND_ECHOES.PrivacyDetails.NotCollectedItems.IpAddress"}}</li>
-        <li>❌ {{localize "ERRORS_AND_ECHOES.PrivacyDetails.NotCollectedItems.WorldData"}}</li>
-        <li>❌ {{localize "ERRORS_AND_ECHOES.PrivacyDetails.NotCollectedItems.ChatMessages"}}</li>
-        <li>❌ {{localize "ERRORS_AND_ECHOES.PrivacyDetails.NotCollectedItems.ModuleSettings"}}</li>
-        <li>❌ {{localize "ERRORS_AND_ECHOES.PrivacyDetails.NotCollectedItems.UserAccounts"}}</li>
-        <li>❌ {{localize "ERRORS_AND_ECHOES.PrivacyDetails.NotCollectedItems.PersonalInfo"}}</li>
+        <li data-type="excluded">❌ {{localize "ERRORS_AND_ECHOES.PrivacyDetails.NotCollectedItems.IpAddress"}}</li>
+        <li data-type="excluded">❌ {{localize "ERRORS_AND_ECHOES.PrivacyDetails.NotCollectedItems.WorldData"}}</li>
+        <li data-type="excluded">❌ {{localize "ERRORS_AND_ECHOES.PrivacyDetails.NotCollectedItems.ChatMessages"}}</li>
+        <li data-type="excluded">❌ {{localize "ERRORS_AND_ECHOES.PrivacyDetails.NotCollectedItems.ModuleSettings"}}</li>
+        <li data-type="excluded">❌ {{localize "ERRORS_AND_ECHOES.PrivacyDetails.NotCollectedItems.UserAccounts"}}</li>
+        <li data-type="excluded">❌ {{localize "ERRORS_AND_ECHOES.PrivacyDetails.NotCollectedItems.PersonalInfo"}}</li>
       </ul>
     </div>
 
     <div class="section">
       <h3>{{localize "ERRORS_AND_ECHOES.PrivacyDetails.ExampleReport"}}</h3>
-      <pre class="example-payload">{{examplePayload}}</pre>
+      <pre class="example-payload">{{{examplePayload}}}</pre>
     </div>
 
     <div class="section">
       <h3>{{localize "ERRORS_AND_ECHOES.PrivacyDetails.HowDataUsed"}}</h3>
       <ul>
-        <li>✅ {{localize "ERRORS_AND_ECHOES.PrivacyDetails.DataUsageItems.HelpAuthors"}}</li>
-        <li>✅ {{localize "ERRORS_AND_ECHOES.PrivacyDetails.DataUsageItems.ImproveQuality"}}</li>
-        <li>✅ {{localize "ERRORS_AND_ECHOES.PrivacyDetails.DataUsageItems.ProvideContext"}}</li>
-        <li>❌ {{localize "ERRORS_AND_ECHOES.PrivacyDetails.DataUsageItems.NoTracking"}}</li>
-        <li>❌ {{localize "ERRORS_AND_ECHOES.PrivacyDetails.DataUsageItems.NoSelling"}}</li>
-        <li>❌ {{localize "ERRORS_AND_ECHOES.PrivacyDetails.DataUsageItems.NoIdentification"}}</li>
+        <li data-type="included">✅ {{localize "ERRORS_AND_ECHOES.PrivacyDetails.DataUsageItems.HelpAuthors"}}</li>
+        <li data-type="included">✅ {{localize "ERRORS_AND_ECHOES.PrivacyDetails.DataUsageItems.ImproveQuality"}}</li>
+        <li data-type="included">✅ {{localize "ERRORS_AND_ECHOES.PrivacyDetails.DataUsageItems.ProvideContext"}}</li>
+        <li data-type="excluded">❌ {{localize "ERRORS_AND_ECHOES.PrivacyDetails.DataUsageItems.NoTracking"}}</li>
+        <li data-type="excluded">❌ {{localize "ERRORS_AND_ECHOES.PrivacyDetails.DataUsageItems.NoSelling"}}</li>
+        <li data-type="excluded">❌ {{localize "ERRORS_AND_ECHOES.PrivacyDetails.DataUsageItems.NoIdentification"}}</li>
       </ul>
     </div>
 
@@ -81,14 +81,20 @@
   </div>
 
   <div class="privacy-actions">
-    <button type="button" class="btn btn-primary" data-action="enable-reporting">
+    <button type="button" class="btn btn-primary" data-action="enableReporting">
       <i class="fas fa-check"></i> {{localize "ERRORS_AND_ECHOES.PrivacyDetails.Buttons.EnableReporting"}}
     </button>
-    <button type="button" class="btn btn-secondary" data-action="change-privacy">
+    <button type="button" class="btn btn-secondary" data-action="changePrivacy">
       <i class="fas fa-cog"></i> {{localize "ERRORS_AND_ECHOES.PrivacyDetails.Buttons.ChangePrivacyLevel"}}
     </button>
-    <button type="button" class="btn btn-secondary" data-action="close">
-      {{localize "ERRORS_AND_ECHOES.PrivacyDetails.Buttons.Close"}}
+    <button type="button" class="btn btn-secondary" data-action="refreshExample">
+      <i class="fas fa-sync"></i> {{localize "ERRORS_AND_ECHOES.PrivacyDetails.Buttons.RefreshExample"}}
+    </button>
+    <button type="button" class="btn btn-warning" data-action="disableReporting">
+      <i class="fas fa-times"></i> {{localize "ERRORS_AND_ECHOES.PrivacyDetails.Buttons.DisableReporting"}}
+    </button>
+    <button type="button" class="btn btn-danger" data-action="revokeConsent">
+      <i class="fas fa-trash"></i> {{localize "ERRORS_AND_ECHOES.PrivacyDetails.Buttons.RevokeConsent"}}
     </button>
   </div>
 </div>

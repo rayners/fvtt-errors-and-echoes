@@ -11,6 +11,7 @@ import { ErrorReporter } from './error-reporter.js';
 import { ConsentManager } from './consent-manager.js';
 import { ErrorReporterWelcomeDialog } from './welcome-dialog.js';
 import { EndpointConfigDialog } from './settings-ui.js';
+import { moduleMatchesAuthor } from './author-utils.js';
 
 // Types for the module
 interface ErrorsAndEchoesAPI {
@@ -136,7 +137,7 @@ function registerSettings(): void {
         name: "Rayners Modules",
         url: "https://errors.rayners.dev/report/rayners",
         author: "rayners",
-        modules: ["journeys-and-jamborees", "realms-and-reaches", "seasons-and-stars", "errors-and-echoes"],
+        modules: [],
         enabled: true
       }
     ]
@@ -250,9 +251,7 @@ function getEndpointForModule(moduleId: string): EndpointConfig | undefined {
       // Check if module matches author
       if (endpoint.author) {
         const module = game.modules.get(moduleId);
-        return module?.authors?.some(author => 
-          author.name === endpoint.author || author.github === endpoint.author
-        );
+        return moduleMatchesAuthor(module, endpoint.author);
       }
       
       return false;

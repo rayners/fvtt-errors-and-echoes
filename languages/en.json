@@ -137,6 +137,9 @@
       "Buttons": {
         "EnableReporting": "Enable Error Reporting",
         "ChangePrivacyLevel": "Change Privacy Level",
+        "RefreshExample": "Refresh Example",
+        "DisableReporting": "Disable Error Reporting", 
+        "RevokeConsent": "Revoke All Consent",
         "Close": "Close"
       }
     },
