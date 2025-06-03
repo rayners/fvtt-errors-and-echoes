@@ -19,7 +19,7 @@ Foundry VTT → Errors and Echoes → Your Sentry-Relay → Sentry Project
 - **Custom Processing**: Add custom logic, filtering, or routing
 - **Multiple Backends**: Forward to Sentry, Discord, email, databases, etc.
 - **Author-based Routing**: Support multiple module authors with separate projects
-- **Standard API**: Compatible with the Foundry VTT Error Reporting API v1.0
+- **Reference API**: Compatible with the Errors and Echoes reference API specification
 
 ## Prerequisites
 

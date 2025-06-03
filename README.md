@@ -2,6 +2,18 @@
 
 Anonymous error reporting for Foundry VTT modules to help authors improve their modules.
 
+## Implementation Status
+
+| Feature | Status | Notes |
+|---------|--------|-------|
+| 🔍 Error Capture | ✅ Complete | Captures JavaScript errors, promise rejections, console errors, and hook errors |
+| 🏷️ Module Attribution | ✅ Complete | Advanced stack trace analysis and hook context detection |
+| 🔒 Privacy Controls | ✅ Complete | Three privacy levels with granular consent management |
+| ⚙️ Settings UI | ✅ Complete | Foundry-native configuration interface |
+| 📊 Manual Reporting | ✅ Complete | Direct error reporting API for modules |
+| 🔗 **Module Registration API** | ⚠️ **Stub Only** | **Core registration system unimplemented** |
+| 🧪 Testing Infrastructure | ⚠️ **Missing** | **No automated tests implemented** |
+
 ## Overview
 
 Errors and Echoes is a privacy-focused error reporting system for Foundry VTT that helps module developers identify and fix issues in their modules. The system captures JavaScript errors, promise rejections, console errors, and Foundry hook errors, then reports them to configured endpoints with sophisticated module attribution and privacy controls.
@@ -19,33 +31,12 @@ Errors and Echoes is a privacy-focused error reporting system for Foundry VTT th
 
 ## Quick Start for Module Developers
 
-### Basic Integration
+### Manual Error Reporting (Available Now)
 
-Add error reporting to your module in just a few lines:
-
-```javascript
-// In your module's init hook
-Hooks.once('init', () => {
-  // Register your module for enhanced error reporting
-  const errorReporter = game.modules.get('errors-and-echoes');
-  if (errorReporter?.active && errorReporter.api) {
-    errorReporter.api.register({
-      moduleId: 'your-module-id',
-      contextProvider: () => ({
-        version: game.modules.get('your-module-id')?.version,
-        activeScene: canvas.scene?.name,
-        // Add any useful debugging context
-      })
-    });
-  }
-});
-```
-
-### Manual Error Reporting
-
-Report specific errors programmatically:
+Report specific errors from your module:
 
 ```javascript
+// Report errors manually when they occur
 try {
   // Your code that might error
   riskyOperation();
@@ -67,6 +58,10 @@ try {
   ui.notifications.error('Operation failed. Please try again.');
 }
 ```
+
+### Module Registration (Coming Soon)
+
+⚠️ **Note**: The full registration API is not yet implemented. Module registration will be available in a future release.
 
 ## API Documentation
 
