@@ -2,8 +2,10 @@
  * Error Attribution System
  * 
  * Determines which module caused an error using various detection methods.
- * Uses stack trace analysis, hook context, and pattern matching.
+ * Uses stack trace analysis, hook context, pattern matching, and module registry.
  */
+
+import { ModuleRegistry } from './module-registry.js';
 
 interface ErrorContext {
   source: 'javascript' | 'promise' | 'console' | 'hook';
@@ -15,7 +17,7 @@ interface ErrorContext {
 export interface Attribution {
   moduleId: string;
   confidence: 'high' | 'medium' | 'low' | 'none';
-  method: 'stack-trace' | 'hook-context' | 'pattern-match' | 'unknown';
+  method: 'stack-trace' | 'hook-context' | 'pattern-match' | 'registry-context' | 'unknown';
   source: string;
 }
 
@@ -61,6 +63,17 @@ export class ErrorAttribution {
           source: context.source
         };
       }
+    }
+
+    // Method 2.5: Registry-based context analysis (medium confidence)
+    const moduleFromRegistry = this.getModuleFromRegistry(error, context);
+    if (moduleFromRegistry) {
+      return { 
+        moduleId: moduleFromRegistry, 
+        confidence: 'medium',
+        method: 'registry-context',
+        source: context.source
+      };
     }
 
     // Method 3: Pattern matching (low confidence)
@@ -149,6 +162,43 @@ export class ErrorAttribution {
       if (pattern.test(searchText)) {
         return module;
       }
+    }
+
+    return null;
+  }
+
+  /**
+   * Get module from registry-based context analysis
+   */
+  private static getModuleFromRegistry(error: Error, _context: ErrorContext): string | null {
+    // Get all registered modules and analyze which one might be responsible
+    const registeredModules = ModuleRegistry.getAllRegisteredModules();
+    
+    if (registeredModules.length === 0) {
+      return null;
+    }
+
+    // Analyze stack trace for module paths
+    const moduleFromStack = this.parseStackTrace(error.stack);
+    if (moduleFromStack && ModuleRegistry.isRegistered(moduleFromStack)) {
+      // If we found a module in the stack trace and it's registered, check if it should be filtered
+      if (ModuleRegistry.shouldFilterError(moduleFromStack, error)) {
+        // Error should be filtered (not reported) for this module
+        return null;
+      }
+      return moduleFromStack;
+    }
+
+    // If no specific module found in stack, check each registered module's error filter
+    // to see if any of them should handle this error
+    for (const registeredModule of registeredModules) {
+      // Skip modules that would filter out this error
+      if (ModuleRegistry.shouldFilterError(registeredModule.moduleId, error)) {
+        continue;
+      }
+      
+      // For now, we don't have a way to positively identify which module caused the error
+      // without stack trace information, so we fall back to other methods
     }
 
     return null;

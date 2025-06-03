@@ -12,6 +12,7 @@ import { ConsentManager } from './consent-manager.js';
 import { ErrorReporterWelcomeDialog } from './welcome-dialog.js';
 import { EndpointConfigDialog } from './settings-ui.js';
 import { moduleMatchesAuthor } from './author-utils.js';
+import { ModuleRegistry, type ModuleRegistrationConfig } from './module-registry.js';
 
 // Types for the module
 interface ErrorsAndEchoesAPI {
@@ -20,13 +21,6 @@ interface ErrorsAndEchoesAPI {
   hasConsent: () => boolean;
   getPrivacyLevel: () => string;
   getStats: () => ReportStats;
-}
-
-interface ModuleRegistrationConfig {
-  moduleId: string;
-  contextProvider?: () => Record<string, any>;
-  errorFilter?: (error: Error) => boolean;
-  endpoint?: EndpointConfig;
 }
 
 interface ReportOptions {
@@ -194,8 +188,7 @@ function setupPublicAPI(): void {
   const api: ErrorsAndEchoesAPI = {
     // For modules to register for enhanced reporting
     register: (config: ModuleRegistrationConfig): void => {
-      console.log(`Errors and Echoes | API registration for ${config.moduleId}`);
-      // Will implement the full API later
+      ModuleRegistry.register(config);
     },
     
     // For manual error reporting
@@ -247,6 +240,13 @@ function getCallingModule(): string {
  */
 function getEndpointForModule(moduleId: string): EndpointConfig | undefined {
   try {
+    // First check if the module has a custom endpoint registered
+    const customEndpoint = ModuleRegistry.getModuleEndpoint(moduleId);
+    if (customEndpoint?.enabled) {
+      return customEndpoint;
+    }
+
+    // Fall back to configured endpoints
     const endpoints: EndpointConfig[] = game.settings.get('errors-and-echoes', 'endpoints') || [];
     
     return endpoints.find(endpoint => {

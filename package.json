@@ -11,7 +11,10 @@
     "clean": "rm -rf dist",
     "prebuild": "npm run clean",
     "typecheck": "tsc --noEmit",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage"
   },
   "keywords": [
     "foundry",
@@ -27,7 +30,10 @@
     "@types/node": "^20.10.4",
     "rollup": "^4.7.0",
     "rollup-plugin-copy": "^3.5.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "vitest": "^1.1.0",
+    "@vitest/ui": "^1.1.0",
+    "jsdom": "^23.0.1"
   },
   "engines": {
     "node": ">=18.0.0"

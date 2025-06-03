@@ -6,6 +6,7 @@
  */
 
 import { ConsentManager, type PrivacyLevel } from './consent-manager.js';
+import { ModuleRegistry } from './module-registry.js';
 import type { Attribution } from './error-attribution.js';
 
 interface EndpointConfig {
@@ -84,13 +85,26 @@ export class ErrorReporter {
       return;
     }
 
+    // Check module-specific error filtering
+    if (ModuleRegistry.shouldFilterError(attribution.moduleId, error)) {
+      console.log(`Errors and Echoes: Error filtered by module '${attribution.moduleId}' error filter`);
+      return;
+    }
+
     // Check endpoint consent
     if (!ConsentManager.hasEndpointConsent(endpoint.url)) {
       return;
     }
 
+    // Get enhanced context from module registry if module is registered
+    const enhancedContext = { ...moduleContext };
+    if (ModuleRegistry.isRegistered(attribution.moduleId)) {
+      const registryContext = ModuleRegistry.getModuleContext(attribution.moduleId);
+      Object.assign(enhancedContext, registryContext);
+    }
+
     const privacyLevel = ConsentManager.getPrivacyLevel();
-    const payload = this.buildPayload(error, attribution, privacyLevel, moduleContext);
+    const payload = this.buildPayload(error, attribution, privacyLevel, enhancedContext);
     
     try {
       const response = await fetch(endpoint.url, {
