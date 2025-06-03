@@ -109,9 +109,94 @@
       {{/if}}
     </div>
 
+    {{#if registeredModules}}
+    <div class="registered-modules-section">
+      <h3><i class="fas fa-code"></i> {{i18n.registeredModules}}</h3>
+      <div class="registration-summary">
+        <p class="summary-stats">
+          <span class="stat-item">
+            <i class="fas fa-cube"></i> <strong>{{registrationStats.totalRegistered}}</strong> modules registered
+          </span>
+          <span class="stat-item">
+            <i class="fas fa-info-circle"></i> <strong>{{registrationStats.modulesWithContext}}</strong> provide context
+          </span>
+          <span class="stat-item">
+            <i class="fas fa-filter"></i> <strong>{{registrationStats.modulesWithFilters}}</strong> have filters
+          </span>
+          <span class="stat-item">
+            <i class="fas fa-link"></i> <strong>{{registrationStats.modulesWithEndpoints}}</strong> custom endpoints
+          </span>
+        </p>
+        <p class="activity-stats">
+          <span class="stat-item">
+            <i class="fas fa-play-circle"></i> <strong>{{registrationStats.totalContextCalls}}</strong> context calls
+          </span>
+          <span class="stat-item">
+            <i class="fas fa-shield-alt"></i> <strong>{{registrationStats.totalFilterCalls}}</strong> filter calls
+          </span>
+        </p>
+      </div>
+      <div class="modules-grid registered">
+        {{#each registeredModules}}
+        <div class="module-card registered {{#unless enabled}}disabled{{/unless}}">
+          <div class="module-header">
+            <h4>{{title}}</h4>
+            <div class="module-badges">
+              <span class="module-version">v{{version}}</span>
+              {{#if hasContextProvider}}
+              <span class="feature-badge context" title="Provides context data">
+                <i class="fas fa-info-circle"></i> Context
+              </span>
+              {{/if}}
+              {{#if hasErrorFilter}}
+              <span class="feature-badge filter" title="Has error filter">
+                <i class="fas fa-filter"></i> Filter
+              </span>
+              {{/if}}
+              {{#if hasCustomEndpoint}}
+              <span class="feature-badge endpoint" title="Custom endpoint">
+                <i class="fas fa-link"></i> Endpoint
+              </span>
+              {{/if}}
+            </div>
+            {{#unless enabled}}
+            <span class="module-status disabled">{{localize "ERRORS_AND_ECHOES.Settings.EndpointConfig.ModuleDisabled"}}</span>
+            {{/unless}}
+          </div>
+          <div class="module-details">
+            <p><strong>ID:</strong> {{id}}</p>
+            {{#if authors}}
+            <p><strong>{{localize "ERRORS_AND_ECHOES.Settings.EndpointConfig.Authors"}}:</strong> {{authors}}</p>
+            {{/if}}
+            <div class="registration-details">
+              <p><strong>Registered:</strong> <span class="timestamp">{{registrationTime}}</span></p>
+              {{#if lastContextCall}}
+              <p><strong>Last Context Call:</strong> <span class="timestamp">{{lastContextCall}}</span></p>
+              {{/if}}
+              <div class="usage-stats">
+                <span class="usage-stat">Context: {{contextCallCount}} calls</span>
+                <span class="usage-stat">Filter: {{filterCallCount}} calls</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        {{/each}}
+      </div>
+    </div>
+    {{else}}
+    <div class="no-registered-modules">
+      <div class="info-box">
+        <i class="fas fa-info-circle"></i>
+        <h4>No Modules Registered</h4>
+        <p>No modules have registered with the Errors and Echoes API yet. When modules register, they will appear here with their configuration details and usage statistics.</p>
+        <p><strong>Note:</strong> Module registration is automatic when modules use the <code>ErrorsAndEchoesAPI.register()</code> method.</p>
+      </div>
+    </div>
+    {{/if}}
+
     {{#if installedModules}}
     <div class="monitored-modules-section">
-      <h3>{{i18n.monitoredModules}}</h3>
+      <h3><i class="fas fa-eye"></i> {{i18n.monitoredModules}}</h3>
       <div class="modules-grid">
         {{#each installedModules}}
         <div class="module-card {{#unless enabled}}disabled{{/unless}}">

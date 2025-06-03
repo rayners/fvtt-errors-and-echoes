@@ -9,10 +9,10 @@ Anonymous error reporting for Foundry VTT modules to help authors improve their 
 | 🔍 Error Capture | ✅ Complete | Captures JavaScript errors, promise rejections, console errors, and hook errors |
 | 🏷️ Module Attribution | ✅ Complete | Advanced stack trace analysis and hook context detection |
 | 🔒 Privacy Controls | ✅ Complete | Three privacy levels with granular consent management |
-| ⚙️ Settings UI | ✅ Complete | Foundry-native configuration interface |
+| ⚙️ Settings UI | ✅ Complete | Foundry-native configuration interface with registered modules display |
 | 📊 Manual Reporting | ✅ Complete | Direct error reporting API for modules |
-| 🔗 **Module Registration API** | ⚠️ **Stub Only** | **Core registration system unimplemented** |
-| 🧪 Testing Infrastructure | ⚠️ **Missing** | **No automated tests implemented** |
+| 🔗 **Module Registration API** | ✅ **Complete** | **Full registration system with context providers and filters** |
+| 🧪 Testing Infrastructure | ✅ **Complete** | **Comprehensive test suite with 35 passing tests** |
 
 ## Overview
 
@@ -31,7 +31,36 @@ Errors and Echoes is a privacy-focused error reporting system for Foundry VTT th
 
 ## Quick Start for Module Developers
 
-### Manual Error Reporting (Available Now)
+### Registration API (Production Ready)
+
+Register your module for enhanced error reporting with context and filtering:
+
+```javascript
+// Register once during module initialization
+Hooks.once('ready', () => {
+  if (!window.ErrorsAndEchoesAPI) return;
+  
+  window.ErrorsAndEchoesAPI.register({
+    moduleId: 'your-module-id',
+    
+    // Optional: Provide context for debugging
+    contextProvider: () => ({
+      gameSystem: game.system.id,
+      activeFeatures: yourModule.getActiveFeatures(),
+      userConfiguration: yourModule.getRelevantSettings()
+    }),
+    
+    // Optional: Filter errors to reduce noise  
+    errorFilter: (error) => {
+      // Return true to filter OUT (not report) 
+      // Return false to report the error
+      return !error.stack.includes('your-module-id');
+    }
+  });
+});
+```
+
+### Manual Error Reporting
 
 Report specific errors from your module:
 
@@ -42,12 +71,9 @@ try {
   riskyOperation();
 } catch (error) {
   // Report to error monitoring
-  const errorReporter = game.modules.get('errors-and-echoes');
-  if (errorReporter?.active && errorReporter.api) {
-    errorReporter.api.report(error, {
-      module: 'your-module-id',
-      context: {
-        operation: 'riskyOperation',
+  if (window.ErrorsAndEchoesAPI?.reportError) {
+    window.ErrorsAndEchoesAPI.reportError(error, {
+      operation: 'riskyOperation',
         userAction: 'button-click'
       }
     });
@@ -59,24 +85,36 @@ try {
 }
 ```
 
-### Module Registration (Coming Soon)
+## Integration Examples
 
-⚠️ **Note**: The full registration API is not yet implemented. Module registration will be available in a future release.
+Complete working examples are available in the [`examples/`](./examples/) directory:
+
+- **[journeys-and-jamborees.js](./examples/journeys-and-jamborees.js)** - Complex gameplay module with party management and travel systems
+- **[simple-weather.js](./examples/simple-weather.js)** - Weather/environmental effects module with calendar integration  
+- **[generic-module.js](./examples/generic-module.js)** - Template for any module type with comprehensive documentation
+
+Each example demonstrates real-world integration patterns and best practices.
 
 ## API Documentation
 
 ### ErrorsAndEchoesAPI Interface
 
-The main API is exposed via `game.modules.get('errors-and-echoes').api`:
+The main API is exposed via `window.ErrorsAndEchoesAPI`:
 
 ```typescript
 interface ErrorsAndEchoesAPI {
   register: (config: ModuleRegistrationConfig) => void;
-  report: (error: Error, options?: ReportOptions) => void;
-  hasConsent: () => boolean;
-  getPrivacyLevel: () => string;
-  getStats: () => ReportStats;
+  reportError: (error: Error, context?: Record<string, any>) => void;
 }
+```
+
+**Module Registry Functions:**
+```typescript
+// Access module registry directly for advanced use cases
+ModuleRegistry.isRegistered(moduleId: string): boolean;
+ModuleRegistry.getRegisteredModule(moduleId: string): RegisteredModule | undefined;
+ModuleRegistry.getAllRegisteredModules(): RegisteredModule[];
+ModuleRegistry.getStats(): RegistrationStats;
 ```
 
 ### Module Registration

@@ -5,6 +5,7 @@
  */
 
 import { moduleMatchesAuthor, getFormattedAuthorString } from './author-utils.js';
+import { ModuleRegistry, type RegisteredModule } from './module-registry.js';
 
 interface EndpointConfig {
   name: string;
@@ -29,9 +30,33 @@ interface ModuleInfo {
   authors: string;
 }
 
+interface RegisteredModuleInfo {
+  id: string;
+  title: string;
+  version: string;
+  enabled: boolean;
+  authors: string;
+  hasContextProvider: boolean;
+  hasErrorFilter: boolean;
+  hasCustomEndpoint: boolean;
+  registrationTime: string;
+  contextCallCount: number;
+  filterCallCount: number;
+  lastContextCall?: string;
+}
+
 interface SettingsData {
   endpoints: EndpointConfigWithIndex[];
   installedModules: ModuleInfo[];
+  registeredModules: RegisteredModuleInfo[];
+  registrationStats: {
+    totalRegistered: number;
+    modulesWithContext: number;
+    modulesWithFilters: number;
+    modulesWithEndpoints: number;
+    totalContextCalls: number;
+    totalFilterCalls: number;
+  };
   privacyLevel: string;
   globalEnabled: boolean;
   i18n: Record<string, string>;
@@ -76,6 +101,8 @@ export class EndpointConfigDialog extends foundry.applications.api.HandlebarsApp
     const context = await super._prepareContext(options);
     const endpoints: EndpointConfig[] = game.settings.get('errors-and-echoes', 'endpoints') || [];
     const installedModules = this.getRelevantModules();
+    const registeredModules = this.getRegisteredModules();
+    const registrationStats = ModuleRegistry.getStats();
     const endpointConsent: Record<string, boolean> = game.settings.get('errors-and-echoes', 'endpointConsent') || {};
 
     return Object.assign(context, {
@@ -87,6 +114,8 @@ export class EndpointConfigDialog extends foundry.applications.api.HandlebarsApp
         isProtected: endpoint.author === 'rayners'
       })),
       installedModules,
+      registeredModules,
+      registrationStats,
       privacyLevel: game.settings.get('errors-and-echoes', 'privacyLevel') || 'standard',
       globalEnabled: game.settings.get('errors-and-echoes', 'globalEnabled') || false,
       i18n: {
@@ -101,6 +130,7 @@ export class EndpointConfigDialog extends foundry.applications.api.HandlebarsApp
         consent: game.i18n.localize('ERRORS_AND_ECHOES.Settings.EndpointConfig.Consent'),
         status: game.i18n.localize('ERRORS_AND_ECHOES.Settings.EndpointConfig.Status'),
         monitoredModules: game.i18n.localize('ERRORS_AND_ECHOES.Settings.EndpointConfig.MonitoredModules'),
+        registeredModules: game.i18n.localize('ERRORS_AND_ECHOES.Settings.EndpointConfig.RegisteredModules') || 'Registered Modules',
         save: game.i18n.localize('ERRORS_AND_ECHOES.Settings.EndpointConfig.Save'),
         cancel: game.i18n.localize('ERRORS_AND_ECHOES.Settings.EndpointConfig.Cancel')
       }
@@ -149,6 +179,33 @@ export class EndpointConfigDialog extends foundry.applications.api.HandlebarsApp
           authors
         };
       });
+  }
+
+  private getRegisteredModules(): RegisteredModuleInfo[] {
+    const registeredModules = ModuleRegistry.getAllRegisteredModules();
+    
+    return registeredModules.map(registered => {
+      const moduleInfo = game.modules.get(registered.moduleId);
+      const authors = moduleInfo ? getFormattedAuthorString(
+        moduleInfo, 
+        game.i18n.localize('ERRORS_AND_ECHOES.Settings.EndpointConfig.Unknown') || 'Unknown'
+      ) : 'Unknown';
+      
+      return {
+        id: registered.moduleId,
+        title: moduleInfo?.title || registered.moduleId,
+        version: moduleInfo?.version || 'Unknown',
+        enabled: moduleInfo?.active || false,
+        authors,
+        hasContextProvider: !!registered.contextProvider,
+        hasErrorFilter: !!registered.errorFilter,
+        hasCustomEndpoint: !!registered.endpoint,
+        registrationTime: registered.registrationTime,
+        contextCallCount: registered.contextCallCount,
+        filterCallCount: registered.filterCallCount,
+        lastContextCall: registered.lastContextCall
+      };
+    });
   }
 
   // Note: ApplicationV2 uses actions system instead of activateListeners

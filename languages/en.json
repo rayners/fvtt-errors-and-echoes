@@ -54,7 +54,9 @@
         "TestError": "Endpoint test failed for {name}: {error}",
         "SaveSuccess": "Endpoint settings saved successfully",
         "ConfirmRemove": "Remove Endpoint",
-        "ConfirmRemoveContent": "Are you sure you want to remove the endpoint '{name}'? This action cannot be undone."
+        "ConfirmRemoveContent": "Are you sure you want to remove the endpoint '{name}'? This action cannot be undone.",
+        "RegisteredModules": "Registered Modules",
+        "NoRegisteredModules": "No modules have registered with the API yet"
       }
     },
     "Welcome": {
