@@ -158,6 +158,13 @@ function registerSettings(): void {
     default: null
   });
 
+  game.settings.register('errors-and-echoes', 'showReportNotifications', {
+    scope: 'client',
+    config: false,
+    type: Boolean,
+    default: false
+  });
+
   game.settings.register('errors-and-echoes', 'endpointConsent', {
     scope: 'client',
     config: false,

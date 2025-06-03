@@ -16,6 +16,15 @@ interface EndpointConfig {
   enabled: boolean;
 }
 
+interface ErrorReportResponse {
+  success: boolean;
+  eventId?: string;          // Unique identifier for this error report
+  message?: string;          // Human-readable status message
+  timestamp?: string;        // ISO timestamp when the error was processed
+  endpoint?: string;         // Endpoint that processed the request
+  retryAfter?: number;       // Seconds to wait before retrying (for rate limiting)
+}
+
 interface ReportPayload {
   error: {
     message: string;
@@ -96,12 +105,16 @@ export class ErrorReporter {
         body: JSON.stringify(payload)
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      // Parse standard response format
+      const reportResponse: ErrorReportResponse = await response.json();
+
+      if (!reportResponse.success) {
+        const errorMsg = reportResponse.message || `HTTP ${response.status}: ${response.statusText}`;
+        throw new Error(errorMsg);
       }
 
       // Track successful report for rate limiting and user transparency
-      this.recordSuccessfulReport(attribution.moduleId, error);
+      this.recordSuccessfulReport(attribution.moduleId, error, reportResponse.eventId);
 
     } catch (reportingError) {
       console.warn('Errors and Echoes: Failed to send error report:', reportingError);
@@ -207,7 +220,7 @@ export class ErrorReporter {
   /**
    * Record a successful report for rate limiting and statistics
    */
-  private static recordSuccessfulReport(moduleId: string, error: Error): void {
+  private static recordSuccessfulReport(moduleId: string, error: Error, eventId?: string): void {
     const errorKey = `${moduleId}:${error.message}:${this.getStackSignature(error.stack)}`;
     this.recentReports.set(errorKey, Date.now());
     this.reportCount++;
@@ -216,9 +229,21 @@ export class ErrorReporter {
     // Clean up old entries
     this.cleanupOldReports();
 
-    // Optional: Show user feedback for debugging
+    // Always show console feedback with event ID for user reference
+    if (eventId) {
+      console.log(`🚨 Error reported to monitoring service | Module: ${moduleId} | Event ID: ${eventId}`);
+      console.log(`   Users can reference this ID when reporting issues or requesting support.`);
+    } else {
+      console.log(`🚨 Error reported to monitoring service | Module: ${moduleId}`);
+    }
+
+    // Optional: Show user notifications for debugging
     if (game.settings.get('errors-and-echoes', 'showReportNotifications')) {
-      console.log(`Errors and Echoes: Reported error from ${moduleId}`);
+      if (eventId) {
+        ui.notifications?.info(`Error reported for ${moduleId} (ID: ${eventId})`);
+      } else {
+        ui.notifications?.info(`Error reported for ${moduleId}`);
+      }
     }
   }
 
@@ -373,7 +398,16 @@ export class ErrorReporter {
         })
       });
 
-      return response.ok;
+      // Parse standard response format
+      const testResponse: ErrorReportResponse = await response.json();
+      
+      if (testResponse.success && testResponse.eventId) {
+        console.log(`✅ Endpoint test successful | Event ID: ${testResponse.eventId}`);
+        return true;
+      } else {
+        console.warn('Endpoint test failed:', testResponse.message || 'Unknown error');
+        return false;
+      }
     } catch (error) {
       console.warn('Endpoint test failed:', error);
       return false;
