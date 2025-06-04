@@ -277,7 +277,7 @@ export class ErrorReporter {
   /**
    * Create a short signature from stack trace for deduplication
    */
-  private static getStackSignature(stack?: string): string {
+  static getStackSignature(stack?: string): string {
     if (!stack) return 'no-stack';
     
     try {
@@ -398,28 +398,53 @@ export class ErrorReporter {
       // Create test URL by replacing '/report/' with '/test/'
       const testUrl = url.replace('/report/', '/test/');
       
-      const response = await fetch(testUrl, {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'X-Foundry-Version': game.version,
-          'X-Module-Version': this.getModuleVersion()
-        },
-        body: JSON.stringify({ 
-          test: true,
-          timestamp: new Date().toISOString(),
-          source: 'endpoint-test'
-        })
-      });
-
-      // Parse standard response format
-      const testResponse: ErrorReportResponse = await response.json();
+      // Create abort controller for timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
       
-      if (testResponse.success && testResponse.eventId) {
-        console.log(`✅ Endpoint test successful | Event ID: ${testResponse.eventId}`);
-        return true;
-      } else {
-        console.warn('Endpoint test failed:', testResponse.message || 'Unknown error');
+      try {
+        const response = await fetch(testUrl, {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'X-Foundry-Version': game.version,
+            'X-Module-Version': this.getModuleVersion()
+          },
+          body: JSON.stringify({ 
+            test: true,
+            timestamp: new Date().toISOString(),
+            source: 'endpoint-test'
+          }),
+          signal: controller.signal
+        });
+        
+        clearTimeout(timeoutId);
+
+        // Parse standard response format
+        let testResponse: ErrorReportResponse;
+        try {
+          testResponse = await response.json();
+        } catch (parseError) {
+          // Handle cases where response is not valid JSON (e.g., HTML error pages)
+          console.warn('Endpoint test failed: Invalid JSON response');
+          return false;
+        }
+        
+        if (testResponse.success && testResponse.eventId) {
+          console.log(`✅ Endpoint test successful | Event ID: ${testResponse.eventId}`);
+          return true;
+        } else {
+          console.warn('Endpoint test failed:', testResponse.message || 'Unknown error');
+          return false;
+        }
+      } catch (fetchError) {
+        clearTimeout(timeoutId);
+        // Handle fetch errors (network issues, timeouts, etc.)
+        if (fetchError.name === 'AbortError') {
+          console.warn('Endpoint test failed: Request timeout');
+        } else {
+          console.warn('Endpoint test failed: Network error', fetchError);
+        }
         return false;
       }
     } catch (error) {

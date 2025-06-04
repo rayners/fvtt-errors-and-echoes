@@ -47,7 +47,8 @@ interface EndpointConfig {
   ErrorCapture,
   ErrorAttribution,
   ErrorReporter,
-  ConsentManager
+  ConsentManager,
+  ModuleRegistry
 };
 
 /**

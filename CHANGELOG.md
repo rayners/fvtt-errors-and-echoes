@@ -60,6 +60,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Health Monitoring** - Health check endpoints for service monitoring
 - **Error Logging** - Structured logging for debugging and monitoring
 
+## [0.1.2] - 2025-06-03
+
+### Fixed
+- **Quench Test Suite** - Resolved all failing integration tests for complete test coverage
+- **Network Request Timeouts** - Added 5-second timeout to endpoint testing to prevent test hanging
+- **Error Attribution Accuracy** - Fixed test expectations to match actual attribution behavior when called from module context
+- **Test Error Cascades** - Eliminated cascading errors in window error tests that were causing multiple failures
+- **Promise Rejection Handling** - Improved unhandled promise rejection test to prevent console pollution
+
+### Improved
+- **Error Reporter Resilience** - Enhanced `testEndpoint` method with proper timeout handling and abort controller
+- **Test Reliability** - Simplified window error capture test to avoid Foundry v13 deprecation warning cascades
+- **Attribution Logic** - Better handling of stack trace analysis when errors originate from module test context
+- **Debugging Output** - Added comprehensive console logging for test debugging and failure analysis
+
+### Technical
+- **AbortController Integration** - Modern fetch timeout handling for better network request management
+- **Test Isolation** - Improved test cleanup and error handler management to prevent interference
+- **Error Boundary Testing** - More robust testing of edge cases and error conditions
+- **JSON Response Parsing** - Better handling of non-JSON responses from invalid endpoints
+
 ## [Unreleased]
 
 ### Planned Features
@@ -74,6 +95,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version History
 
+- **v0.1.2** (2025-06-03): Test suite fixes and network reliability improvements
 - **v0.1.0** (2025-06-03): Initial production release with complete feature set
 - **Pre-release Development** (2024-2025): Documentation-first development with privacy framework
 
