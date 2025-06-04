@@ -1,0 +1,126 @@
+name: Bug Report
+description: Report a bug or unexpected behavior
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting a bug! Please fill out the information below to help us diagnose and fix the issue.
+
+  - type: input
+    id: version
+    attributes:
+      label: Module Version
+      description: What version of Errors and Echoes are you using?
+      placeholder: "v0.1.2"
+    validations:
+      required: true
+
+  - type: input
+    id: foundry-version
+    attributes:
+      label: Foundry VTT Version
+      description: What version of Foundry VTT are you using?
+      placeholder: "v13.331"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: game-system
+    attributes:
+      label: Game System
+      description: Which game system are you using?
+      options:
+        - D&D 5th Edition (dnd5e)
+        - Pathfinder 2e (pf2e)
+        - Dragonbane
+        - Forbidden Lands
+        - Simple Worldbuilding
+        - Other (please specify in description)
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is.
+      placeholder: Describe what happened and what you expected to happen instead
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: Tell us how to reproduce this behavior
+      placeholder: |
+        1. Go to '...'
+        2. Click on '...'
+        3. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen?
+      placeholder: Describe the expected behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: console-errors
+    attributes:
+      label: Console Errors
+      description: Check the browser console (F12) for any error messages and paste them here
+      render: javascript
+      placeholder: Paste any console errors here
+
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Browser
+      description: What browser are you using?
+      options:
+        - Chrome
+        - Firefox
+        - Safari
+        - Edge
+        - Other (please specify in additional info)
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: modules
+    attributes:
+      label: Module Compatibility
+      description: Check if the issue occurs with minimal modules
+      options:
+        - label: I can reproduce this issue with only Errors and Echoes enabled
+        - label: This issue only occurs with other modules enabled
+        - label: I have not tested with minimal modules
+
+  - type: textarea
+    id: other-modules
+    attributes:
+      label: Other Active Modules
+      description: List other modules you have active (if relevant to the issue)
+      placeholder: |
+        - Module Name v1.0.0
+        - Another Module v2.1.0
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Information
+      description: |
+        Add any other context about the problem here.
+        
+        Tips:
+        - Screenshots or video recordings are very helpful
+        - If this worked before, mention when it started failing
+        - Include your privacy settings if relevant to error reporting
+      placeholder: Any additional context, screenshots, or information

@@ -156,9 +156,34 @@ public async reportError(
 
 ## Testing
 
-### Current Testing Setup
+### Automated Testing
 
-Currently, the project uses manual testing procedures. Automated testing contributions are welcome and encouraged.
+The project uses Vitest for unit testing and comprehensive CI automation:
+
+```bash
+# Run all tests
+npm run test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Run tests with coverage
+npm run test:coverage
+
+# Run complete validation pipeline
+npm run validate
+```
+
+### CI/CD Pipeline
+
+All pull requests automatically run:
+- **Linting**: ESLint with TypeScript support
+- **Formatting**: Prettier code style checks
+- **Type Checking**: TypeScript compilation validation
+- **Unit Tests**: Vitest test suite (35 tests)
+- **Build**: Complete module compilation
+- **Security**: CodeQL and dependency scanning
+- **Bundle Analysis**: Size impact tracking
 
 ### Manual Testing Checklist
 
@@ -190,33 +215,71 @@ Before submitting PRs, verify:
 
 ### Adding Tests
 
-Contributions of automated tests are highly encouraged. Preferred frameworks:
+The project uses Vitest for testing. When adding new features, please include tests:
 
-- **Unit Tests**: Jest or Vitest
-- **Integration Tests**: Foundry-compatible test runner
-- **E2E Tests**: Playwright or similar
+```typescript
+// Example test structure
+import { describe, it, expect, beforeEach } from 'vitest';
+import { ErrorReporter } from '../src/error-reporter';
+
+describe('ErrorReporter', () => {
+  let errorReporter: ErrorReporter;
+
+  beforeEach(() => {
+    errorReporter = new ErrorReporter();
+  });
+
+  it('should respect user privacy settings', () => {
+    // Test implementation
+  });
+});
+```
+
+**Test Coverage Guidelines:**
+- Unit tests for all public APIs
+- Integration tests for FoundryVTT hooks
+- Mock external dependencies (game, ui, canvas)
+- Test privacy and consent scenarios
+- Include edge cases and error conditions
 
 ## Pull Request Process
 
 ### Before Submitting
 
-1. **Code Quality**
+1. **Automated Checks**
+
+   - [ ] All tests pass (`npm run test`)
+   - [ ] Linting passes (`npm run lint`)
+   - [ ] Formatting is correct (`npm run format:check`)
+   - [ ] Build succeeds (`npm run build`)
+   - [ ] Full validation passes (`npm run validate`)
+
+2. **Code Quality**
 
    - [ ] TypeScript compilation passes (`npm run typecheck`)
    - [ ] Code follows style guidelines
    - [ ] All public APIs documented with JSDoc
-   - [ ] Manual testing completed
+   - [ ] Test coverage for new functionality
 
-2. **Privacy Review**
+3. **Privacy Review**
 
    - [ ] No new PII collection introduced
    - [ ] Privacy implications documented
    - [ ] Consent mechanisms respected
+   - [ ] Data collection follows privacy levels
 
-3. **Documentation**
+4. **FoundryVTT Compatibility**
+
+   - [ ] Tested with Foundry v12 and v13
+   - [ ] No breaking changes to FoundryVTT APIs
+   - [ ] Graceful handling of missing dependencies
+   - [ ] Tested with multiple game systems
+
+5. **Documentation**
    - [ ] README.md updated if API changes
    - [ ] CHANGELOG.md entry added
    - [ ] JSDoc comments added/updated
+   - [ ] Issue templates used for submissions
 
 ### PR Template
 
@@ -230,10 +293,29 @@ Please include:
 
 ### Review Process
 
-1. **Automated Checks**: TypeScript compilation and basic validation
+1. **Automated Checks**: Full CI pipeline with comprehensive validation
+   - Multi-node testing (Node 18 & 20)
+   - Security scanning and dependency analysis
+   - Bundle size impact assessment
+   - Code quality and formatting verification
+
 2. **Code Review**: Focus on privacy, security, and code quality
+   - Privacy-first approach verification
+   - FoundryVTT best practices compliance
+   - TypeScript usage and type safety
+   - Performance impact assessment
+
 3. **Testing**: Manual verification of functionality
+   - Cross-browser compatibility
+   - Multiple FoundryVTT version testing
+   - Game system compatibility
+   - Privacy controls validation
+
 4. **Documentation Review**: Ensure all changes are documented
+   - API documentation updates
+   - User-facing documentation clarity
+   - Privacy implications explained
+   - Breaking changes documented
 
 ## Issue Reporting
 
@@ -331,10 +413,49 @@ Consider:
 - Review from both user and developer perspectives
 - Ensure privacy implications are clearly explained
 
+## Community Guidelines
+
+### Interaction Standards
+
+- **Be Respectful**: Treat all community members with courtesy and respect
+- **Stay On Topic**: Keep discussions relevant to the project
+- **Privacy Conscious**: Be mindful of privacy when discussing errors or logs
+- **Constructive Feedback**: Provide actionable, helpful feedback
+- **Inclusive Environment**: Welcome contributors of all skill levels
+
+### Issue and PR Etiquette
+
+- **Use Templates**: Fill out issue and PR templates completely
+- **Search First**: Check for existing issues before creating new ones
+- **Clear Titles**: Use descriptive, specific titles
+- **Provide Context**: Include relevant environment and configuration details
+- **Follow Up**: Respond to requests for additional information
+
+### Security and Privacy
+
+- **No Sensitive Data**: Never include personal information, passwords, or tokens
+- **Responsible Disclosure**: Report security issues privately (see SECURITY.md)
+- **Privacy First**: Always consider privacy implications of suggestions
+- **Anonymous Examples**: Use anonymized data in examples and discussions
+
 ## Getting Help
 
-- **GitHub Issues**: For bugs and feature requests
-- **GitHub Discussions**: For questions and general discussion
-- **Discord**: Contact @rayners78 for urgent security issues
+- **GitHub Issues**: For bugs, feature requests, and compatibility issues
+- **GitHub Discussions**: For questions, general discussion, and community support
+- **Pull Requests**: For code contributions and improvements
+- **Security Issues**: Follow the [Security Policy](SECURITY.md) for sensitive matters
+
+### Response Times
+
+- **Issues**: We aim to respond within 48 hours
+- **Pull Requests**: Initial review within 72 hours
+- **Security Issues**: Within 24 hours for critical issues
+
+### Community Resources
+
+- **Documentation**: Comprehensive guides in `/docs` directory
+- **Examples**: Working code examples in `/examples` directory
+- **API Reference**: Complete API documentation in `API-REFERENCE.md`
+- **Changelog**: Release notes and breaking changes in `CHANGELOG.md`
 
 Thank you for contributing to Errors and Echoes! Your contributions help make FoundryVTT module development more reliable while respecting user privacy.

@@ -1,0 +1,143 @@
+name: Compatibility Issue
+description: Report compatibility problems with FoundryVTT versions, game systems, or other modules
+title: "[Compatibility]: "
+labels: ["compatibility"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting a compatibility issue! This helps us ensure Errors and Echoes works well with the broader FoundryVTT ecosystem.
+
+  - type: input
+    id: errors-echoes-version
+    attributes:
+      label: Errors and Echoes Version
+      description: What version of Errors and Echoes are you using?
+      placeholder: "v0.1.2"
+    validations:
+      required: true
+
+  - type: input
+    id: foundry-version
+    attributes:
+      label: Foundry VTT Version
+      description: What version of Foundry VTT are you using?
+      placeholder: "v13.331"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: compatibility-type
+    attributes:
+      label: Compatibility Issue Type
+      description: What type of compatibility issue are you experiencing?
+      options:
+        - FoundryVTT version compatibility
+        - Game system compatibility
+        - Module conflict or incompatibility
+        - API or hook compatibility
+        - Performance impact with other modules
+        - Data format or storage conflicts
+    validations:
+      required: true
+
+  - type: input
+    id: conflicting-system-module
+    attributes:
+      label: Conflicting System/Module
+      description: Which game system or module is causing the compatibility issue?
+      placeholder: "dnd5e v3.1.2, libWrapper v1.12.11, etc."
+    validations:
+      required: true
+
+  - type: textarea
+    id: issue-description
+    attributes:
+      label: Issue Description
+      description: Describe the compatibility problem in detail
+      placeholder: |
+        What happens when the incompatibility occurs?
+        Does it prevent functionality, cause errors, or create conflicts?
+    validations:
+      required: true
+
+  - type: textarea
+    id: error-messages
+    attributes:
+      label: Error Messages or Console Output
+      description: Include any error messages from the browser console (F12)
+      render: javascript
+      placeholder: Paste console errors, warnings, or relevant log output here
+
+  - type: textarea
+    id: reproduction-steps
+    attributes:
+      label: Steps to Reproduce
+      description: How can we reproduce this compatibility issue?
+      placeholder: |
+        1. Install both modules/systems
+        2. Enable specific settings
+        3. Perform specific action
+        4. Observe the conflict
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: What should happen instead?
+      placeholder: Describe how the modules/systems should work together
+
+  - type: textarea
+    id: current-workaround
+    attributes:
+      label: Current Workaround
+      description: Have you found any temporary solutions or workarounds?
+      placeholder: Describe any steps you've taken to work around this issue
+
+  - type: textarea
+    id: module-list
+    attributes:
+      label: Complete Module List
+      description: List all active modules in your world (copy from Foundry's module management screen)
+      placeholder: |
+        - errors-and-echoes v0.1.2
+        - dnd5e v3.1.2
+        - libWrapper v1.12.11
+        - etc.
+
+  - type: checkboxes
+    id: isolation-testing
+    attributes:
+      label: Isolation Testing
+      description: Please confirm you've tested this issue
+      options:
+        - label: I can reproduce this with only the conflicting modules enabled
+        - label: This issue does NOT occur when either module is disabled
+        - label: I have tested with minimal modules and the issue persists
+        - label: I have not yet done isolation testing
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Impact Severity
+      description: How severely does this affect your FoundryVTT experience?
+      options:
+        - Critical - Prevents using FoundryVTT entirely
+        - High - Breaks important functionality
+        - Medium - Causes inconvenience but workarounds exist
+        - Low - Minor annoyance with minimal impact
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Any other information that might help resolve this compatibility issue
+      placeholder: |
+        - Screenshots or recordings of the issue
+        - Specific world/scene configurations
+        - Timing of when this started occurring
+        - Other relevant technical details

@@ -1,0 +1,101 @@
+name: Feature Request
+description: Suggest a new feature or enhancement
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for suggesting a feature! Please provide details about your idea below.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or Use Case
+      description: What problem does this feature solve? What workflow would it improve?
+      placeholder: |
+        Describe the problem you're trying to solve or the workflow you'd like to improve.
+        For example: "As a module developer, I want to... so that I can..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: How would you like this feature to work?
+      placeholder: Describe your ideal solution in detail
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternative Solutions
+      description: Have you considered any alternative approaches?
+      placeholder: Describe any alternative solutions you've considered
+
+  - type: checkboxes
+    id: priority
+    attributes:
+      label: Priority
+      description: How important is this feature to you?
+      options:
+        - label: Critical - I can't use the module effectively without this
+        - label: High - This would significantly improve my experience
+        - label: Medium - This would be a nice enhancement
+        - label: Low - This would be convenient but not essential
+
+  - type: dropdown
+    id: user-type
+    attributes:
+      label: User Type
+      description: This feature would primarily benefit...
+      options:
+        - Module developers integrating error reporting
+        - End users configuring privacy settings
+        - System administrators managing FoundryVTT instances
+        - Both developers and end users
+        - Other (please specify)
+
+  - type: checkboxes
+    id: feature-category
+    attributes:
+      label: Feature Category
+      description: What type of feature is this? (Select all that apply)
+      options:
+        - label: Privacy and data collection controls
+        - label: Error reporting and attribution
+        - label: User interface and settings
+        - label: Developer API and integration
+        - label: Performance and optimization
+        - label: Compatibility and system support
+        - label: Documentation and help
+
+  - type: textarea
+    id: mockups
+    attributes:
+      label: Mockups or Examples
+      description: |
+        If you have screenshots, mockups, or examples from other software, please include them here.
+        You can drag and drop images directly into this field.
+      placeholder: Drag and drop images here, or describe visual examples
+
+  - type: textarea
+    id: compatibility
+    attributes:
+      label: Compatibility Considerations
+      description: Are there any FoundryVTT versions, game systems, or modules this should work with?
+      placeholder: |
+        For example:
+        - Should work with Foundry v12 and v13
+        - Needs integration with Dragonbane system
+        - Should be compatible with libWrapper
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: |
+        Add any other context, examples, or information about the feature request here.
+      placeholder: Any additional context or information
