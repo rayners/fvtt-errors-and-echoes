@@ -1,6 +1,8 @@
 /**
  * Test setup file for Vitest
  * Provides mock Foundry VTT environment for testing
+ * 
+ * This file is used to test our CI automation pipeline
  */
 
 import { vi } from 'vitest';
