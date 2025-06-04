@@ -472,6 +472,18 @@ npm run build:prod
 - **Validation**: Validate all incoming data
 - **Authentication**: Consider API keys for private endpoints
 
+### Reference Implementation
+
+A complete reference implementation is available at [sentry-relay](https://github.com/rayners/sentry-relay), which demonstrates:
+
+- **Standard API compliance**: Implements the error reporting protocol
+- **Sentry integration**: Forwards reports to Sentry for monitoring and alerting
+- **Cloudflare Workers**: Serverless deployment example with global edge locations
+- **Input validation**: Demonstrates request validation and sanitization
+- **Rate limiting**: Shows implementation of throttling and abuse prevention
+
+The reference implementation serves as both a working example and a starting point for building your own error reporting endpoint.
+
 ### Module Security
 
 - **Never swallow errors**: Always preserve original error behavior
