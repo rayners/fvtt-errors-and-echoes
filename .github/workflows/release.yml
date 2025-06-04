@@ -1,0 +1,25 @@
+# Errors and Echoes Release Workflow
+# Builds and packages the module for FoundryVTT distribution
+
+name: Release Module
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Release Errors and Echoes
+        uses: rayners/foundry-module-actions/release@v1
+        with:
+          node-version: '20'
+          build-command: 'npm run build'
+          working-directory: 'dist'
+          module-files: 'module.js module.json styles/ templates/ languages/ examples/ README.md CHANGELOG.md LICENSE'

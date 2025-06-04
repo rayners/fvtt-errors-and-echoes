@@ -222,8 +222,16 @@ function setupPublicAPI(): void {
   // Expose API
   errorReporterModule.api = api;
   (window as any).ErrorsAndEchoes.API = api;
+  (window as any).ErrorsAndEchoesAPI = api; // Also expose as ErrorsAndEchoesAPI for consistency
   
   console.log('Errors and Echoes | Public API registered');
+
+  // Load Quench integration tests if available
+  try {
+    import('./quench-tests.js');
+  } catch (error) {
+    // Quench tests are optional - fail silently if import fails
+  }
 }
 
 /**

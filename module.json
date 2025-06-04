@@ -19,7 +19,7 @@
     "module.js"
   ],
   "styles": [
-    "errors-and-echoes.css"
+    "styles/errors-and-echoes.css"
   ],
   "languages": [
     {
@@ -45,11 +45,11 @@
   "media": [
     {
       "type": "icon",
-      "url": "https://docs.rayners.dev/img/errors-and-echoes-icon.webp"
+      "url": "https://docs.rayners.dev/img/errors-and-echoes-icon.svg"
     },
     {
       "type": "cover",
-      "url": "https://docs.rayners.dev/img/errors-and-echoes-cover.webp"
+      "url": "https://docs.rayners.dev/img/errors-and-echoes-cover.svg"
     }
   ]
 }
