@@ -1,6 +1,3 @@
-# Errors and Echoes Release Workflow
-# Builds and packages the module for FoundryVTT distribution
-
 name: Release Module
 
 on:
@@ -8,7 +5,7 @@ on:
     types: [published]
 
 jobs:
-  build:
+  build-and-release:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -16,10 +13,23 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Release Errors and Echoes
+      - name: Build and Release Module
+        id: module_release
         uses: rayners/foundry-module-actions/release@v1
         with:
-          node-version: '20'
+          node-version: '18'
           build-command: 'npm run build'
           working-directory: 'dist'
-          module-files: 'module.js module.json styles/ templates/ languages/ examples/ README.md CHANGELOG.md LICENSE'
+          module-files: 'module.json module.js styles/ templates/ languages/ examples/'
+          zip-name: 'fvtt-errors-and-echoes.zip'
+
+      # Foundry VTT Package Release submission commented out until package is registered
+      # - name: Submit to Foundry VTT Package Release API
+      #   uses: rayners/foundry-module-actions/foundry-release@v1
+      #   with:
+      #     package-id: 'errors-and-echoes'
+      #     release-token: ${{ secrets.FOUNDRY_RELEASE_TOKEN }}
+      #     version: ${{ steps.module_release.outputs.version }}
+      #     manifest-url: 'https://github.com/${{ github.repository }}/releases/download/${{ github.event.release.tag_name }}/module.json'
+      #     minimum-foundry-version: '12'
+      #     verified-foundry-version: '13'

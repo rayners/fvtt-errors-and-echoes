@@ -2,7 +2,7 @@
 
 **Version**: v1.0.0  
 **Release Date**: TBD  
-**Tester**: ******\_\_\_******  
+**Tester**: **\*\***\_\_\_**\*\***  
 **Test Environment**: FoundryVTT **\_** / Browser **\_** / OS **\_**
 
 ---
@@ -270,9 +270,9 @@
 
 **Overall Test Result**: ⭕ PASS / FAIL
 
-**Critical Issues Found**: ******\_\_\_******
+**Critical Issues Found**: **\*\***\_\_\_**\*\***
 
-**Non-Critical Issues**: ******\_\_\_******
+**Non-Critical Issues**: **\*\***\_\_\_**\*\***
 
 **Performance Results**:
 
@@ -296,8 +296,8 @@
 
 ## 🚨 **Pre-Release Approval**
 
-**Testing Completed By**: ******\_\_\_******  
-**Date**: ******\_\_\_******  
+**Testing Completed By**: **\*\***\_\_\_**\*\***  
+**Date**: **\*\***\_\_\_**\*\***  
 **Approved for Release**: ⭕ YES / NO
 
 **Additional Notes**:
