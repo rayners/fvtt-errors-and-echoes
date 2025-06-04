@@ -1,6 +1,6 @@
 /**
  * Module Registry System
- * 
+ *
  * Manages registration of modules for enhanced error reporting,
  * including context providers and error filters.
  */
@@ -64,11 +64,16 @@ export class ModuleRegistry {
       try {
         const testContext = contextProvider();
         if (typeof testContext !== 'object' || testContext === null) {
-          console.warn(`Errors and Echoes: Context provider for '${moduleId}' must return an object`);
+          console.warn(
+            `Errors and Echoes: Context provider for '${moduleId}' must return an object`
+          );
           return;
         }
       } catch (error) {
-        console.warn(`Errors and Echoes: Context provider for '${moduleId}' threw an error during test:`, error);
+        console.warn(
+          `Errors and Echoes: Context provider for '${moduleId}' threw an error during test:`,
+          error
+        );
         return;
       }
     }
@@ -83,7 +88,10 @@ export class ModuleRegistry {
           return;
         }
       } catch (error) {
-        console.warn(`Errors and Echoes: Error filter for '${moduleId}' threw an error during test:`, error);
+        console.warn(
+          `Errors and Echoes: Error filter for '${moduleId}' threw an error during test:`,
+          error
+        );
         return;
       }
     }
@@ -97,7 +105,7 @@ export class ModuleRegistry {
       registrationTime: new Date().toISOString(),
       lastContextCall: undefined,
       contextCallCount: 0,
-      filterCallCount: 0
+      filterCallCount: 0,
     };
 
     this.registeredModules.set(moduleId, registeredModule);
@@ -140,11 +148,11 @@ export class ModuleRegistry {
 
     try {
       const context = registered.contextProvider();
-      
+
       // Update statistics
       registered.contextCallCount++;
       registered.lastContextCall = new Date().toISOString();
-      
+
       // Validate returned context
       if (typeof context !== 'object' || context === null) {
         console.warn(`Errors and Echoes: Context provider for '${moduleId}' returned invalid data`);
@@ -169,13 +177,16 @@ export class ModuleRegistry {
 
     try {
       const shouldFilter = registered.errorFilter(error);
-      
+
       // Update statistics
       registered.filterCallCount++;
-      
+
       return Boolean(shouldFilter);
     } catch (filterError) {
-      console.warn(`Errors and Echoes: Error filter for '${moduleId}' threw an error:`, filterError);
+      console.warn(
+        `Errors and Echoes: Error filter for '${moduleId}' threw an error:`,
+        filterError
+      );
       return false; // Don't filter if the filter itself errors
     }
   }
@@ -194,11 +205,11 @@ export class ModuleRegistry {
   static unregister(moduleId: string): boolean {
     const wasRegistered = this.registeredModules.has(moduleId);
     this.registeredModules.delete(moduleId);
-    
+
     if (wasRegistered) {
       console.log(`Errors and Echoes: Module '${moduleId}' unregistered`);
     }
-    
+
     return wasRegistered;
   }
 
@@ -223,14 +234,14 @@ export class ModuleRegistry {
     totalFilterCalls: number;
   } {
     const modules = Array.from(this.registeredModules.values());
-    
+
     return {
       totalRegistered: modules.length,
       modulesWithContext: modules.filter(m => m.contextProvider).length,
       modulesWithFilters: modules.filter(m => m.errorFilter).length,
       modulesWithEndpoints: modules.filter(m => m.endpoint).length,
       totalContextCalls: modules.reduce((sum, m) => sum + m.contextCallCount, 0),
-      totalFilterCalls: modules.reduce((sum, m) => sum + m.filterCallCount, 0)
+      totalFilterCalls: modules.reduce((sum, m) => sum + m.filterCallCount, 0),
     };
   }
 }

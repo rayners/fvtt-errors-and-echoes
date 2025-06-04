@@ -1,6 +1,6 @@
 /**
  * Privacy Details Dialog
- * 
+ *
  * Comprehensive privacy information dialog that shows users exactly
  * what data is collected and how it's used.
  */
@@ -37,8 +37,9 @@ interface ExamplePayload {
   };
 }
 
-export class PrivacyDetailsDialog extends foundry.applications.api.HandlebarsApplicationMixin(foundry.applications.api.ApplicationV2) {
-  
+export class PrivacyDetailsDialog extends foundry.applications.api.HandlebarsApplicationMixin(
+  foundry.applications.api.ApplicationV2
+) {
   static DEFAULT_OPTIONS = {
     id: 'errors-and-echoes-privacy-details',
     classes: ['errors-and-echoes', 'privacy-details'],
@@ -47,26 +48,26 @@ export class PrivacyDetailsDialog extends foundry.applications.api.HandlebarsApp
       frame: true,
       positioned: true,
       title: 'ERRORS_AND_ECHOES.PrivacyDetails.Title',
-      resizable: true
+      resizable: true,
     },
     position: {
       width: 800,
-      height: 600
+      height: 600,
     },
     actions: {
       enableReporting: PrivacyDetailsDialog.prototype._onEnableReporting,
       changePrivacy: PrivacyDetailsDialog.prototype._onChangePrivacy,
       disableReporting: PrivacyDetailsDialog.prototype._onDisableReporting,
       revokeConsent: PrivacyDetailsDialog.prototype._onRevokeConsent,
-      refreshExample: PrivacyDetailsDialog.prototype._onRefreshExample
-    }
+      refreshExample: PrivacyDetailsDialog.prototype._onRefreshExample,
+    },
   };
 
   static PARTS = {
     main: {
       id: 'main',
-      template: 'modules/errors-and-echoes/templates/privacy-details.hbs'
-    }
+      template: 'modules/errors-and-echoes/templates/privacy-details.hbs',
+    },
   };
 
   /**
@@ -76,9 +77,11 @@ export class PrivacyDetailsDialog extends foundry.applications.api.HandlebarsApp
     const context = await super._prepareContext(options);
     const currentPrivacyLevel = ConsentManager.getPrivacyLevel();
     const examplePayload = this.generateExamplePayload(currentPrivacyLevel);
-    
+
     return Object.assign(context, {
-      examplePayload: this.formatJsonWithSyntaxHighlighting(JSON.stringify(examplePayload, null, 2)),
+      examplePayload: this.formatJsonWithSyntaxHighlighting(
+        JSON.stringify(examplePayload, null, 2)
+      ),
       privacyLevel: currentPrivacyLevel,
       endpoints: this.getConfiguredEndpoints(),
       hasConsent: ConsentManager.hasConsent(),
@@ -87,20 +90,20 @@ export class PrivacyDetailsDialog extends foundry.applications.api.HandlebarsApp
         game.i18n.localize('ERRORS_AND_ECHOES.PrivacyDetails.MinimalItems.ErrorMessage'),
         game.i18n.localize('ERRORS_AND_ECHOES.PrivacyDetails.MinimalItems.StackTrace'),
         game.i18n.localize('ERRORS_AND_ECHOES.PrivacyDetails.MinimalItems.ErrorType'),
-        game.i18n.localize('ERRORS_AND_ECHOES.PrivacyDetails.MinimalItems.Timestamp')
+        game.i18n.localize('ERRORS_AND_ECHOES.PrivacyDetails.MinimalItems.Timestamp'),
       ],
       standardItems: [
         game.i18n.localize('ERRORS_AND_ECHOES.PrivacyDetails.StandardItems.FromMinimal'),
         game.i18n.localize('ERRORS_AND_ECHOES.PrivacyDetails.StandardItems.FoundryVersion'),
         game.i18n.localize('ERRORS_AND_ECHOES.PrivacyDetails.StandardItems.SystemInfo'),
         game.i18n.localize('ERRORS_AND_ECHOES.PrivacyDetails.StandardItems.ModuleList'),
-        game.i18n.localize('ERRORS_AND_ECHOES.PrivacyDetails.StandardItems.SessionId')
+        game.i18n.localize('ERRORS_AND_ECHOES.PrivacyDetails.StandardItems.SessionId'),
       ],
       detailedItems: [
         game.i18n.localize('ERRORS_AND_ECHOES.PrivacyDetails.DetailedItems.FromStandard'),
         game.i18n.localize('ERRORS_AND_ECHOES.PrivacyDetails.DetailedItems.BrowserInfo'),
         game.i18n.localize('ERRORS_AND_ECHOES.PrivacyDetails.DetailedItems.SceneName'),
-        game.i18n.localize('ERRORS_AND_ECHOES.PrivacyDetails.DetailedItems.ErrorContext')
+        game.i18n.localize('ERRORS_AND_ECHOES.PrivacyDetails.DetailedItems.ErrorContext'),
       ],
       notCollectedItems: [
         game.i18n.localize('ERRORS_AND_ECHOES.PrivacyDetails.NotCollectedItems.IpAddress'),
@@ -108,7 +111,7 @@ export class PrivacyDetailsDialog extends foundry.applications.api.HandlebarsApp
         game.i18n.localize('ERRORS_AND_ECHOES.PrivacyDetails.NotCollectedItems.ChatMessages'),
         game.i18n.localize('ERRORS_AND_ECHOES.PrivacyDetails.NotCollectedItems.ModuleSettings'),
         game.i18n.localize('ERRORS_AND_ECHOES.PrivacyDetails.NotCollectedItems.UserAccounts'),
-        game.i18n.localize('ERRORS_AND_ECHOES.PrivacyDetails.NotCollectedItems.PersonalInfo')
+        game.i18n.localize('ERRORS_AND_ECHOES.PrivacyDetails.NotCollectedItems.PersonalInfo'),
       ],
       dataUsageItems: [
         game.i18n.localize('ERRORS_AND_ECHOES.PrivacyDetails.DataUsageItems.HelpAuthors'),
@@ -116,14 +119,14 @@ export class PrivacyDetailsDialog extends foundry.applications.api.HandlebarsApp
         game.i18n.localize('ERRORS_AND_ECHOES.PrivacyDetails.DataUsageItems.ProvideContext'),
         game.i18n.localize('ERRORS_AND_ECHOES.PrivacyDetails.DataUsageItems.NoTracking'),
         game.i18n.localize('ERRORS_AND_ECHOES.PrivacyDetails.DataUsageItems.NoSelling'),
-        game.i18n.localize('ERRORS_AND_ECHOES.PrivacyDetails.DataUsageItems.NoIdentification')
+        game.i18n.localize('ERRORS_AND_ECHOES.PrivacyDetails.DataUsageItems.NoIdentification'),
       ],
       rightsItems: [
         game.i18n.localize('ERRORS_AND_ECHOES.PrivacyDetails.RightsItems.OptOut'),
         game.i18n.localize('ERRORS_AND_ECHOES.PrivacyDetails.RightsItems.ChangePrivacy'),
         game.i18n.localize('ERRORS_AND_ECHOES.PrivacyDetails.RightsItems.DisableEndpoints'),
-        game.i18n.localize('ERRORS_AND_ECHOES.PrivacyDetails.RightsItems.Anonymous')
-      ]
+        game.i18n.localize('ERRORS_AND_ECHOES.PrivacyDetails.RightsItems.Anonymous'),
+      ],
     });
   }
 
@@ -134,36 +137,37 @@ export class PrivacyDetailsDialog extends foundry.applications.api.HandlebarsApp
     const basePayload: ExamplePayload = {
       error: {
         message: "Cannot read property 'value' of undefined",
-        stack: "TypeError: Cannot read property 'value' of undefined\\n    at PartyActor.calculateMovement (modules/journeys-and-jamborees/dist/party-actor.js:123:45)",
-        type: "TypeError",
-        source: "javascript"
+        stack:
+          "TypeError: Cannot read property 'value' of undefined\\n    at PartyActor.calculateMovement (modules/journeys-and-jamborees/dist/party-actor.js:123:45)",
+        type: 'TypeError',
+        source: 'javascript',
       },
       attribution: {
-        moduleId: "journeys-and-jamborees",
-        confidence: "high",
-        method: "stack-trace"
+        moduleId: 'journeys-and-jamborees',
+        confidence: 'high',
+        method: 'stack-trace',
       },
       foundry: {
-        version: game.version
+        version: game.version,
       },
       meta: {
         timestamp: new Date().toISOString(),
         privacyLevel: privacyLevel,
-        reporterVersion: game.modules.get('errors-and-echoes')?.version || '1.0.0'
-      }
+        reporterVersion: game.modules.get('errors-and-echoes')?.version || '1.0.0',
+      },
     };
 
     // Add data based on privacy level
     if (privacyLevel === 'standard' || privacyLevel === 'detailed') {
       basePayload.foundry.system = {
         id: game.system.id,
-        version: game.system.version
+        version: game.system.version,
       };
 
       basePayload.foundry.modules = [
-        { id: "journeys-and-jamborees", version: "1.2.3" },
-        { id: "realms-and-reaches", version: "0.8.1" },
-        { id: "dnd5e", version: "3.1.2" }
+        { id: 'journeys-and-jamborees', version: '1.2.3' },
+        { id: 'realms-and-reaches', version: '0.8.1' },
+        { id: 'dnd5e', version: '3.1.2' },
       ];
     }
 
@@ -174,43 +178,44 @@ export class PrivacyDetailsDialog extends foundry.applications.api.HandlebarsApp
    * Format JSON string with basic syntax highlighting
    */
   private formatJsonWithSyntaxHighlighting(json: string): string {
-    return json
-      // Highlight strings (including keys)
-      .replace(/"([^"\\]*(\\.[^"\\]*)*)"/g, (match, content) => {
-        if (match.endsWith('":')) {
-          // It's a key
-          return `<span class="json-key">${match}</span>`;
-        } else {
-          // It's a string value
-          return `<span class="json-string">${match}</span>`;
-        }
-      })
-      // Highlight numbers
-      .replace(/\b(-?\d+\.?\d*)\b/g, '<span class="json-number">$1</span>')
-      // Highlight booleans and null
-      .replace(/\b(true|false|null)\b/g, '<span class="json-boolean">$1</span>')
-      // Highlight punctuation
-      .replace(/([,:])/g, '<span class="json-punctuation">$1</span>')
-      // Highlight brackets
-      .replace(/([{}[\]])/g, '<span class="json-bracket">$1</span>');
+    return (
+      json
+        // Highlight strings (including keys)
+        .replace(/"([^"\\]*(\\.[^"\\]*)*)"/g, (match, content) => {
+          if (match.endsWith('":')) {
+            // It's a key
+            return `<span class="json-key">${match}</span>`;
+          } else {
+            // It's a string value
+            return `<span class="json-string">${match}</span>`;
+          }
+        })
+        // Highlight numbers
+        .replace(/\b(-?\d+\.?\d*)\b/g, '<span class="json-number">$1</span>')
+        // Highlight booleans and null
+        .replace(/\b(true|false|null)\b/g, '<span class="json-boolean">$1</span>')
+        // Highlight punctuation
+        .replace(/([,:])/g, '<span class="json-punctuation">$1</span>')
+        // Highlight brackets
+        .replace(/([{}[\]])/g, '<span class="json-bracket">$1</span>')
+    );
   }
 
   /**
    * Get configured endpoints for display
    */
-  private getConfiguredEndpoints(): Array<{name: string, url: string, enabled: boolean}> {
+  private getConfiguredEndpoints(): Array<{ name: string; url: string; enabled: boolean }> {
     try {
       const endpoints = game.settings.get('errors-and-echoes', 'endpoints') || [];
       return endpoints.map((endpoint: any) => ({
         name: endpoint.name,
         url: endpoint.url,
-        enabled: endpoint.enabled
+        enabled: endpoint.enabled,
       }));
     } catch (error) {
       return [];
     }
   }
-
 
   /**
    * Handle enabling error reporting
@@ -233,7 +238,7 @@ export class PrivacyDetailsDialog extends foundry.applications.api.HandlebarsApp
       // Import welcome dialog for privacy level selection
       const { ErrorReporterWelcomeDialog } = await import('./welcome-dialog.js');
       const selectedLevel = await ErrorReporterWelcomeDialog.showPrivacyLevelDialog();
-      
+
       if (selectedLevel) {
         await game.settings.set('errors-and-echoes', 'privacyLevel', selectedLevel);
         this.render(true); // Refresh to show updated privacy level
@@ -264,7 +269,8 @@ export class PrivacyDetailsDialog extends foundry.applications.api.HandlebarsApp
   async _onRevokeConsent(event: Event, target: HTMLElement): Promise<void> {
     const confirmed = await Dialog.confirm({
       title: 'Revoke All Consent',
-      content: '<p>Are you sure you want to revoke all error reporting consent? This will disable all error reporting and clear your consent preferences.</p>'
+      content:
+        '<p>Are you sure you want to revoke all error reporting consent? This will disable all error reporting and clear your consent preferences.</p>',
     });
 
     if (confirmed) {

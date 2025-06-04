@@ -8,7 +8,7 @@ export default {
     file: 'dist/module.js',
     format: 'es',
     sourcemap: false,
-    inlineDynamicImports: true
+    inlineDynamicImports: true,
   },
   plugins: [
     nodeResolve(),
@@ -16,7 +16,7 @@ export default {
       tsconfig: './tsconfig.json',
       sourceMap: false,
       declaration: false,
-      declarationMap: false
+      declarationMap: false,
     }),
     copy({
       targets: [
@@ -27,9 +27,9 @@ export default {
         { src: 'examples/', dest: 'dist/' },
         { src: 'README.md', dest: 'dist/' },
         { src: 'CHANGELOG.md', dest: 'dist/' },
-        { src: 'LICENSE', dest: 'dist/' }
-      ]
-    })
+        { src: 'LICENSE', dest: 'dist/' },
+      ],
+    }),
   ],
-  external: []
+  external: [],
 };

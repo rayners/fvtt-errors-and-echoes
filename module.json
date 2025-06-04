@@ -15,12 +15,8 @@
     "verified": "13.0.0",
     "maximum": "13.999.999"
   },
-  "esmodules": [
-    "module.js"
-  ],
-  "styles": [
-    "styles/errors-and-echoes.css"
-  ],
+  "esmodules": ["module.js"],
+  "styles": ["styles/errors-and-echoes.css"],
   "languages": [
     {
       "lang": "en",
@@ -35,13 +31,7 @@
   "changelog": "https://github.com/rayners/fvtt-errors-and-echoes/blob/main/CHANGELOG.md",
   "readme": "https://github.com/rayners/fvtt-errors-and-echoes/blob/main/README.md",
   "license": "MIT",
-  "keywords": [
-    "error-reporting",
-    "debugging",
-    "module-development",
-    "privacy",
-    "anonymous"
-  ],
+  "keywords": ["error-reporting", "debugging", "module-development", "privacy", "anonymous"],
   "media": [
     {
       "type": "icon",

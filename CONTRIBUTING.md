@@ -30,22 +30,26 @@ This project follows the standard [Contributor Covenant](https://www.contributor
 ### Development Setup
 
 1. **Fork and Clone**
+
    ```bash
    git clone https://github.com/your-username/fvtt-errors-and-echoes.git
    cd fvtt-errors-and-echoes
    ```
 
 2. **Install Dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Build the Module**
+
    ```bash
    npm run build
    ```
 
 4. **Development Mode** (auto-rebuild on changes)
+
    ```bash
    npm run dev
    ```
@@ -70,12 +74,14 @@ This project uses strict TypeScript settings with the following key requirements
 ### Code Style Guidelines
 
 #### General Principles
+
 - **Privacy First**: Always consider privacy implications of any data collection or transmission
 - **Graceful Degradation**: Code must handle missing dependencies gracefully
 - **Error Handling**: Never swallow errors; always propagate or log appropriately
 - **Performance**: Minimize runtime overhead and memory usage
 
 #### Naming Conventions
+
 - **Classes**: PascalCase (`ErrorReporter`, `ConsentManager`)
 - **Functions/Methods**: camelCase (`reportError`, `getUserConsent`)
 - **Constants**: UPPER_SNAKE_CASE (`DEFAULT_PRIVACY_LEVEL`, `MAX_CONTEXT_SIZE`)
@@ -83,6 +89,7 @@ This project uses strict TypeScript settings with the following key requirements
 - **Files**: kebab-case (`error-reporter.ts`, `consent-manager.ts`)
 
 #### TypeScript Specific
+
 - Use explicit return types for all public methods
 - Prefer `interface` over `type` for object shapes
 - Use `readonly` for immutable properties
@@ -90,6 +97,7 @@ This project uses strict TypeScript settings with the following key requirements
 - Use optional chaining (`?.`) and nullish coalescing (`??`) where appropriate
 
 #### Example Code Style
+
 ```typescript
 interface ErrorReportData {
   readonly message: string;
@@ -105,10 +113,7 @@ class ErrorReporter {
     this.settings = settings;
   }
 
-  public async reportError(
-    error: Error,
-    options: ReportOptions = {}
-  ): Promise<boolean> {
+  public async reportError(error: Error, options: ReportOptions = {}): Promise<boolean> {
     if (!this.settings.hasConsent()) {
       return false;
     }
@@ -117,10 +122,7 @@ class ErrorReporter {
     return this.transmitReport(reportData);
   }
 
-  private buildReportData(
-    error: Error,
-    options: ReportOptions
-  ): ErrorReportData {
+  private buildReportData(error: Error, options: ReportOptions): ErrorReportData {
     // Implementation
   }
 }
@@ -130,14 +132,14 @@ class ErrorReporter {
 
 All public APIs must include comprehensive JSDoc:
 
-```typescript
+````typescript
 /**
  * Reports an error to configured endpoints with privacy controls.
- * 
+ *
  * @param error - The error to report
  * @param options - Configuration options for the report
  * @returns Promise resolving to true if successfully transmitted
- * 
+ *
  * @example
  * ```typescript
  * const success = await errorReporter.reportError(
@@ -150,7 +152,7 @@ public async reportError(
   error: Error,
   options: ReportOptions = {}
 ): Promise<boolean>
-```
+````
 
 ## Testing
 
@@ -163,16 +165,19 @@ Currently, the project uses manual testing procedures. Automated testing contrib
 Before submitting PRs, verify:
 
 1. **Privacy Controls**
+
    - [ ] All privacy levels work correctly
    - [ ] Consent can be granted and withdrawn
    - [ ] No PII is transmitted at any privacy level
 
 2. **Error Reporting**
+
    - [ ] Errors are correctly attributed to modules
    - [ ] Endpoints receive properly formatted data
    - [ ] Failed transmissions are handled gracefully
 
 3. **FoundryVTT Integration**
+
    - [ ] Module loads without errors in v12 and v13+
    - [ ] Settings UI functions correctly
    - [ ] No conflicts with other modules
@@ -186,6 +191,7 @@ Before submitting PRs, verify:
 ### Adding Tests
 
 Contributions of automated tests are highly encouraged. Preferred frameworks:
+
 - **Unit Tests**: Jest or Vitest
 - **Integration Tests**: Foundry-compatible test runner
 - **E2E Tests**: Playwright or similar
@@ -195,12 +201,14 @@ Contributions of automated tests are highly encouraged. Preferred frameworks:
 ### Before Submitting
 
 1. **Code Quality**
+
    - [ ] TypeScript compilation passes (`npm run typecheck`)
    - [ ] Code follows style guidelines
    - [ ] All public APIs documented with JSDoc
    - [ ] Manual testing completed
 
 2. **Privacy Review**
+
    - [ ] No new PII collection introduced
    - [ ] Privacy implications documented
    - [ ] Consent mechanisms respected
@@ -234,12 +242,14 @@ Please include:
 Please include:
 
 1. **Environment**
+
    - FoundryVTT version
    - Browser and version
    - Operating system
    - Module version
 
 2. **Steps to Reproduce**
+
    - Detailed steps to trigger the issue
    - Expected vs. actual behavior
    - Screenshots if helpful
@@ -298,11 +308,13 @@ Consider:
 ### Documentation Types
 
 1. **User Documentation** (README_FOUNDRY.md)
+
    - Installation and setup
    - Privacy controls explanation
    - Troubleshooting
 
 2. **Developer Documentation** (README.md, API-REFERENCE.md)
+
    - Integration examples
    - API reference
    - Architecture overview

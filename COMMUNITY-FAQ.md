@@ -22,6 +22,7 @@ A: Errors and Echoes is a privacy-first error reporting module for FoundryVTT th
 
 **Q: Why should I install this module?**  
 A: By installing Errors and Echoes, you help module authors improve their code by providing anonymous error reports. This leads to:
+
 - Better, more stable modules
 - Faster bug fixes
 - Improved user experience across the FoundryVTT community
@@ -32,6 +33,7 @@ A: No, Errors and Echoes is always optional. Modules should gracefully handle it
 
 **Q: Will this slow down my FoundryVTT?**  
 A: No, Errors and Echoes is designed for minimal performance impact:
+
 - <100ms additional startup time
 - <5ms processing per error
 - <1MB memory usage
@@ -46,6 +48,7 @@ A: Yes! The Privacy Details dialog shows exactly what data is collected at each 
 
 **Q: What personal information is collected?**  
 A: **None.** Errors and Echoes is designed to be anonymous-by-design:
+
 - No usernames, email addresses, or account information
 - No IP address logging (depends on endpoint configuration)
 - No unique user identifiers or tracking
@@ -55,15 +58,18 @@ A: **None.** Errors and Echoes is designed to be anonymous-by-design:
 A: This depends on your privacy level setting:
 
 **Minimal Level:**
+
 - Error message only
 - Nothing else
 
 **Standard Level:**
+
 - Error message
 - FoundryVTT version
 - List of active module names (no versions)
 
 **Detailed Level:**
+
 - Everything from Standard
 - Active module versions
 - Browser type and version (no unique identifiers)
@@ -72,6 +78,7 @@ A: This depends on your privacy level setting:
 
 **Q: Can module authors identify me personally?**  
 A: No. The system is specifically designed to prevent this:
+
 - No unique identifiers are transmitted
 - No session tracking across reports
 - No correlation between different error reports
@@ -79,6 +86,7 @@ A: No. The system is specifically designed to prevent this:
 
 **Q: What if I don't trust the privacy claims?**  
 A: You can verify them yourself:
+
 - Review the open-source code
 - Monitor network traffic in browser developer tools
 - Use the most restrictive "Minimal" privacy level
@@ -86,6 +94,7 @@ A: You can verify them yourself:
 
 **Q: Is this GDPR compliant?**  
 A: Yes, Errors and Echoes is designed for GDPR compliance:
+
 - Anonymous data collection falls outside GDPR scope
 - No personal data is processed
 - Users have full control over participation
@@ -95,6 +104,7 @@ A: Yes, Errors and Echoes is designed for GDPR compliance:
 
 **Q: How long is my data kept?**  
 A: This depends on the endpoint configuration chosen by each module author. Common patterns:
+
 - **Temporary storage**: 30-90 days for active debugging
 - **Aggregated statistics**: Indefinitely in anonymous form
 - **Individual reports**: Usually deleted after issue resolution
@@ -104,6 +114,7 @@ A: Only the module authors you've specifically configured endpoints for. Reports
 
 **Q: Can I delete my data?**  
 A: Since no personal identifiers are collected, there's no way to identify which reports came from you. However, you can:
+
 - Disable error reporting to stop future data collection
 - Clear your local settings to reset all preferences
 - Contact module authors directly about their data retention
@@ -112,6 +123,7 @@ A: Since no personal identifiers are collected, there's no way to identify which
 
 **Q: How do I opt out of error reporting?**  
 A: You have several options:
+
 1. **Complete opt-out**: Disable error reporting in module settings
 2. **Selective opt-out**: Remove endpoint configurations for specific modules
 3. **Minimal data**: Use "Minimal" privacy level
@@ -129,6 +141,7 @@ A: Yes, you can change your privacy level and consent settings at any time in th
 
 **Q: How does error attribution work?**  
 A: Errors and Echoes uses several techniques to determine which module caused an error:
+
 - **Stack trace analysis**: Examining file paths in error stack traces
 - **Context detection**: Looking at what code was executing when the error occurred
 - **Confidence scoring**: Rating how certain the attribution is (0-1 scale)
@@ -136,6 +149,7 @@ A: Errors and Echoes uses several techniques to determine which module caused an
 
 **Q: What types of errors are reported?**  
 A: All JavaScript errors that occur in FoundryVTT:
+
 - Unhandled exceptions
 - Promise rejections
 - Runtime errors
@@ -145,6 +159,7 @@ A: All JavaScript errors that occur in FoundryVTT:
 
 **Q: How accurate is module attribution?**  
 A: Attribution accuracy varies by scenario:
+
 - **High confidence (>0.8)**: Errors clearly from specific module code
 - **Medium confidence (0.5-0.8)**: Likely from specific module with some uncertainty
 - **Low confidence (<0.5)**: Could be from multiple sources, marked as "unknown"
@@ -169,6 +184,7 @@ A: Yes, Errors and Echoes works with any FoundryVTT game system. It operates at 
 
 **Q: Should I require users to install Errors and Echoes?**  
 A: No, never require it. Always implement graceful degradation:
+
 ```javascript
 // Good: Optional integration
 const errorReporter = game.modules.get('errors-and-echoes')?.api;
@@ -181,6 +197,7 @@ if (errorReporter) {
 
 **Q: How do I set up error reporting for my module?**  
 A: Follow these steps:
+
 1. Set up an endpoint (see [Sentry-Relay Integration Guide](SENTRY-RELAY-INTEGRATION.md))
 2. Add endpoint configuration to your module
 3. Optionally integrate the API for custom error reporting
@@ -188,6 +205,7 @@ A: Follow these steps:
 
 **Q: What endpoint should I use?**  
 A: Common options:
+
 - **Sentry**: Professional error tracking service
 - **Discord Webhooks**: Simple integration for small projects
 - **Custom Server**: Full control over data handling
@@ -195,6 +213,7 @@ A: Common options:
 
 **Q: How do I handle user privacy concerns?**  
 A: Be transparent about error reporting:
+
 - Document that your module uses Errors and Echoes
 - Explain what data you collect and how you use it
 - Provide opt-out instructions
@@ -217,6 +236,7 @@ A: Simply disable error reporting in the Errors and Echoes settings. This will p
 
 **Q: The module isn't loading. What should I check?**  
 A: Common solutions:
+
 1. Verify FoundryVTT version is 12.0.0 or higher
 2. Check that all module files are properly installed
 3. Clear browser cache and restart FoundryVTT
@@ -224,6 +244,7 @@ A: Common solutions:
 
 **Q: Errors aren't being reported. Why not?**  
 A: Check these common causes:
+
 1. Error reporting is disabled in settings
 2. No endpoints are configured
 3. Privacy level is set too low for the type of error
@@ -232,6 +253,7 @@ A: Check these common causes:
 
 **Q: I'm getting CORS errors. How do I fix this?**  
 A: CORS errors occur when browsers block cross-origin requests:
+
 1. Ensure your endpoint supports CORS
 2. Use HTTPS for all endpoints
 3. Consider using sentry-relay for CORS handling
@@ -239,6 +261,7 @@ A: CORS errors occur when browsers block cross-origin requests:
 
 **Q: The settings page won't open. What's wrong?**  
 A: Try these solutions:
+
 1. Hard refresh the browser (Ctrl+F5 or Cmd+Shift+R)
 2. Check browser console for JavaScript errors
 3. Disable other modules temporarily to check for conflicts
@@ -248,6 +271,7 @@ A: Try these solutions:
 
 **Q: FoundryVTT is running slowly after installing this module. Why?**  
 A: While Errors and Echoes is designed for minimal impact, performance issues can occur:
+
 1. Check if you have excessive errors from other modules
 2. Lower the privacy level to reduce processing overhead
 3. Temporarily disable error reporting to confirm the cause
@@ -255,6 +279,7 @@ A: While Errors and Echoes is designed for minimal impact, performance issues ca
 
 **Q: How can I minimize performance impact?**  
 A: Use these strategies:
+
 - Set privacy level to "Minimal" for lowest overhead
 - Regularly update modules to reduce error frequency
 - Monitor browser console for excessive error patterns
@@ -264,6 +289,7 @@ A: Use these strategies:
 
 **Q: Errors are being attributed to the wrong module. How do I fix this?**  
 A: Attribution can be challenging in complex scenarios:
+
 1. This is often expected behavior for edge cases
 2. Check if multiple modules interact in the error scenario
 3. Look for confidence scores in error reports
@@ -271,6 +297,7 @@ A: Attribution can be challenging in complex scenarios:
 
 **Q: All my errors show as "unknown source." Why?**  
 A: Common causes:
+
 1. Errors from browser extensions or external scripts
 2. Minified code without source maps
 3. Very generic errors without clear stack traces
@@ -281,12 +308,14 @@ A: Common causes:
 ### Primary Support
 
 **GitHub Issues** (Recommended)
+
 - **URL**: https://github.com/rayners/fvtt-errors-and-echoes/issues
 - **Best for**: Bug reports, feature requests, technical issues
 - **Response time**: Usually within 24-48 hours
 - **Requirements**: GitHub account
 
 **GitHub Discussions**
+
 - **URL**: https://github.com/rayners/fvtt-errors-and-echoes/discussions
 - **Best for**: Questions, general discussion, sharing experiences
 - **Response time**: Community-driven, variable
@@ -295,12 +324,14 @@ A: Common causes:
 ### Secondary Support
 
 **Discord**
+
 - **Contact**: @rayners78
 - **Best for**: Urgent security issues, real-time troubleshooting
 - **Response time**: Variable, best effort
 - **Note**: For urgent issues only, prefer GitHub for tracking
 
 **FoundryVTT Community**
+
 - **Discord**: #module-development channel
 - **Reddit**: r/FoundryVTT
 - **Best for**: General FoundryVTT questions, community discussion
@@ -308,6 +339,7 @@ A: Common causes:
 ### Self-Service Resources
 
 **Documentation**
+
 - [User Guide](README_FOUNDRY.md) - Complete user instructions
 - [Developer Guide](README.md) - Integration and development
 - [API Reference](API-REFERENCE.md) - Complete API documentation
@@ -319,16 +351,19 @@ A: Common causes:
 ### Code of Conduct
 
 **Be Respectful**
+
 - Treat all community members with respect and courtesy
 - Avoid personal attacks, harassment, or discriminatory language
 - Focus on constructive feedback and solutions
 
 **Be Helpful**
+
 - Share knowledge and experiences with others
 - Provide clear, detailed information when reporting issues
 - Help newcomers understand the module and privacy concepts
 
 **Be Privacy-Conscious**
+
 - Never share personally identifiable information in issues or discussions
 - Respect others' privacy concerns and choices
 - Sanitize logs and error reports before sharing
@@ -336,12 +371,14 @@ A: Common causes:
 ### Issue Reporting Guidelines
 
 **Before Reporting**
+
 1. Search existing issues to avoid duplicates
 2. Test in isolation to confirm the issue
 3. Gather all relevant information (versions, browsers, steps to reproduce)
 4. Check documentation for known solutions
 
 **When Reporting**
+
 - Use clear, descriptive titles
 - Provide complete environment information
 - Include steps to reproduce the issue
@@ -349,6 +386,7 @@ A: Common causes:
 - Be patient and respectful in all interactions
 
 **Security Issues**
+
 - **DO NOT** report security vulnerabilities in public issues
 - Follow the [Security Policy](SECURITY.md) for responsible disclosure
 - Contact @rayners78 directly for urgent security matters
@@ -356,12 +394,14 @@ A: Common causes:
 ### Discussion Guidelines
 
 **Technical Discussions**
+
 - Stay on topic and relevant to Errors and Echoes
 - Provide context and background for your questions
 - Share solutions and workarounds that helped you
 - Use appropriate technical language while remaining accessible
 
 **Privacy Discussions**
+
 - Respect different comfort levels with data sharing
 - Provide factual information about privacy implications
 - Avoid fear-mongering or exaggerated claims
@@ -372,18 +412,21 @@ A: Common causes:
 ### Ways to Help
 
 **For Users**
+
 - Report bugs and provide detailed feedback
 - Help answer questions in discussions
 - Share your experiences and use cases
 - Test new releases and provide feedback
 
 **For Developers**
+
 - Contribute code improvements via pull requests
 - Add or improve documentation
 - Help with testing across different environments
 - Share integration examples and best practices
 
 **For Module Authors**
+
 - Integrate Errors and Echoes responsibly
 - Document your integration clearly
 - Respect user privacy choices
@@ -393,12 +436,14 @@ A: Common causes:
 
 **Contributors**
 All contributors are recognized in:
+
 - CHANGELOG.md for their specific contributions
 - GitHub contributor statistics
 - Community discussions and documentation
 
 **Community Members**
 Active community members who help others are highlighted in:
+
 - GitHub Discussions
 - Community documentation
 - Annual community recognition
@@ -406,10 +451,12 @@ Active community members who help others are highlighted in:
 ### Translation and Localization
 
 **Current Status**
+
 - English: Complete
 - Other languages: Community contributions welcome
 
 **How to Contribute Translations**
+
 1. Check existing language files in `languages/`
 2. Create new language file based on `en.json`
 3. Translate all strings while maintaining technical accuracy
@@ -417,6 +464,7 @@ Active community members who help others are highlighted in:
 5. Maintain translations for future updates
 
 **Translation Guidelines**
+
 - Preserve technical terms and concepts
 - Maintain privacy terminology accuracy
 - Consider cultural privacy expectations

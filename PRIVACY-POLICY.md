@@ -8,6 +8,7 @@
 This privacy policy explains how Errors and Echoes ("the module") collects, uses, and protects information when you use our error reporting functionality. Your privacy is important to us, and this module is designed with privacy-by-design principles.
 
 **Key Points:**
+
 - We never collect personally identifiable information
 - All data collection is anonymous and user-controlled
 - You can opt-out or change settings at any time
@@ -22,12 +23,14 @@ This privacy policy explains how Errors and Echoes ("the module") collects, uses
 The information collected depends on your chosen privacy level:
 
 #### Minimal Level
+
 - Error message text
 - Error type (TypeError, ReferenceError, etc.)
 - Stack trace showing where the error occurred
 - Timestamp when the error occurred
 
 #### Standard Level (Default)
+
 - Everything from Minimal level
 - Foundry VTT version number
 - Game system name and version
@@ -35,6 +38,7 @@ The information collected depends on your chosen privacy level:
 - Anonymous session ID (rotates daily)
 
 #### Detailed Level
+
 - Everything from Standard level
 - Browser name and version (e.g., "Chrome/120")
 - Current scene name (if applicable)
@@ -43,6 +47,7 @@ The information collected depends on your chosen privacy level:
 ### What We Never Collect
 
 **We guarantee we never collect:**
+
 - Your IP address or geographic location
 - Personal information or user accounts
 - World content, actors, items, or scenes
@@ -58,6 +63,7 @@ The information collected depends on your chosen privacy level:
 ### Purposes
 
 Error information is used exclusively for:
+
 - **Bug identification:** Helping module authors identify software bugs
 - **Quality improvement:** Improving module stability and compatibility
 - **Debugging context:** Providing technical context for error resolution
@@ -65,6 +71,7 @@ Error information is used exclusively for:
 ### What We Don't Do
 
 We never use error information for:
+
 - User tracking or profiling
 - Marketing or advertising
 - Data selling or monetization
@@ -78,6 +85,7 @@ We never use error information for:
 ### Who Receives Data
 
 Error reports are sent only to:
+
 - **Module authors:** Only for their own modules, and only if you've consented
 - **Configured endpoints:** Only endpoints you've explicitly enabled
 
@@ -90,6 +98,7 @@ Error reports are sent only to:
 ### Third-Party Services
 
 Some module authors may use third-party services (like Sentry) to process error reports. Each author is responsible for:
+
 - Disclosing their data handling practices
 - Complying with applicable privacy laws
 - Providing their own privacy policies
@@ -129,12 +138,14 @@ Some module authors may use third-party services (like Sentry) to process error 
 ### Author Retention
 
 Each module author who receives error reports is responsible for:
+
 - Setting appropriate data retention periods
 - Implementing data deletion procedures
 - Complying with applicable data protection laws
 - Documenting their retention practices
 
 **Recommended practices for authors:**
+
 - Maximum 12 months retention for debugging purposes
 - Automatic deletion of old error reports
 - No correlation of errors across extended time periods
@@ -148,16 +159,19 @@ Each module author who receives error reports is responsible for:
 You have complete control over error reporting:
 
 #### Enable/Disable
+
 - **Master switch:** Turn all error reporting on or off
 - **Per-author control:** Enable/disable specific module authors
 - **Real-time changes:** Settings take effect immediately
 
 #### Privacy Levels
+
 - **Choose your level:** Select minimal, standard, or detailed data sharing
 - **Change anytime:** Modify privacy level without losing other settings
 - **Preview data:** See example reports before enabling
 
 #### Transparency Features
+
 - **Test connections:** Send test reports to verify what data is shared
 - **Example reports:** View sample data for your current privacy level
 - **Clear documentation:** Comprehensive explanations of all data collection
@@ -165,16 +179,19 @@ You have complete control over error reporting:
 ### Your Rights
 
 #### Access and Information
+
 - **View settings:** See all current privacy and endpoint settings
 - **Example data:** Preview exactly what data would be sent
 - **Documentation:** Access comprehensive privacy information
 
 #### Control and Deletion
+
 - **Opt-out anytime:** Disable error reporting with one click
 - **Delete settings:** Uninstall module to remove all local preferences
 - **Stop collection:** Disable to prevent any new data collection
 
 #### Contact and Support
+
 - **Ask questions:** Contact privacy@rayners.dev for privacy-related inquiries
 - **Report concerns:** Report privacy issues through established channels
 - **Get help:** Comprehensive support for privacy-related questions
@@ -210,6 +227,7 @@ We strive to comply with privacy laws in all jurisdictions where the module is u
 ### Notification of Changes
 
 We will notify users of material changes to this privacy policy through:
+
 - Updates to this document with new effective dates
 - Notices in module update announcements
 - New consent requests if data collection practices change materially
@@ -223,6 +241,7 @@ We will notify users of material changes to this privacy policy through:
 ### User Response to Changes
 
 If we make material changes that affect data collection:
+
 - Existing users will be asked to review and consent to new practices
 - Users can opt-out if they disagree with changes
 - Previous consent will not be assumed for new data collection practices
@@ -257,6 +276,7 @@ If we make material changes that affect data collection:
 ### Governing Law
 
 This privacy policy is governed by:
+
 - **US Federal Law:** Applicable federal privacy regulations
 - **Maryland State Law:** State privacy laws where module developer is located
 - **International Law:** GDPR for EU users, other applicable local laws

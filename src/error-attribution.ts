@@ -1,6 +1,6 @@
 /**
  * Error Attribution System
- * 
+ *
  * Determines which module caused an error using various detection methods.
  * Uses stack trace analysis, hook context, pattern matching, and module registry.
  */
@@ -27,7 +27,6 @@ interface ModulePattern {
 }
 
 export class ErrorAttribution {
-  
   // Known patterns for common modules (can be extended)
   private static modulePatterns: ModulePattern[] = [
     { pattern: /PartyActor|PartySheet|PartyModel/, module: 'journeys-and-jamborees' },
@@ -44,11 +43,11 @@ export class ErrorAttribution {
     // Method 1: Stack trace analysis (highest confidence)
     const moduleFromStack = this.parseStackTrace(error.stack);
     if (moduleFromStack) {
-      return { 
-        moduleId: moduleFromStack, 
+      return {
+        moduleId: moduleFromStack,
         confidence: 'high',
         method: 'stack-trace',
-        source: context.source
+        source: context.source,
       };
     }
 
@@ -56,11 +55,11 @@ export class ErrorAttribution {
     if (context.source === 'hook') {
       const moduleFromHook = this.getModuleFromHookContext(context.hookName);
       if (moduleFromHook) {
-        return { 
-          moduleId: moduleFromHook, 
+        return {
+          moduleId: moduleFromHook,
           confidence: 'medium',
           method: 'hook-context',
-          source: context.source
+          source: context.source,
         };
       }
     }
@@ -68,42 +67,42 @@ export class ErrorAttribution {
     // Method 2.5: Registry-based context analysis (medium confidence)
     const moduleFromRegistry = this.getModuleFromRegistry(error, context);
     if (moduleFromRegistry) {
-      return { 
-        moduleId: moduleFromRegistry, 
+      return {
+        moduleId: moduleFromRegistry,
         confidence: 'medium',
         method: 'registry-context',
-        source: context.source
+        source: context.source,
       };
     }
 
     // Method 3: Pattern matching (low confidence)
     const moduleFromPattern = this.matchKnownPatterns(error);
     if (moduleFromPattern) {
-      return { 
-        moduleId: moduleFromPattern, 
+      return {
+        moduleId: moduleFromPattern,
         confidence: 'low',
         method: 'pattern-match',
-        source: context.source
+        source: context.source,
       };
     }
 
     // Method 4: Current active module detection
     const moduleFromCallStack = this.getActiveModuleFromCallStack();
     if (moduleFromCallStack) {
-      return { 
-        moduleId: moduleFromCallStack, 
+      return {
+        moduleId: moduleFromCallStack,
         confidence: 'medium',
         method: 'stack-trace',
-        source: context.source
+        source: context.source,
       };
     }
 
     // Default: unknown module
-    return { 
-      moduleId: 'unknown', 
+    return {
+      moduleId: 'unknown',
       confidence: 'none',
       method: 'unknown',
-      source: context.source
+      source: context.source,
     };
   }
 
@@ -157,7 +156,7 @@ export class ErrorAttribution {
    */
   private static matchKnownPatterns(error: Error): string | null {
     const searchText = `${error.stack || ''} ${error.message || ''}`;
-    
+
     for (const { pattern, module } of this.modulePatterns) {
       if (pattern.test(searchText)) {
         return module;
@@ -173,7 +172,7 @@ export class ErrorAttribution {
   private static getModuleFromRegistry(error: Error, _context: ErrorContext): string | null {
     // Get all registered modules and analyze which one might be responsible
     const registeredModules = ModuleRegistry.getAllRegisteredModules();
-    
+
     if (registeredModules.length === 0) {
       return null;
     }
@@ -196,7 +195,7 @@ export class ErrorAttribution {
       if (ModuleRegistry.shouldFilterError(registeredModule.moduleId, error)) {
         continue;
       }
-      
+
       // For now, we don't have a way to positively identify which module caused the error
       // without stack trace information, so we fall back to other methods
     }
@@ -228,19 +227,22 @@ export class ErrorAttribution {
   /**
    * Enhanced attribution with file and line information
    */
-  static getDetailedAttribution(error: Error, context: ErrorContext): Attribution & {
+  static getDetailedAttribution(
+    error: Error,
+    context: ErrorContext
+  ): Attribution & {
     fileName?: string;
     lineNumber?: number;
     columnNumber?: number;
   } {
     const basicAttribution = this.attributeToModule(error, context);
-    
+
     // Extract file and line information from stack trace
     const fileInfo = this.extractFileInfo(error.stack);
-    
+
     return {
       ...basicAttribution,
-      ...fileInfo
+      ...fileInfo,
     };
   }
 
@@ -264,7 +266,7 @@ export class ErrorAttribution {
           return {
             fileName: match[1],
             lineNumber: parseInt(match[2], 10),
-            columnNumber: parseInt(match[3], 10)
+            columnNumber: parseInt(match[3], 10),
           };
         }
       }

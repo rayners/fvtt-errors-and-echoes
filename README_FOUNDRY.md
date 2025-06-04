@@ -9,6 +9,7 @@
 Errors and Echoes is a privacy-focused error reporting module that helps Foundry VTT module authors identify and fix bugs faster. When enabled, it anonymously reports JavaScript errors to module authors, providing valuable debugging information while protecting your privacy.
 
 **Key Features:**
+
 - ✅ **Anonymous by design** - No personally identifiable information is ever collected
 - ✅ **User-controlled privacy levels** - You choose what information to share
 - ✅ **Transparent reporting** - See exactly what data would be sent
@@ -26,11 +27,13 @@ Errors and Echoes is a privacy-focused error reporting module that helps Foundry
 You control what information is included in error reports through three privacy levels:
 
 #### 🔒 Minimal Level
+
 - ✅ Error message and stack trace
 - ✅ Error type (TypeError, ReferenceError, etc.)
 - ✅ Timestamp when error occurred
 
 #### 🔒 Standard Level (Recommended)
+
 - ✅ Everything from Minimal level
 - ✅ Foundry VTT version number
 - ✅ Game system name and version
@@ -38,6 +41,7 @@ You control what information is included in error reports through three privacy 
 - ✅ Anonymous session ID (rotates daily)
 
 #### 🔒 Detailed Level
+
 - ✅ Everything from Standard level
 - ✅ Browser name and version (e.g., "Chrome/120")
 - ✅ Current scene name (if applicable)
@@ -63,6 +67,7 @@ Error reports are used exclusively to:
 - ✅ Provide context for debugging complex issues
 
 **Data is never used for:**
+
 - ❌ User tracking or profiling
 - ❌ Marketing or advertising
 - ❌ Data selling or sharing with third parties
@@ -73,12 +78,14 @@ Error reports are used exclusively to:
 ## Installation
 
 1. **Install via Foundry VTT:**
+
    - Open the Add-on Modules tab in your Foundry setup
    - Click "Install Module"
    - Search for "Errors and Echoes"
    - Click Install
 
 2. **Enable the Module:**
+
    - In your world, go to Settings → Manage Modules
    - Enable "Errors and Echoes"
    - Save Module Settings
@@ -95,6 +102,7 @@ Error reports are used exclusively to:
 ### Initial Setup
 
 When you first enable the module, you'll see a welcome dialog that explains:
+
 - What information is collected at each privacy level
 - How your data is used and protected
 - Your rights and controls
@@ -119,6 +127,7 @@ Access privacy settings through **Settings → Module Settings → Errors and Ec
 4. Test connections before saving
 
 **Default Configuration:**
+
 - Pre-configured to report errors from Rayners' modules to `https://errors.rayners.dev`
 - Only errors from modules by that author are sent to their endpoint
 - You can add, remove, or disable any endpoint
@@ -130,16 +139,19 @@ Access privacy settings through **Settings → Module Settings → Errors and Ec
 ### When to Use Each Level
 
 **Minimal Level** - Choose if you:
+
 - Want maximum privacy
 - Are concerned about information sharing
 - Only want to help with basic error identification
 
 **Standard Level** - Choose if you:
+
 - Want to help authors fix bugs effectively (recommended)
 - Are comfortable sharing technical system information
 - Want to balance privacy with usefulness
 
 **Detailed Level** - Choose if you:
+
 - Want to provide maximum debugging help
 - Are comfortable with additional browser context
 - Help test beta versions or complex modules
@@ -147,6 +159,7 @@ Access privacy settings through **Settings → Module Settings → Errors and Ec
 ### Example Reports
 
 #### Minimal Level Report
+
 ```json
 {
   "error": "Cannot read property 'update' of undefined",
@@ -157,6 +170,7 @@ Access privacy settings through **Settings → Module Settings → Errors and Ec
 ```
 
 #### Standard Level Report
+
 ```json
 {
   "error": "Cannot read property 'update' of undefined",
@@ -182,11 +196,13 @@ Access privacy settings through **Settings → Module Settings → Errors and Ec
 ### Verify Your Privacy Settings
 
 1. **Check Current Settings:**
+
    - Go to Settings → Module Settings → Errors and Echoes
    - Verify your privacy level is correct
    - Confirm error reporting is enabled only if desired
 
 2. **Test Error Reporting:**
+
    - In the Configure Endpoints dialog, use the "Test" button
    - This sends a test report using your current privacy settings
    - Verify the test succeeds only if you want it to
@@ -199,6 +215,7 @@ Access privacy settings through **Settings → Module Settings → Errors and Ec
 ### Connection Testing
 
 The module includes built-in endpoint testing:
+
 - **Green checkmark:** Endpoint is working correctly
 - **Red X:** Connection failed or endpoint unavailable
 - **Testing...:** Connection test in progress
@@ -210,6 +227,7 @@ The module includes built-in endpoint testing:
 ### Error Reporting Not Working
 
 **Check these settings:**
+
 1. Module is enabled in Manage Modules
 2. "Enable Error Reporting" is checked in module settings
 3. At least one endpoint is configured and enabled
@@ -218,6 +236,7 @@ The module includes built-in endpoint testing:
 ### Privacy Concerns
 
 **If you're unsure about privacy:**
+
 1. Start with "Minimal" privacy level
 2. Review the Privacy Details dialog carefully
 3. Test with a single trusted endpoint first
@@ -226,6 +245,7 @@ The module includes built-in endpoint testing:
 ### Module Conflicts
 
 **If experiencing issues:**
+
 1. Check browser console for error messages
 2. Temporarily disable other modules to isolate conflicts
 3. Test with a fresh world to rule out world-specific issues
@@ -234,6 +254,7 @@ The module includes built-in endpoint testing:
 ### Endpoint Connection Problems
 
 **If endpoint tests fail:**
+
 1. Verify the endpoint URL is correct and starts with `https://`
 2. Check that the endpoint service is online
 3. Ensure your network/firewall allows HTTPS connections
@@ -260,6 +281,7 @@ The module includes built-in endpoint testing:
 ### Contact Information
 
 For privacy-related questions or concerns:
+
 - **General Issues:** [GitHub Issues](https://github.com/rayners/fvtt-errors-and-echoes/issues)
 - **Privacy Concerns:** privacy@rayners.dev
 - **Security Issues:** security@rayners.dev
@@ -278,6 +300,7 @@ By enabling error reporting, you're helping:
 ### For Module Authors
 
 If you're a module author interested in receiving error reports:
+
 - Review the [Developer Documentation](README.md)
 - Set up a compatible error reporting endpoint
 - Follow privacy best practices for handling user data

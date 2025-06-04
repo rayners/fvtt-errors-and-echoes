@@ -1,6 +1,6 @@
 /**
  * Error Reporter System
- * 
+ *
  * Handles sending error reports to configured endpoints with rate limiting,
  * deduplication, and privacy controls.
  */
@@ -19,11 +19,11 @@ interface EndpointConfig {
 
 interface ErrorReportResponse {
   success: boolean;
-  eventId?: string;          // Unique identifier for this error report
-  message?: string;          // Human-readable status message
-  timestamp?: string;        // ISO timestamp when the error was processed
-  endpoint?: string;         // Endpoint that processed the request
-  retryAfter?: number;       // Seconds to wait before retrying (for rate limiting)
+  eventId?: string; // Unique identifier for this error report
+  message?: string; // Human-readable status message
+  timestamp?: string; // ISO timestamp when the error was processed
+  endpoint?: string; // Endpoint that processed the request
+  retryAfter?: number; // Seconds to wait before retrying (for rate limiting)
 }
 
 interface ReportPayload {
@@ -75,9 +75,9 @@ export class ErrorReporter {
    * Send an error report to the specified endpoint
    */
   static async sendReport(
-    error: Error, 
-    attribution: Attribution, 
-    endpoint: EndpointConfig, 
+    error: Error,
+    attribution: Attribution,
+    endpoint: EndpointConfig,
     moduleContext: Record<string, any> = {}
   ): Promise<void> {
     // Check rate limiting
@@ -87,7 +87,9 @@ export class ErrorReporter {
 
     // Check module-specific error filtering
     if (ModuleRegistry.shouldFilterError(attribution.moduleId, error)) {
-      console.log(`Errors and Echoes: Error filtered by module '${attribution.moduleId}' error filter`);
+      console.log(
+        `Errors and Echoes: Error filtered by module '${attribution.moduleId}' error filter`
+      );
       return;
     }
 
@@ -105,7 +107,7 @@ export class ErrorReporter {
 
     const privacyLevel = ConsentManager.getPrivacyLevel();
     const payload = this.buildPayload(error, attribution, privacyLevel, enhancedContext);
-    
+
     try {
       const response = await fetch(endpoint.url, {
         method: 'POST',
@@ -114,22 +116,22 @@ export class ErrorReporter {
           'X-Foundry-Version': game.version,
           'X-Module-Version': this.getModuleVersion(),
           'X-Privacy-Level': privacyLevel,
-          'User-Agent': this.getUserAgent()
+          'User-Agent': this.getUserAgent(),
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
       });
 
       // Parse standard response format
       const reportResponse: ErrorReportResponse = await response.json();
 
       if (!reportResponse.success) {
-        const errorMsg = reportResponse.message || `HTTP ${response.status}: ${response.statusText}`;
+        const errorMsg =
+          reportResponse.message || `HTTP ${response.status}: ${response.statusText}`;
         throw new Error(errorMsg);
       }
 
       // Track successful report for rate limiting and user transparency
       this.recordSuccessfulReport(attribution.moduleId, error, reportResponse.eventId);
-
     } catch (reportingError) {
       console.warn('Errors and Echoes: Failed to send error report:', reportingError);
       // CRITICAL: NEVER re-throw - don't let reporting errors affect the game
@@ -140,8 +142,8 @@ export class ErrorReporter {
    * Build the payload for error reporting based on privacy level
    */
   private static buildPayload(
-    error: Error, 
-    attribution: Attribution, 
+    error: Error,
+    attribution: Attribution,
     privacyLevel: PrivacyLevel,
     moduleContext: Record<string, any>
   ): ReportPayload {
@@ -151,30 +153,30 @@ export class ErrorReporter {
         message: error.message,
         stack: error.stack,
         type: error.constructor.name,
-        source: attribution.source
+        source: attribution.source,
       },
-      
+
       // Always included - attribution
       attribution,
-      
+
       // Always included - basic Foundry context
       foundry: {
-        version: game.version
+        version: game.version,
       },
-      
+
       // Always included - timestamp and privacy info
       meta: {
         timestamp: new Date().toISOString(),
         privacyLevel,
-        reporterVersion: this.getModuleVersion()
-      }
+        reporterVersion: this.getModuleVersion(),
+      },
     };
 
     // Add more context based on privacy level
     if (privacyLevel === 'standard' || privacyLevel === 'detailed') {
       payload.foundry.system = {
         id: game.system.id,
-        version: game.system.version
+        version: game.system.version,
       };
 
       payload.foundry.modules = game.modules.contents
@@ -182,7 +184,7 @@ export class ErrorReporter {
         .map(m => ({ id: m.id, version: m.version }));
 
       payload.client = {
-        sessionId: this.getAnonymousSessionId()
+        sessionId: this.getAnonymousSessionId(),
       };
     }
 
@@ -191,7 +193,7 @@ export class ErrorReporter {
       if (payload.client) {
         payload.client.browser = this.getBrowserInfo();
       }
-      
+
       // Add current scene name if available
       if (canvas.scene) {
         payload.foundry.scene = canvas.scene.name;
@@ -213,18 +215,21 @@ export class ErrorReporter {
     // Deduplication - don't send identical errors repeatedly
     const errorKey = `${attribution.moduleId}:${error.message}:${this.getStackSignature(error.stack)}`;
     const lastSent = this.recentReports.get(errorKey);
-    
-    if (lastSent && (Date.now() - lastSent) < this.deduplicationWindow) {
+
+    if (lastSent && Date.now() - lastSent < this.deduplicationWindow) {
       return false;
     }
 
     // Rate limiting - max reports per hour
     const hourAgo = Date.now() - 3600000;
-    const recentCount = Array.from(this.recentReports.values())
-      .filter(timestamp => timestamp > hourAgo).length;
-    
+    const recentCount = Array.from(this.recentReports.values()).filter(
+      timestamp => timestamp > hourAgo
+    ).length;
+
     if (recentCount >= this.maxReportsPerHour) {
-      console.warn(`Errors and Echoes: Rate limit reached (${this.maxReportsPerHour} reports/hour)`);
+      console.warn(
+        `Errors and Echoes: Rate limit reached (${this.maxReportsPerHour} reports/hour)`
+      );
       return false;
     }
 
@@ -245,7 +250,9 @@ export class ErrorReporter {
 
     // Always show console feedback with event ID for user reference
     if (eventId) {
-      console.log(`🚨 Error reported to monitoring service | Module: ${moduleId} | Event ID: ${eventId}`);
+      console.log(
+        `🚨 Error reported to monitoring service | Module: ${moduleId} | Event ID: ${eventId}`
+      );
       console.log(`   Users can reference this ID when reporting issues or requesting support.`);
     } else {
       console.log(`🚨 Error reported to monitoring service | Module: ${moduleId}`);
@@ -266,7 +273,7 @@ export class ErrorReporter {
    */
   private static cleanupOldReports(): void {
     const hourAgo = Date.now() - 3600000;
-    
+
     for (const [key, timestamp] of this.recentReports.entries()) {
       if (timestamp < hourAgo) {
         this.recentReports.delete(key);
@@ -279,7 +286,7 @@ export class ErrorReporter {
    */
   static getStackSignature(stack?: string): string {
     if (!stack) return 'no-stack';
-    
+
     try {
       // Use first 100 characters of stack trace as signature
       return btoa(stack.substring(0, 100)).substring(0, 10);
@@ -294,10 +301,10 @@ export class ErrorReporter {
   private static getAnonymousSessionId(): string {
     const today = new Date().toDateString();
     const storageKey = 'errors-and-echoes-session';
-    
+
     try {
       const stored = localStorage.getItem(storageKey);
-      
+
       if (stored) {
         const [date, id] = stored.split('|');
         if (date === today) {
@@ -329,28 +336,28 @@ export class ErrorReporter {
   private static getBrowserInfo(): string {
     try {
       const userAgent = navigator.userAgent;
-      
+
       // Extract just browser name and version
       if (userAgent.includes('Chrome/')) {
         const match = userAgent.match(/Chrome\/(\d+)/);
         return match ? `Chrome/${match[1]}` : 'Chrome';
       }
-      
+
       if (userAgent.includes('Firefox/')) {
         const match = userAgent.match(/Firefox\/(\d+)/);
         return match ? `Firefox/${match[1]}` : 'Firefox';
       }
-      
+
       if (userAgent.includes('Safari/') && !userAgent.includes('Chrome')) {
         const match = userAgent.match(/Version\/(\d+)/);
         return match ? `Safari/${match[1]}` : 'Safari';
       }
-      
+
       if (userAgent.includes('Edge/')) {
         const match = userAgent.match(/Edge\/(\d+)/);
         return match ? `Edge/${match[1]}` : 'Edge';
       }
-      
+
       return 'Unknown';
     } catch (error) {
       return 'Unknown';
@@ -371,13 +378,14 @@ export class ErrorReporter {
    */
   static getReportStats(): ReportStats {
     const hourAgo = Date.now() - 3600000;
-    const recentCount = Array.from(this.recentReports.values())
-      .filter(timestamp => timestamp > hourAgo).length;
+    const recentCount = Array.from(this.recentReports.values()).filter(
+      timestamp => timestamp > hourAgo
+    ).length;
 
     return {
       totalReports: this.reportCount,
       recentReports: recentCount,
-      lastReportTime: this.lastReportTime || undefined
+      lastReportTime: this.lastReportTime || undefined,
     };
   }
 
@@ -397,27 +405,27 @@ export class ErrorReporter {
     try {
       // Create test URL by replacing '/report/' with '/test/'
       const testUrl = url.replace('/report/', '/test/');
-      
+
       // Create abort controller for timeout
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
-      
+
       try {
         const response = await fetch(testUrl, {
           method: 'POST',
-          headers: { 
+          headers: {
             'Content-Type': 'application/json',
             'X-Foundry-Version': game.version,
-            'X-Module-Version': this.getModuleVersion()
+            'X-Module-Version': this.getModuleVersion(),
           },
-          body: JSON.stringify({ 
+          body: JSON.stringify({
             test: true,
             timestamp: new Date().toISOString(),
-            source: 'endpoint-test'
+            source: 'endpoint-test',
           }),
-          signal: controller.signal
+          signal: controller.signal,
         });
-        
+
         clearTimeout(timeoutId);
 
         // Parse standard response format
@@ -429,7 +437,7 @@ export class ErrorReporter {
           console.warn('Endpoint test failed: Invalid JSON response');
           return false;
         }
-        
+
         if (testResponse.success && testResponse.eventId) {
           console.log(`✅ Endpoint test successful | Event ID: ${testResponse.eventId}`);
           return true;

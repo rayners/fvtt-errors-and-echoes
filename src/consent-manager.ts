@@ -1,6 +1,6 @@
 /**
  * Consent Management System
- * 
+ *
  * Handles user consent for error reporting with privacy controls.
  * Ensures all reporting is opt-in and respects user privacy choices.
  */
@@ -8,13 +8,12 @@
 export type PrivacyLevel = 'minimal' | 'standard' | 'detailed';
 
 export class ConsentManager {
-  
   /**
    * Check if user has given consent for error reporting
    */
   static hasConsent(): boolean {
     if (!game?.settings) return false;
-    
+
     try {
       return game.settings.get('errors-and-echoes', 'globalEnabled') === true;
     } catch (error) {
@@ -28,7 +27,7 @@ export class ConsentManager {
    */
   static getPrivacyLevel(): PrivacyLevel {
     if (!game?.settings) return 'standard';
-    
+
     try {
       const level = game.settings.get('errors-and-echoes', 'privacyLevel') || 'standard';
       return level as PrivacyLevel;
@@ -41,7 +40,10 @@ export class ConsentManager {
   /**
    * Set user consent and privacy level
    */
-  static async setConsent(enabled: boolean, privacyLevel: PrivacyLevel = 'standard'): Promise<void> {
+  static async setConsent(
+    enabled: boolean,
+    privacyLevel: PrivacyLevel = 'standard'
+  ): Promise<void> {
     if (!game?.settings) {
       console.warn('Errors and Echoes: Cannot set consent - game.settings not available');
       return;
@@ -74,9 +76,10 @@ export class ConsentManager {
    */
   static hasEndpointConsent(endpointUrl: string): boolean {
     if (!game?.settings) return true; // Default to true if settings not available
-    
+
     try {
-      const endpointConsent: Record<string, boolean> = game.settings.get('errors-and-echoes', 'endpointConsent') || {};
+      const endpointConsent: Record<string, boolean> =
+        game.settings.get('errors-and-echoes', 'endpointConsent') || {};
       return endpointConsent[endpointUrl] !== false; // Default to true if not explicitly set to false
     } catch (error) {
       console.warn('Errors and Echoes: Failed to check endpoint consent:', error);
@@ -94,7 +97,8 @@ export class ConsentManager {
     }
 
     try {
-      const endpointConsent: Record<string, boolean> = game.settings.get('errors-and-echoes', 'endpointConsent') || {};
+      const endpointConsent: Record<string, boolean> =
+        game.settings.get('errors-and-echoes', 'endpointConsent') || {};
       endpointConsent[endpointUrl] = enabled;
       await game.settings.set('errors-and-echoes', 'endpointConsent', endpointConsent);
     } catch (error) {
@@ -107,11 +111,11 @@ export class ConsentManager {
    */
   static shouldShowWelcome(): boolean {
     if (!game?.settings) return false;
-    
+
     try {
       const hasShown = game.settings.get('errors-and-echoes', 'hasShownWelcome');
       const hasConsent = this.hasConsent();
-      
+
       // Show welcome if not shown before, user hasn't already consented, and user is a GM
       return !hasShown && !hasConsent && game.user.isGM;
     } catch (error) {
@@ -125,7 +129,7 @@ export class ConsentManager {
    */
   static getConsentDate(): string | null {
     if (!game?.settings) return null;
-    
+
     try {
       return game.settings.get('errors-and-echoes', 'consentDate') || null;
     } catch (error) {
@@ -143,8 +147,8 @@ export class ConsentManager {
 
     try {
       const consentTime = new Date(consentDate).getTime();
-      const oneYearAgo = Date.now() - (365 * 24 * 60 * 60 * 1000);
-      
+      const oneYearAgo = Date.now() - 365 * 24 * 60 * 60 * 1000;
+
       return consentTime > oneYearAgo;
     } catch (error) {
       console.warn('Errors and Echoes: Failed to validate consent date:', error);

@@ -15,6 +15,7 @@ Foundry VTT → Errors and Echoes → Your Sentry-Relay → Sentry Project
 ```
 
 **Key Benefits:**
+
 - **Privacy Control**: You control where your module's error data goes
 - **Custom Processing**: Add custom logic, filtering, or routing
 - **Multiple Backends**: Forward to Sentry, Discord, email, databases, etc.
@@ -24,16 +25,19 @@ Foundry VTT → Errors and Echoes → Your Sentry-Relay → Sentry Project
 ## Prerequisites
 
 ### Required Services
+
 - **Cloudflare Account** with Workers enabled (free tier sufficient)
 - **Sentry Account** with project(s) created (free tier sufficient)
 - **Domain Name** (optional but recommended for professional setup)
 
 ### Development Tools
+
 - **Node.js 18+** and npm
 - **Wrangler CLI**: `npm install -g wrangler`
 - **Git** for version control
 
 ### Knowledge Requirements
+
 - Basic understanding of TypeScript/JavaScript
 - Familiarity with Cloudflare Workers (optional)
 - Basic understanding of HTTP APIs
@@ -144,8 +148,8 @@ The relay routes errors based on the URL path parameter:
 ```typescript
 function getSentryDSN(author: string, env: Env): string | undefined {
   const dsnMap: Record<string, keyof Env> = {
-    'yourusername': 'SENTRY_DSN_YOURUSERNAME',
-    'collaborator': 'SENTRY_DSN_COLLABORATOR',
+    yourusername: 'SENTRY_DSN_YOURUSERNAME',
+    collaborator: 'SENTRY_DSN_COLLABORATOR',
     'community-dev': 'SENTRY_DSN_COMMUNITY_DEV',
   };
 
@@ -188,16 +192,17 @@ npx wrangler deploy --env production
 ```
 
 Your endpoints will be available at:
+
 - `https://errors.yourdomain.com/report/yourusername`
 - `https://errors.yourdomain.com/test/yourusername`
 - `https://errors.yourdomain.com/health`
 
 ### Environment Variables
 
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `SENTRY_DSN_{AUTHOR}` | Sentry DSN for author's modules | `https://key@org.ingest.sentry.io/project` |
-| `ALLOWED_ORIGINS` | CORS allowed origins (comma-separated) | `https://foundry.yourdomain.com,http://localhost:30000` |
+| Variable              | Description                            | Example                                                 |
+| --------------------- | -------------------------------------- | ------------------------------------------------------- |
+| `SENTRY_DSN_{AUTHOR}` | Sentry DSN for author's modules        | `https://key@org.ingest.sentry.io/project`              |
+| `ALLOWED_ORIGINS`     | CORS allowed origins (comma-separated) | `https://foundry.yourdomain.com,http://localhost:30000` |
 
 ### CORS Configuration
 
@@ -226,13 +231,13 @@ Hooks.once('init', () => {
         url: 'https://errors.yourdomain.com/report/yourusername',
         author: 'yourusername',
         modules: ['my-awesome-module', 'my-other-module'],
-        enabled: true
+        enabled: true,
       },
       contextProvider: () => ({
         moduleVersion: game.modules.get('my-awesome-module')?.version,
         currentScene: canvas.scene?.name,
         // Add other useful debugging context
-      })
+      }),
     });
   }
 });
@@ -258,7 +263,7 @@ try {
 } catch (error) {
   errorReporter.api.report(error, {
     module: 'my-awesome-module',
-    context: { test: true, source: 'manual-test' }
+    context: { test: true, source: 'manual-test' },
   });
 }
 ```
@@ -275,20 +280,20 @@ async function handleErrorReport(request: Request, env: Env, path: string): Prom
 
   try {
     const foundryReport: FoundryErrorReport = await request.json();
-    
+
     // Custom filtering logic
     if (shouldIgnoreError(foundryReport)) {
       return createStandardResponse(true, {
-        message: 'Error filtered out - no action needed'
+        message: 'Error filtered out - no action needed',
       });
     }
-    
+
     // Custom error enhancement
     const enhancedReport = enhanceErrorReport(foundryReport);
-    
+
     // Convert to Sentry format
     const sentryEvent = transformToSentryEvent(enhancedReport);
-    
+
     // ... rest of handling ...
   } catch (error) {
     // ... error handling ...
@@ -300,27 +305,25 @@ function shouldIgnoreError(report: FoundryErrorReport): boolean {
   const ignoredMessages = [
     'Network request timeout',
     'User cancelled operation',
-    'Permission denied by user'
+    'Permission denied by user',
   ];
-  
-  return ignoredMessages.some(msg => 
-    report.error.message.includes(msg)
-  );
+
+  return ignoredMessages.some(msg => report.error.message.includes(msg));
 }
 
 function enhanceErrorReport(report: FoundryErrorReport): FoundryErrorReport {
   // Add custom tags or context
   const enhanced = { ...report };
-  
+
   // Add environment detection
   if (report.foundry.version.includes('beta')) {
     enhanced.moduleContext = {
       ...enhanced.moduleContext,
       environment: 'beta',
-      warning: 'Beta version - errors expected'
+      warning: 'Beta version - errors expected',
     };
   }
-  
+
   return enhanced;
 }
 ```
@@ -340,10 +343,10 @@ async function handleErrorReport(request: Request, env: Env, path: string): Prom
   try {
     const sentryEvent = transformToSentryEvent(foundryReport);
     const sentryEventId = await sendToSentry(sentryEvent, sentryDSN);
-    results.push({ 
-      service: 'sentry', 
-      success: !!sentryEventId, 
-      eventId: sentryEventId || undefined 
+    results.push({
+      service: 'sentry',
+      success: !!sentryEventId,
+      eventId: sentryEventId || undefined,
     });
   } catch (error) {
     results.push({ service: 'sentry', success: false });
@@ -353,10 +356,10 @@ async function handleErrorReport(request: Request, env: Env, path: string): Prom
   if (env.DISCORD_WEBHOOK_URL) {
     try {
       const discordEventId = await sendToDiscord(foundryReport, env.DISCORD_WEBHOOK_URL);
-      results.push({ 
-        service: 'discord', 
-        success: !!discordEventId, 
-        eventId: discordEventId 
+      results.push({
+        service: 'discord',
+        success: !!discordEventId,
+        eventId: discordEventId,
       });
     } catch (error) {
       results.push({ service: 'discord', success: false });
@@ -368,17 +371,20 @@ async function handleErrorReport(request: Request, env: Env, path: string): Prom
   if (successful.length > 0) {
     return createStandardResponse(true, {
       eventId: successful[0].eventId,
-      message: `Error reported to ${successful.length} service(s): ${successful.map(r => r.service).join(', ')}`
+      message: `Error reported to ${successful.length} service(s): ${successful.map(r => r.service).join(', ')}`,
     });
   } else {
     return createStandardResponse(false, {
       message: 'Failed to report error to any configured service',
-      status: 502
+      status: 502,
     });
   }
 }
 
-async function sendToDiscord(report: FoundryErrorReport, webhookUrl: string): Promise<string | null> {
+async function sendToDiscord(
+  report: FoundryErrorReport,
+  webhookUrl: string
+): Promise<string | null> {
   const embed = {
     title: `🚨 Error in ${report.attribution.moduleId}`,
     description: report.error.message,
@@ -388,28 +394,28 @@ async function sendToDiscord(report: FoundryErrorReport, webhookUrl: string): Pr
       {
         name: 'Foundry Version',
         value: report.foundry.version,
-        inline: true
+        inline: true,
       },
       {
         name: 'Confidence',
         value: report.attribution.confidence,
-        inline: true
-      }
-    ]
+        inline: true,
+      },
+    ],
   };
 
   if (report.error.stack) {
     embed.fields.push({
       name: 'Stack Trace',
       value: `\`\`\`\n${report.error.stack.substring(0, 1000)}\n\`\`\``,
-      inline: false
+      inline: false,
     });
   }
 
   const response = await fetch(webhookUrl, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ embeds: [embed] })
+    body: JSON.stringify({ embeds: [embed] }),
   });
 
   return response.ok ? crypto.randomUUID() : null;
@@ -431,27 +437,31 @@ async function storeInDatabase(report: FoundryErrorReport, env: Env): Promise<st
   if (!env.DB) return null;
 
   const eventId = crypto.randomUUID();
-  
+
   try {
-    await env.DB.prepare(`
+    await env.DB.prepare(
+      `
       INSERT INTO error_reports (
         id, module_id, error_message, error_stack, error_type,
         foundry_version, attribution_confidence, attribution_method,
         privacy_level, timestamp, raw_report
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `).bind(
-      eventId,
-      report.attribution.moduleId,
-      report.error.message,
-      report.error.stack,
-      report.error.type,
-      report.foundry.version,
-      report.attribution.confidence,
-      report.attribution.method,
-      report.meta.privacyLevel,
-      report.meta.timestamp,
-      JSON.stringify(report)
-    ).run();
+    `
+    )
+      .bind(
+        eventId,
+        report.attribution.moduleId,
+        report.error.message,
+        report.error.stack,
+        report.error.type,
+        report.foundry.version,
+        report.attribution.confidence,
+        report.attribution.method,
+        report.meta.privacyLevel,
+        report.meta.timestamp,
+        JSON.stringify(report)
+      )
+      .run();
 
     return eventId;
   } catch (error) {
@@ -498,8 +508,8 @@ interface RateLimitEntry {
 const rateLimiter = new Map<string, RateLimitEntry>();
 
 function checkRateLimit(
-  clientKey: string, 
-  limit: number = 100, 
+  clientKey: string,
+  limit: number = 100,
   windowMs: number = 3600000 // 1 hour
 ): { allowed: boolean; retryAfter?: number } {
   const now = Date.now();
@@ -509,7 +519,7 @@ function checkRateLimit(
     // New window or expired
     rateLimiter.set(clientKey, {
       count: 1,
-      resetTime: now + windowMs
+      resetTime: now + windowMs,
     });
     return { allowed: true };
   }
@@ -532,13 +542,13 @@ async function handleErrorReport(request: Request, env: Env, path: string): Prom
   const clientIP = request.headers.get('CF-Connecting-IP') || 'unknown';
   const author = path.split('/')[2];
   const rateLimitKey = `${clientIP}:${author}`;
-  
+
   const rateLimit = checkRateLimit(rateLimitKey);
   if (!rateLimit.allowed) {
     return createStandardResponse(false, {
       message: 'Rate limit exceeded',
       retryAfter: rateLimit.retryAfter,
-      status: 429
+      status: 429,
     });
   }
 
@@ -563,13 +573,13 @@ let metrics: Metrics = {
   totalRequests: 0,
   successfulReports: 0,
   failedReports: 0,
-  lastRequestTime: new Date().toISOString()
+  lastRequestTime: new Date().toISOString(),
 };
 
 function updateMetrics(success: boolean) {
   metrics.totalRequests++;
   metrics.lastRequestTime = new Date().toISOString();
-  
+
   if (success) {
     metrics.successfulReports++;
   } else {
@@ -579,15 +589,19 @@ function updateMetrics(success: boolean) {
 
 // Add metrics endpoint
 async function handleMetrics(): Promise<Response> {
-  return new Response(JSON.stringify({
-    ...metrics,
-    uptime: Date.now() - startTime,
-    successRate: metrics.totalRequests > 0 
-      ? (metrics.successfulReports / metrics.totalRequests * 100).toFixed(2) + '%'
-      : '0%'
-  }), {
-    headers: { 'Content-Type': 'application/json' }
-  });
+  return new Response(
+    JSON.stringify({
+      ...metrics,
+      uptime: Date.now() - startTime,
+      successRate:
+        metrics.totalRequests > 0
+          ? ((metrics.successfulReports / metrics.totalRequests) * 100).toFixed(2) + '%'
+          : '0%',
+    }),
+    {
+      headers: { 'Content-Type': 'application/json' },
+    }
+  );
 }
 ```
 
@@ -596,6 +610,7 @@ async function handleMetrics(): Promise<Response> {
 ### Common Issues
 
 **1. CORS Errors**
+
 ```bash
 # Check your ALLOWED_ORIGINS setting
 npx wrangler secret list --env production
@@ -606,6 +621,7 @@ npx wrangler secret put ALLOWED_ORIGINS --env production
 ```
 
 **2. Sentry Connection Fails**
+
 ```bash
 # Test your Sentry DSN manually
 curl -X POST \
@@ -616,6 +632,7 @@ curl -X POST \
 ```
 
 **3. Deployment Issues**
+
 ```bash
 # Check worker logs
 npx wrangler tail --env production
@@ -642,6 +659,7 @@ debugLog('Sentry response', { eventId, success: !!eventId });
 ```
 
 Enable debug mode:
+
 ```bash
 npx wrangler secret put DEBUG --env development
 # Enter: true
@@ -668,7 +686,7 @@ function validateErrorReport(report: any): report is FoundryErrorReport {
 if (!validateErrorReport(foundryReport)) {
   return createStandardResponse(false, {
     message: 'Invalid error report format',
-    status: 400
+    status: 400,
   });
 }
 ```
@@ -752,6 +770,6 @@ The Sentry-Relay integration provides a robust, scalable solution for collecting
 ✅ **Custom Processing**: Filter, enhance, or route errors as needed  
 ✅ **Multiple Backends**: Support for Sentry, Discord, email, databases  
 ✅ **Scalable Infrastructure**: Cloudflare Workers auto-scale globally  
-✅ **Standard API**: Compatible with Foundry VTT Error Reporting API  
+✅ **Standard API**: Compatible with Foundry VTT Error Reporting API
 
 For questions or issues with the integration, check the troubleshooting section above or create an issue on the [Errors and Echoes GitHub repository](https://github.com/rayners/fvtt-errors-and-echoes).

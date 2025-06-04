@@ -1,6 +1,6 @@
 /**
  * Welcome Dialog for Error Reporting
- * 
+ *
  * First-run dialog that explains error reporting and asks for user consent.
  * Provides clear information about privacy and data collection.
  */
@@ -25,8 +25,9 @@ interface WelcomeDialogData {
   };
 }
 
-export class ErrorReporterWelcomeDialog extends foundry.applications.api.HandlebarsApplicationMixin(foundry.applications.api.ApplicationV2) {
-  
+export class ErrorReporterWelcomeDialog extends foundry.applications.api.HandlebarsApplicationMixin(
+  foundry.applications.api.ApplicationV2
+) {
   static DEFAULT_OPTIONS = {
     id: 'errors-and-echoes-welcome',
     classes: ['errors-and-echoes', 'welcome-dialog'],
@@ -35,25 +36,25 @@ export class ErrorReporterWelcomeDialog extends foundry.applications.api.Handleb
       frame: true,
       positioned: true,
       title: 'ERRORS_AND_ECHOES.Welcome.Title',
-      resizable: false
+      resizable: false,
     },
     position: {
       width: 600,
-      height: 'auto'
+      height: 'auto',
     },
     actions: {
       enable: ErrorReporterWelcomeDialog.prototype._onEnable,
       decline: ErrorReporterWelcomeDialog.prototype._onDecline,
       learnMore: ErrorReporterWelcomeDialog.prototype._onLearnMore,
-      selectPrivacyLevel: ErrorReporterWelcomeDialog.prototype._onSelectPrivacyLevel
-    }
+      selectPrivacyLevel: ErrorReporterWelcomeDialog.prototype._onSelectPrivacyLevel,
+    },
   };
 
   static PARTS = {
     main: {
       id: 'main',
-      template: 'modules/errors-and-echoes/templates/welcome-dialog.hbs'
-    }
+      template: 'modules/errors-and-echoes/templates/welcome-dialog.hbs',
+    },
   };
 
   /**
@@ -74,32 +75,32 @@ export class ErrorReporterWelcomeDialog extends foundry.applications.api.Handleb
    */
   async _prepareContext(options = {}): Promise<WelcomeDialogData> {
     const context = await super._prepareContext(options);
-    
+
     return Object.assign(context, {
       title: game.i18n.localize('ERRORS_AND_ECHOES.Welcome.Title'),
       includedItems: [
         game.i18n.localize('ERRORS_AND_ECHOES.Welcome.IncludedItems.ErrorMessages'),
         game.i18n.localize('ERRORS_AND_ECHOES.Welcome.IncludedItems.FoundryVersion'),
-        game.i18n.localize('ERRORS_AND_ECHOES.Welcome.IncludedItems.SystemInfo')
+        game.i18n.localize('ERRORS_AND_ECHOES.Welcome.IncludedItems.SystemInfo'),
       ],
       excludedItems: [
         game.i18n.localize('ERRORS_AND_ECHOES.Welcome.ExcludedItems.WorldData'),
         game.i18n.localize('ERRORS_AND_ECHOES.Welcome.ExcludedItems.ChatMessages'),
         game.i18n.localize('ERRORS_AND_ECHOES.Welcome.ExcludedItems.PersonalInfo'),
-        game.i18n.localize('ERRORS_AND_ECHOES.Welcome.ExcludedItems.ModuleSettings')
+        game.i18n.localize('ERRORS_AND_ECHOES.Welcome.ExcludedItems.ModuleSettings'),
       ],
       privacyNote: game.i18n.localize('ERRORS_AND_ECHOES.Welcome.PrivacyNote'),
       privacyLevels: {
         title: game.i18n.localize('ERRORS_AND_ECHOES.Welcome.PrivacyLevels.Title'),
         minimal: game.i18n.localize('ERRORS_AND_ECHOES.Welcome.PrivacyLevels.Minimal'),
         standard: game.i18n.localize('ERRORS_AND_ECHOES.Welcome.PrivacyLevels.Standard'),
-        detailed: game.i18n.localize('ERRORS_AND_ECHOES.Welcome.PrivacyLevels.Detailed')
+        detailed: game.i18n.localize('ERRORS_AND_ECHOES.Welcome.PrivacyLevels.Detailed'),
       },
       buttons: {
         enable: game.i18n.localize('ERRORS_AND_ECHOES.Welcome.EnableButton'),
         decline: game.i18n.localize('ERRORS_AND_ECHOES.Welcome.DeclineButton'),
-        learnMore: game.i18n.localize('ERRORS_AND_ECHOES.Welcome.LearnMoreButton')
-      }
+        learnMore: game.i18n.localize('ERRORS_AND_ECHOES.Welcome.LearnMoreButton'),
+      },
     });
   }
 
@@ -111,7 +112,7 @@ export class ErrorReporterWelcomeDialog extends foundry.applications.api.Handleb
       const privacyLevel = this.getSelectedPrivacyLevel();
       await ConsentManager.setConsent(true, privacyLevel);
       this.close();
-      
+
       ui.notifications.info(game.i18n.localize('ERRORS_AND_ECHOES.Notifications.Enabled'));
     } catch (error) {
       console.error('Failed to enable error reporting:', error);
@@ -174,7 +175,7 @@ export class ErrorReporterWelcomeDialog extends foundry.applications.api.Handleb
     if (!previewElement) return;
 
     let previewText = '';
-    
+
     switch (level) {
       case 'minimal':
         previewText = game.i18n.localize('ERRORS_AND_ECHOES.Welcome.PrivacyLevels.Minimal');
@@ -202,7 +203,7 @@ export class ErrorReporterWelcomeDialog extends foundry.applications.api.Handleb
     } catch (error) {
       console.warn('Failed to mark welcome as shown:', error);
     }
-    
+
     return super.close(options);
   }
 
@@ -210,7 +211,7 @@ export class ErrorReporterWelcomeDialog extends foundry.applications.api.Handleb
    * Static method to show privacy level selection
    */
   static async showPrivacyLevelDialog(): Promise<PrivacyLevel | null> {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       new Dialog({
         title: game.i18n.localize('ERRORS_AND_ECHOES.Welcome.PrivacyLevels.Title'),
         content: `
@@ -245,13 +246,13 @@ export class ErrorReporterWelcomeDialog extends foundry.applications.api.Handleb
             callback: (html: JQuery) => {
               const level = html.find('input[name="privacy"]:checked').val() as PrivacyLevel;
               resolve(level || 'standard');
-            }
+            },
           },
-          cancel: { 
+          cancel: {
             label: game.i18n.localize('Cancel'),
-            callback: () => resolve(null)
-          }
-        }
+            callback: () => resolve(null),
+          },
+        },
       }).render(true);
     });
   }

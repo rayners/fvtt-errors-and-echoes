@@ -4,15 +4,15 @@ Anonymous error reporting for Foundry VTT modules to help authors improve their 
 
 ## Implementation Status
 
-| Feature | Status | Notes |
-|---------|--------|-------|
-| 🔍 Error Capture | ✅ Complete | Captures JavaScript errors, promise rejections, console errors, and hook errors |
-| 🏷️ Module Attribution | ✅ Complete | Advanced stack trace analysis and hook context detection |
-| 🔒 Privacy Controls | ✅ Complete | Three privacy levels with granular consent management |
-| ⚙️ Settings UI | ✅ Complete | Foundry-native configuration interface with registered modules display |
-| 📊 Manual Reporting | ✅ Complete | Direct error reporting API for modules |
-| 🔗 **Module Registration API** | ✅ **Complete** | **Full registration system with context providers and filters** |
-| 🧪 Testing Infrastructure | ✅ **Complete** | **Comprehensive test suite with 35 passing tests** |
+| Feature                        | Status          | Notes                                                                           |
+| ------------------------------ | --------------- | ------------------------------------------------------------------------------- |
+| 🔍 Error Capture               | ✅ Complete     | Captures JavaScript errors, promise rejections, console errors, and hook errors |
+| 🏷️ Module Attribution          | ✅ Complete     | Advanced stack trace analysis and hook context detection                        |
+| 🔒 Privacy Controls            | ✅ Complete     | Three privacy levels with granular consent management                           |
+| ⚙️ Settings UI                 | ✅ Complete     | Foundry-native configuration interface with registered modules display          |
+| 📊 Manual Reporting            | ✅ Complete     | Direct error reporting API for modules                                          |
+| 🔗 **Module Registration API** | ✅ **Complete** | **Full registration system with context providers and filters**                 |
+| 🧪 Testing Infrastructure      | ✅ **Complete** | **Comprehensive test suite with 35 passing tests**                              |
 
 ## Overview
 
@@ -39,23 +39,23 @@ Register your module for enhanced error reporting with context and filtering:
 // Register once during module initialization
 Hooks.once('ready', () => {
   if (!window.ErrorsAndEchoesAPI) return;
-  
+
   window.ErrorsAndEchoesAPI.register({
     moduleId: 'your-module-id',
-    
+
     // Optional: Provide context for debugging
     contextProvider: () => ({
       gameSystem: game.system.id,
       activeFeatures: yourModule.getActiveFeatures(),
-      userConfiguration: yourModule.getRelevantSettings()
+      userConfiguration: yourModule.getRelevantSettings(),
     }),
-    
-    // Optional: Filter errors to reduce noise  
-    errorFilter: (error) => {
-      // Return true to filter OUT (not report) 
+
+    // Optional: Filter errors to reduce noise
+    errorFilter: error => {
+      // Return true to filter OUT (not report)
       // Return false to report the error
       return !error.stack.includes('your-module-id');
-    }
+    },
   });
 });
 ```
@@ -78,7 +78,7 @@ try {
       }
     });
   }
-  
+
   // Still handle the error normally
   console.error('Operation failed:', error);
   ui.notifications.error('Operation failed. Please try again.');
@@ -90,7 +90,7 @@ try {
 Complete working examples are available in the [`examples/`](./examples/) directory:
 
 - **[journeys-and-jamborees.js](./examples/journeys-and-jamborees.js)** - Complex gameplay module with party management and travel systems
-- **[simple-weather.js](./examples/simple-weather.js)** - Weather/environmental effects module with calendar integration  
+- **[simple-weather.js](./examples/simple-weather.js)** - Weather/environmental effects module with calendar integration
 - **[generic-module.js](./examples/generic-module.js)** - Template for any module type with comprehensive documentation
 
 Each example demonstrates real-world integration patterns and best practices.
@@ -109,6 +109,7 @@ interface ErrorsAndEchoesAPI {
 ```
 
 **Module Registry Functions:**
+
 ```typescript
 // Access module registry directly for advanced use cases
 ModuleRegistry.isRegistered(moduleId: string): boolean;
@@ -123,10 +124,10 @@ Register your module for enhanced error reporting:
 
 ```typescript
 interface ModuleRegistrationConfig {
-  moduleId: string;                                    // Your module's ID
-  contextProvider?: () => Record<string, any>;         // Optional context provider function
-  errorFilter?: (error: Error) => boolean;             // Optional error filter
-  endpoint?: EndpointConfig;                           // Optional custom endpoint
+  moduleId: string; // Your module's ID
+  contextProvider?: () => Record<string, any>; // Optional context provider function
+  errorFilter?: (error: Error) => boolean; // Optional error filter
+  endpoint?: EndpointConfig; // Optional custom endpoint
 }
 ```
 
@@ -139,15 +140,15 @@ const contextProvider = () => ({
   // Version information
   moduleVersion: game.modules.get('my-module')?.version,
   foundryVersion: game.version,
-  
+
   // Current state
   activeScene: canvas.scene?.name,
   selectedTokens: canvas.tokens?.controlled?.length || 0,
-  
+
   // Module-specific state
   customSetting: game.settings.get('my-module', 'important-setting'),
   featureEnabled: MyModule.isFeatureEnabled(),
-  
+
   // User context (be careful about privacy)
   isGM: game.user.isGM,
   // DON'T include: usernames, IP addresses, email addresses, etc.
@@ -159,14 +160,14 @@ const contextProvider = () => ({
 Filter which errors to report:
 
 ```javascript
-const errorFilter = (error) => {
+const errorFilter = error => {
   // Don't report errors we expect or can't fix
   if (error.message.includes('Network request failed')) return false;
   if (error.message.includes('Permission denied')) return false;
-  
+
   // Only report errors from our module
   if (error.stack && !error.stack.includes('/modules/my-module/')) return false;
-  
+
   return true;
 };
 ```
@@ -177,8 +178,8 @@ Report errors manually with additional context:
 
 ```typescript
 interface ReportOptions {
-  module?: string;                    // Override detected module
-  context?: Record<string, any>;      // Additional context
+  module?: string; // Override detected module
+  context?: Record<string, any>; // Additional context
 }
 ```
 
@@ -194,7 +195,7 @@ if (errorReporter?.active && errorReporter.api) {
     console.log('Error reporting enabled');
     console.log('Privacy level:', errorReporter.api.getPrivacyLevel());
   }
-  
+
   // Get reporting statistics
   const stats = errorReporter.api.getStats();
   console.log(`${stats.totalReports} total reports, ${stats.recentReports} in last hour`);
@@ -204,18 +205,21 @@ if (errorReporter?.active && errorReporter.api) {
 ## Privacy Levels
 
 ### Minimal
+
 - **Error message and stack trace**
 - **Module attribution**
 - **Foundry version**
 - **Timestamp**
 
 ### Standard (Default)
+
 - Everything from Minimal, plus:
 - **Active system and version**
 - **List of active modules and versions**
 - **Anonymous session ID (daily rotating)**
 
 ### Detailed
+
 - Everything from Standard, plus:
 - **Browser name and version** (e.g., "Chrome/91")
 - **Current scene name**
@@ -224,7 +228,9 @@ if (errorReporter?.active && errorReporter.api) {
 ## Architecture Overview
 
 ### Error Capture
+
 The `ErrorCapture` class listens for errors using multiple methods:
+
 - **Window error events** (`window.addEventListener('error', ...)`)
 - **Unhandled promise rejections** (`window.addEventListener('unhandledrejection', ...)`)
 - **Console error patching** (preserves original `console.error` behavior)
@@ -233,6 +239,7 @@ The `ErrorCapture` class listens for errors using multiple methods:
 **Critical Design Principle**: The module NEVER calls `preventDefault()` or swallows errors. All errors remain visible to users.
 
 ### Error Attribution
+
 The `ErrorAttribution` class uses sophisticated analysis to determine which module caused an error:
 
 1. **Stack Trace Analysis** (High Confidence): Parses stack traces for `/modules/[module-name]/` patterns
@@ -241,14 +248,18 @@ The `ErrorAttribution` class uses sophisticated analysis to determine which modu
 4. **Active Module Detection** (Medium Confidence): Fallback using call stack analysis
 
 ### Error Reporting
+
 The `ErrorReporter` class handles sending reports to configured endpoints:
+
 - **Rate limiting**: Maximum 50 reports per hour
 - **Deduplication**: Prevents duplicate reports within 1-minute windows
 - **Privacy filtering**: Builds payloads based on user's privacy level
 - **Endpoint routing**: Sends reports to appropriate author endpoints
 
 ### Consent Management
+
 The `ConsentManager` class handles all privacy and consent decisions:
+
 - **Opt-in only**: No data collection without explicit user consent
 - **GM-only control**: Only GMs can enable error reporting for their world
 - **Consent expiration**: Consent expires after 1 year and requires renewal
@@ -257,6 +268,7 @@ The `ConsentManager` class handles all privacy and consent decisions:
 ## Integration Patterns
 
 ### Error Boundaries
+
 Wrap risky operations with error boundaries:
 
 ```javascript
@@ -268,13 +280,13 @@ class MyModuleFeature {
     } catch (error) {
       // Report error while preserving normal error handling
       this.reportError(error, { operation: 'performComplexOperation' });
-      
+
       // Handle error normally
       throw error; // Re-throw if calling code should handle it
       // OR provide fallback behavior
     }
   }
-  
+
   reportError(error, context = {}) {
     const errorReporter = game.modules.get('errors-and-echoes');
     if (errorReporter?.active && errorReporter.api?.hasConsent()) {
@@ -283,8 +295,8 @@ class MyModuleFeature {
         context: {
           ...context,
           timestamp: Date.now(),
-          userAction: this.currentUserAction
-        }
+          userAction: this.currentUserAction,
+        },
       });
     }
   }
@@ -292,6 +304,7 @@ class MyModuleFeature {
 ```
 
 ### Custom Endpoints
+
 Module authors can configure custom endpoints:
 
 ```javascript
@@ -303,12 +316,13 @@ errorReporter.api.register({
     url: 'https://errors.my-domain.com/report/my-module',
     author: 'my-username',
     modules: ['my-module', 'my-other-module'],
-    enabled: true
-  }
+    enabled: true,
+  },
 });
 ```
 
 ### Testing Error Reporting
+
 Test your error reporting integration:
 
 ```javascript
@@ -321,10 +335,10 @@ if (errorReporter?.active) {
 }
 
 // Test error attribution
-window.ErrorsAndEchoes.ErrorAttribution.attributeToModule(
-  new Error('Test error'),
-  { source: 'javascript', timestamp: Date.now() }
-);
+window.ErrorsAndEchoes.ErrorAttribution.attributeToModule(new Error('Test error'), {
+  source: 'javascript',
+  timestamp: Date.now(),
+});
 
 // Generate test error
 try {
@@ -332,7 +346,7 @@ try {
 } catch (error) {
   errorReporter.api.report(error, {
     module: 'my-module',
-    context: { test: true }
+    context: { test: true },
   });
 }
 ```
@@ -340,6 +354,7 @@ try {
 ## Error Endpoint Requirements
 
 ### Request Format
+
 Endpoints should accept POST requests with this payload structure:
 
 ```typescript
@@ -358,8 +373,8 @@ interface ReportPayload {
   };
   foundry: {
     version: string;
-    system?: { id: string; version: string; };
-    modules?: Array<{ id: string; version: string; }>;
+    system?: { id: string; version: string };
+    modules?: Array<{ id: string; version: string }>;
     scene?: string;
   };
   client?: {
@@ -376,20 +391,22 @@ interface ReportPayload {
 ```
 
 ### Response Format
+
 Endpoints should respond with this format:
 
 ```typescript
 interface ErrorReportResponse {
   success: boolean;
-  eventId?: string;        // Unique identifier for the report
-  message?: string;        // Human-readable status message
-  timestamp?: string;      // ISO timestamp when processed
-  endpoint?: string;       // Endpoint that processed the request
-  retryAfter?: number;     // Seconds to wait before retrying (rate limiting)
+  eventId?: string; // Unique identifier for the report
+  message?: string; // Human-readable status message
+  timestamp?: string; // ISO timestamp when processed
+  endpoint?: string; // Endpoint that processed the request
+  retryAfter?: number; // Seconds to wait before retrying (rate limiting)
 }
 ```
 
 ### Endpoint Testing
+
 Endpoints should support test requests at `/test/` instead of `/report/`:
 
 ```bash
@@ -406,10 +423,12 @@ Content-Type: application/json
 ## Development Setup
 
 ### Prerequisites
+
 - Node.js 18+ and npm
 - FoundryVTT development environment
 
 ### Local Development
+
 1. Clone the repository
 2. Install dependencies: `npm install`
 3. Build the module: `npm run build`
@@ -417,6 +436,7 @@ Content-Type: application/json
 5. Enable in Foundry and configure endpoints
 
 ### Testing
+
 ```bash
 # Run TypeScript compilation
 npm run build
@@ -427,6 +447,7 @@ await ErrorReporter.testEndpoint('https://your-endpoint.com/report/test');
 ```
 
 ### Building
+
 ```bash
 # Development build
 npm run build
@@ -438,18 +459,21 @@ npm run build:prod
 ## Security Considerations
 
 ### Data Privacy
+
 - **No PII**: Never collect usernames, email addresses, IP addresses, or other PII
 - **Anonymous sessions**: Session IDs rotate daily and contain no identifying information
 - **Minimal data**: Collect only what's necessary for debugging
 - **User control**: Users can disable reporting or change privacy levels at any time
 
 ### Endpoint Security
+
 - **HTTPS required**: All endpoints must use HTTPS
 - **Rate limiting**: Implement server-side rate limiting
 - **Validation**: Validate all incoming data
 - **Authentication**: Consider API keys for private endpoints
 
 ### Module Security
+
 - **Never swallow errors**: Always preserve original error behavior
 - **Graceful degradation**: Module should work even if error reporting fails
 - **No dependencies**: Core error reporting works without external dependencies
@@ -457,16 +481,19 @@ npm run build:prod
 ## Contributing
 
 ### Code Style
+
 - TypeScript with strict mode enabled
 - ESLint configuration provided
 - Foundry VTT coding conventions
 
 ### Testing Requirements
+
 - Test error attribution with your module's error patterns
 - Verify endpoint integration works correctly
 - Test privacy level filtering
 
 ### Pull Request Process
+
 1. Fork the repository
 2. Create a feature branch
 3. Test your changes thoroughly
@@ -485,6 +512,7 @@ MIT License - see [LICENSE](LICENSE) file for details.
 ## Legal and Privacy
 
 This module complies with GDPR and other privacy regulations. See:
+
 - [Privacy Policy](PRIVACY-POLICY.md)
 - [Legal Compliance](LEGAL-COMPLIANCE.md)
 - [Security Policy](SECURITY.md)

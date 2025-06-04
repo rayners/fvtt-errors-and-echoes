@@ -149,14 +149,14 @@ class ErrorCapture {
   // Global error listeners (never preventDefault())
   - handleWindowError(event: ErrorEvent): void
   - handleUnhandledRejection(event: PromiseRejectionEvent): void
-  
+
   // Console patching (preserves original behavior)
   - patchConsoleError(): void
   - patchConsoleWarn(): void
-  
+
   // Foundry hook patching (non-interfering)
   - patchFoundryHooks(): void
-  
+
   // State management
   - startListening(): void
   - stopListening(): void
@@ -165,6 +165,7 @@ class ErrorCapture {
 ```
 
 **Design Patterns Used**:
+
 - **Singleton**: Single global error capture instance
 - **Decorator**: Patches existing functions while preserving behavior
 - **Observer**: Listens to global error events
@@ -183,7 +184,7 @@ class ErrorAttribution {
   - attributeFromHookContext(hookName: string): Attribution | null
   - attributeFromPatternMatching(error: Error): Attribution | null
   - attributeFromActiveModule(): Attribution | null
-  
+
   // Confidence calculation
   - calculateConfidenceScore(attribution: Attribution): number
   - getDetailedAttribution(error: Error): DetailedAttribution
@@ -191,22 +192,23 @@ class ErrorAttribution {
 ```
 
 **Attribution Algorithm**:
+
 ```
 1. Stack Trace Analysis (Confidence: High 0.8)
    ├─ Parse stack for /modules/{module-id}/ patterns
    ├─ Support multiple path formats (Unix/Windows)
    └─ Extract file/line information
-   
+
 2. Hook Context Detection (Confidence: Medium 0.6)
    ├─ Check if error occurred during hook execution
    ├─ Generate stack trace to find calling module
    └─ Associate with hook-specific patterns
-   
+
 3. Pattern Matching (Confidence: Low 0.4)
    ├─ Match error content against known module signatures
    ├─ Search both stack trace and error message
    └─ Use configurable pattern library
-   
+
 4. Active Module Detection (Confidence: Medium 0.6)
    ├─ Analyze current call stack
    └─ Identify currently executing module
@@ -224,15 +226,15 @@ class ConsentManager {
   - hasConsent(): boolean
   - isConsentValid(): boolean
   - shouldShowWelcome(): boolean
-  
+
   // Consent management
   - setConsent(enabled: boolean, privacyLevel?: PrivacyLevel): Promise<void>
   - revokeConsent(): Promise<void>
-  
+
   // Endpoint-specific consent
   - hasEndpointConsent(endpointUrl: string): boolean
   - setEndpointConsent(endpointUrl: string, enabled: boolean): Promise<void>
-  
+
   // Privacy settings
   - getPrivacyLevel(): PrivacyLevel
   - getConsentDate(): string | null
@@ -241,11 +243,11 @@ class ConsentManager {
 
 **Privacy Level Data Collection**:
 
-| Level | Error Data | System Data | Context Data | Browser Data |
-|-------|------------|-------------|--------------|--------------|
-| **Minimal** | ✅ Message<br>✅ Stack trace<br>✅ Type | ✅ Foundry version | ✅ Module attribution<br>✅ Timestamp | ❌ |
-| **Standard** | ✅ All minimal data | ✅ All minimal<br>✅ System ID/version<br>✅ Active modules | ✅ All minimal<br>✅ Session ID (anonymous) | ❌ |
-| **Detailed** | ✅ All standard data | ✅ All standard data | ✅ All standard<br>✅ Current scene<br>✅ Module context | ✅ Browser name/version |
+| Level        | Error Data                              | System Data                                                 | Context Data                                             | Browser Data            |
+| ------------ | --------------------------------------- | ----------------------------------------------------------- | -------------------------------------------------------- | ----------------------- |
+| **Minimal**  | ✅ Message<br>✅ Stack trace<br>✅ Type | ✅ Foundry version                                          | ✅ Module attribution<br>✅ Timestamp                    | ❌                      |
+| **Standard** | ✅ All minimal data                     | ✅ All minimal<br>✅ System ID/version<br>✅ Active modules | ✅ All minimal<br>✅ Session ID (anonymous)              | ❌                      |
+| **Detailed** | ✅ All standard data                    | ✅ All standard data                                        | ✅ All standard<br>✅ Current scene<br>✅ Module context | ✅ Browser name/version |
 
 #### 4. ErrorReporter Class
 
@@ -258,12 +260,12 @@ class ErrorReporter {
   // Reporting pipeline
   - sendReport(error: Error, attribution: Attribution, endpoint: EndpointConfig, context: object): Promise<void>
   - buildPayload(error: Error, attribution: Attribution, privacyLevel: PrivacyLevel, context: object): ReportPayload
-  
+
   // Rate limiting and deduplication
   - shouldSendReport(error: Error, attribution: Attribution): boolean
   - recordSuccessfulReport(moduleId: string, error: Error, eventId?: string): void
   - cleanupOldReports(): void
-  
+
   // Utilities
   - testEndpoint(url: string): Promise<boolean>
   - getReportStats(): ReportStats
@@ -272,6 +274,7 @@ class ErrorReporter {
 ```
 
 **Rate Limiting Strategy**:
+
 - **Deduplication Window**: 1 minute for identical errors
 - **Hourly Rate Limit**: Maximum 50 reports per hour
 - **Error Signature**: Based on `moduleId:message:stackSignature`
@@ -291,7 +294,7 @@ class ErrorReporterWelcomeDialog extends Application {
   - show(): Promise<void>
   - render(): string
   - activateListeners(html: JQuery): void
-  
+
   // User interactions
   - handleConsentChoice(enabled: boolean, privacyLevel: PrivacyLevel): Promise<void>
   - handlePrivacyDetailsRequest(): void
@@ -317,9 +320,9 @@ class ErrorReporterWelcomeDialog extends Application {
 ```typescript
 // Pattern matching for module paths
 const modulePathPatterns = [
-  /\/modules\/([^\/]+)\//,           // Unix: /modules/module-id/
-  /\\modules\\([^\\]+)\\/,          // Windows: \modules\module-id\
-  /modules%2F([^%]+)%2F/,           // URL encoded: modules%2Fmodule-id%2F
+  /\/modules\/([^\/]+)\//, // Unix: /modules/module-id/
+  /\\modules\\([^\\]+)\\/, // Windows: \modules\module-id\
+  /modules%2F([^%]+)%2F/, // URL encoded: modules%2Fmodule-id%2F
 ];
 
 // Attribution process
@@ -331,7 +334,7 @@ function attributeFromStackTrace(stack: string): Attribution | null {
         moduleId: match[1],
         confidence: 'high',
         method: 'stack-trace',
-        source: 'javascript'
+        source: 'javascript',
       };
     }
   }
@@ -346,20 +349,20 @@ function attributeFromStackTrace(stack: string): Attribution | null {
 
 ```typescript
 // Hook patching strategy
-Hooks.call = function(hook: string, ...args: any[]): boolean {
+Hooks.call = function (hook: string, ...args: any[]): boolean {
   try {
     return originalHooksCall.call(Hooks, hook, ...args);
   } catch (error) {
     // Generate new stack trace to find calling module
     const contextStack = new Error().stack;
     const attribution = attributeFromStackTrace(contextStack);
-    
+
     if (attribution) {
       attribution.method = 'hook-context';
       attribution.confidence = 'medium';
       attribution.source = `hook:${hook}`;
     }
-    
+
     handleError(error, { ...context, hookName: hook });
     throw error; // Re-throw for normal error handling
   }
@@ -376,32 +379,32 @@ Hooks.call = function(hook: string, ...args: any[]): boolean {
 const modulePatterns: ModulePattern[] = [
   {
     pattern: /PartyActor|PartySheet|PartyModel/,
-    module: 'journeys-and-jamborees'
+    module: 'journeys-and-jamborees',
   },
   {
     pattern: /RealmManager|BiomeLayer/,
-    module: 'realms-and-reaches'
+    module: 'realms-and-reaches',
   },
   {
     pattern: /CalendarWidget|CalendarEngine/,
-    module: 'seasons-and-stars'
+    module: 'seasons-and-stars',
   },
   {
     pattern: /ErrorCapture|ErrorReporter|ConsentManager/,
-    module: 'errors-and-echoes'
-  }
+    module: 'errors-and-echoes',
+  },
 ];
 
 function attributeFromPatternMatching(error: Error): Attribution | null {
   const searchText = `${error.message} ${error.stack}`;
-  
+
   for (const { pattern, module } of modulePatterns) {
     if (pattern.test(searchText)) {
       return {
         moduleId: module,
         confidence: 'low',
         method: 'pattern-match',
-        source: 'signature'
+        source: 'signature',
       };
     }
   }
@@ -422,19 +425,19 @@ function calculateConfidenceScore(attribution: Attribution): number {
     'stack-trace': 0.8,
     'hook-context': 0.6,
     'pattern-match': 0.4,
-    'unknown': 0.2
+    unknown: 0.2,
   };
-  
+
   const sourceBonus = {
-    'javascript': 0.1,
-    'promise': 0.1,
-    'hook': 0.05,
-    'console': 0.05
+    javascript: 0.1,
+    promise: 0.1,
+    hook: 0.05,
+    console: 0.05,
   };
-  
+
   let score = baseScores[attribution.method] || 0.0;
   score += sourceBonus[attribution.source] || 0.0;
-  
+
   return Math.min(score, 1.0);
 }
 ```
@@ -467,8 +470,8 @@ User First Visit → Welcome Dialog → Privacy Explanation → Consent Decision
 
 ```typescript
 function buildPayload(
-  error: Error, 
-  attribution: Attribution, 
+  error: Error,
+  attribution: Attribution,
   privacyLevel: PrivacyLevel,
   moduleContext: Record<string, any>
 ): ReportPayload {
@@ -478,32 +481,32 @@ function buildPayload(
       message: error.message,
       stack: error.stack,
       type: error.constructor.name,
-      source: attribution.source
+      source: attribution.source,
     },
     attribution,
     foundry: {
-      version: game.version
+      version: game.version,
     },
     meta: {
       timestamp: new Date().toISOString(),
       privacyLevel,
-      reporterVersion: getModuleVersion()
-    }
+      reporterVersion: getModuleVersion(),
+    },
   };
 
   // Standard level additions
   if (privacyLevel === 'standard' || privacyLevel === 'detailed') {
     basePayload.foundry.system = {
       id: game.system.id,
-      version: game.system.version
+      version: game.system.version,
     };
-    
+
     basePayload.foundry.modules = game.modules.contents
       .filter(m => m.active)
       .map(m => ({ id: m.id, version: m.version }));
-    
+
     basePayload.client = {
-      sessionId: getAnonymousSessionId() // Daily rotating, no PII
+      sessionId: getAnonymousSessionId(), // Daily rotating, no PII
     };
   }
 
@@ -512,7 +515,7 @@ function buildPayload(
     if (basePayload.client) {
       basePayload.client.browser = getBrowserInfo(); // Just "Chrome/91"
     }
-    
+
     if (canvas.scene) {
       basePayload.foundry.scene = canvas.scene.name;
     }
@@ -533,10 +536,10 @@ function buildPayload(
 function getAnonymousSessionId(): string {
   const today = new Date().toDateString();
   const storageKey = 'errors-and-echoes-session';
-  
+
   try {
     const stored = localStorage.getItem(storageKey);
-    
+
     if (stored) {
       const [date, id] = stored.split('|');
       if (date === today) {
@@ -574,36 +577,39 @@ Module → ErrorReporter → Rate Limiting → Privacy Filter → HTTP Request �
 ```typescript
 interface ReportPayload {
   error: {
-    message: string;          // Error message
-    stack?: string;           // Stack trace (if available)
-    type: string;            // Error constructor name
-    source: string;          // Attribution source
+    message: string; // Error message
+    stack?: string; // Stack trace (if available)
+    type: string; // Error constructor name
+    source: string; // Attribution source
   };
   attribution: {
-    moduleId: string;        // Attributed module ID
-    confidence: string;      // Confidence level
-    method: string;          // Attribution method
-    source: string;          // Error source type
+    moduleId: string; // Attributed module ID
+    confidence: string; // Confidence level
+    method: string; // Attribution method
+    source: string; // Error source type
   };
   foundry: {
-    version: string;         // Foundry VTT version
-    system?: {              // Game system (standard+)
+    version: string; // Foundry VTT version
+    system?: {
+      // Game system (standard+)
       id: string;
       version: string;
     };
-    modules?: Array<{       // Active modules (standard+)
+    modules?: Array<{
+      // Active modules (standard+)
       id: string;
       version: string;
     }>;
-    scene?: string;         // Current scene (detailed only)
+    scene?: string; // Current scene (detailed only)
   };
-  client?: {               // Client info (standard+)
-    sessionId: string;      // Anonymous session ID
-    browser?: string;       // Browser info (detailed only)
+  client?: {
+    // Client info (standard+)
+    sessionId: string; // Anonymous session ID
+    browser?: string; // Browser info (detailed only)
   };
   meta: {
-    timestamp: string;      // ISO timestamp
-    privacyLevel: string;   // Privacy level used
+    timestamp: string; // ISO timestamp
+    privacyLevel: string; // Privacy level used
     reporterVersion: string; // Module version
   };
   moduleContext?: Record<string, any>; // Module-provided context
@@ -614,12 +620,12 @@ interface ReportPayload {
 
 ```typescript
 interface ErrorReportResponse {
-  success: boolean;         // Whether the report was processed
-  eventId?: string;         // Unique identifier for this report
-  message?: string;         // Human-readable status message
-  timestamp?: string;       // When the report was processed
-  endpoint?: string;        // Endpoint that processed it
-  retryAfter?: number;     // Seconds to wait before retry (rate limiting)
+  success: boolean; // Whether the report was processed
+  eventId?: string; // Unique identifier for this report
+  message?: string; // Human-readable status message
+  timestamp?: string; // When the report was processed
+  endpoint?: string; // Endpoint that processed it
+  retryAfter?: number; // Seconds to wait before retry (rate limiting)
 }
 ```
 
@@ -627,9 +633,9 @@ interface ErrorReportResponse {
 
 ```typescript
 async function sendReport(
-  error: Error, 
-  attribution: Attribution, 
-  endpoint: EndpointConfig, 
+  error: Error,
+  attribution: Attribution,
+  endpoint: EndpointConfig,
   moduleContext: Record<string, any>
 ): Promise<void> {
   try {
@@ -640,9 +646,9 @@ async function sendReport(
         'X-Foundry-Version': game.version,
         'X-Module-Version': getModuleVersion(),
         'X-Privacy-Level': getPrivacyLevel(),
-        'User-Agent': getUserAgent()
+        'User-Agent': getUserAgent(),
       },
-      body: JSON.stringify(payload)
+      body: JSON.stringify(payload),
     });
 
     if (!response.ok) {
@@ -650,7 +656,7 @@ async function sendReport(
     }
 
     const reportResponse: ErrorReportResponse = await response.json();
-    
+
     if (reportResponse.success) {
       recordSuccessfulReport(attribution.moduleId, error, reportResponse.eventId);
     } else {
@@ -686,21 +692,21 @@ class PerformanceTracker {
   private static metrics = {
     attributionTime: 0,
     reportingTime: 0,
-    totalProcessed: 0
+    totalProcessed: 0,
   };
-  
+
   static measureAttribution<T>(fn: () => T): T {
     const start = performance.now();
     const result = fn();
     this.metrics.attributionTime += performance.now() - start;
     return result;
   }
-  
+
   static getMetrics() {
     return {
       ...this.metrics,
       avgAttributionTime: this.metrics.attributionTime / this.metrics.totalProcessed,
-      avgReportingTime: this.metrics.reportingTime / this.metrics.totalProcessed
+      avgReportingTime: this.metrics.reportingTime / this.metrics.totalProcessed,
     };
   }
 }
@@ -731,7 +737,7 @@ function validateErrorReport(payload: any): payload is ReportPayload {
 ```typescript
 function sanitizeErrorData(error: Error): Error {
   const sanitized = new Error(error.message);
-  
+
   if (error.stack) {
     // Remove potential file paths containing usernames
     sanitized.stack = error.stack
@@ -739,7 +745,7 @@ function sanitizeErrorData(error: Error): Error {
       .replace(/C:\\Users\\[^\\]+/g, 'C:\\Users\\***')
       .replace(/\/home\/[^\/\s]+/g, '/home/***');
   }
-  
+
   return sanitized;
 }
 ```
@@ -760,8 +766,8 @@ function sanitizeErrorData(error: Error): Error {
 const customPatterns: ModulePattern[] = [
   {
     pattern: /MyCustomModule|MyFeature/,
-    module: 'my-custom-module'
-  }
+    module: 'my-custom-module',
+  },
 ];
 
 // Register during initialization
@@ -777,12 +783,12 @@ errorReporter.api.register({
   contextProvider: () => ({
     // Standard context
     moduleVersion: game.modules.get('my-module')?.version,
-    
+
     // Custom context
     featureState: MyModule.getFeatureState(),
     userSettings: MyModule.getUserSettings(),
-    performanceMetrics: MyModule.getPerformanceMetrics()
-  })
+    performanceMetrics: MyModule.getPerformanceMetrics(),
+  }),
 });
 ```
 
@@ -794,7 +800,7 @@ const errorFilter = (error: Error): boolean => {
   // Filter out expected errors
   if (error.message.includes('User cancelled')) return false;
   if (error.message.includes('Permission denied')) return false;
-  
+
   // Only report errors from our modules
   const moduleIds = ['my-module-1', 'my-module-2'];
   const stack = error.stack || '';
@@ -813,8 +819,8 @@ errorReporter.api.register({
     url: 'https://errors.mydomain.com/report/mymodules',
     author: 'my-username',
     modules: ['my-module-1', 'my-module-2'],
-    enabled: true
-  }
+    enabled: true,
+  },
 });
 ```
 
@@ -828,7 +834,7 @@ errorReporter.api.register({
    ├─ Register Foundry settings (privacy, endpoints, consent)
    ├─ Setup public API interface
    └─ Initialize ConsentManager
-   
+
 2. Hooks.once('ready') - Start error capture if consented
    │
    ├─ Check ConsentManager.hasConsent()
@@ -842,42 +848,42 @@ errorReporter.api.register({
 ```typescript
 // Client-side settings stored in browser local storage
 const settings = {
-  'globalEnabled': {
+  globalEnabled: {
     scope: 'client',
     type: Boolean,
     default: false,
-    onChange: handleGlobalToggle
+    onChange: handleGlobalToggle,
   },
-  'privacyLevel': {
-    scope: 'client', 
+  privacyLevel: {
+    scope: 'client',
     type: String,
     choices: ['minimal', 'standard', 'detailed'],
-    default: 'standard'
+    default: 'standard',
   },
-  'endpoints': {
+  endpoints: {
     scope: 'client',
     type: Object,
     config: false, // Uses custom UI
-    default: defaultEndpoints
+    default: defaultEndpoints,
   },
-  'hasShownWelcome': {
+  hasShownWelcome: {
     scope: 'client',
     config: false,
     type: Boolean,
-    default: false
+    default: false,
   },
-  'consentDate': {
+  consentDate: {
     scope: 'client',
     config: false,
     type: String,
-    default: null
+    default: null,
   },
-  'endpointConsent': {
+  endpointConsent: {
     scope: 'client',
     config: false,
     type: Object,
-    default: {}
-  }
+    default: {},
+  },
 };
 ```
 
@@ -893,7 +899,7 @@ window.addEventListener('error', (event: ErrorEvent) => {
     // If our error reporting fails, log but don't throw
     console.warn('Error reporting failed:', reportingError);
   }
-  
+
   // CRITICAL: We NEVER call event.preventDefault()
   // The error continues normal propagation to:
   // - Browser console
@@ -911,8 +917,8 @@ const API_VERSIONS = {
   '1.0': {
     minFoundryVersion: '12.0.0',
     maxFoundryVersion: '13.999.999',
-    features: ['basic-reporting', 'privacy-levels', 'attribution']
-  }
+    features: ['basic-reporting', 'privacy-levels', 'attribution'],
+  },
 };
 
 // Backward compatibility guarantee

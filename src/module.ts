@@ -1,6 +1,6 @@
 /**
  * Errors and Echoes - Main Module File
- * 
+ *
  * Anonymous error reporting for Foundry VTT modules.
  * CRITICAL: This module NEVER swallows errors - all errors remain visible to users.
  */
@@ -48,7 +48,7 @@ interface EndpointConfig {
   ErrorAttribution,
   ErrorReporter,
   ConsentManager,
-  ModuleRegistry
+  ModuleRegistry,
 };
 
 /**
@@ -56,9 +56,9 @@ interface EndpointConfig {
  */
 Hooks.once('init', (): void => {
   console.log('Errors and Echoes | Initializing error reporting module');
-  
+
   registerSettings();
-  
+
   // Set up API for other modules to integrate
   setupPublicAPI();
 });
@@ -68,13 +68,13 @@ Hooks.once('init', (): void => {
  */
 Hooks.once('ready', async (): Promise<void> => {
   console.log('Errors and Echoes | Module ready');
-  
+
   // Start error capture if user has consented
   if (ConsentManager.hasConsent()) {
     ErrorCapture.startListening();
     console.log('Errors and Echoes | Error capture started (user has consented)');
   }
-  
+
   // Show welcome dialog if needed - do this after everything else is set up
   if (ConsentManager.shouldShowWelcome()) {
     // Wait for next tick to ensure UI is fully rendered
@@ -103,7 +103,7 @@ function registerSettings(): void {
         ErrorCapture.stopListening();
         console.log('Errors and Echoes | Error capture disabled via settings');
       }
-    }
+    },
   });
 
   // Privacy level setting
@@ -114,11 +114,11 @@ function registerSettings(): void {
     config: true,
     type: String,
     choices: {
-      'minimal': game.i18n.localize('ERRORS_AND_ECHOES.Settings.PrivacyLevel.Choices.minimal'),
-      'standard': game.i18n.localize('ERRORS_AND_ECHOES.Settings.PrivacyLevel.Choices.standard'),
-      'detailed': game.i18n.localize('ERRORS_AND_ECHOES.Settings.PrivacyLevel.Choices.detailed')
+      minimal: game.i18n.localize('ERRORS_AND_ECHOES.Settings.PrivacyLevel.Choices.minimal'),
+      standard: game.i18n.localize('ERRORS_AND_ECHOES.Settings.PrivacyLevel.Choices.standard'),
+      detailed: game.i18n.localize('ERRORS_AND_ECHOES.Settings.PrivacyLevel.Choices.detailed'),
     },
-    default: 'standard'
+    default: 'standard',
   });
 
   // Error reporting endpoints (configured separately)
@@ -129,13 +129,13 @@ function registerSettings(): void {
     type: Object,
     default: [
       {
-        name: "Rayners Modules",
-        url: "https://errors.rayners.dev/report/rayners",
-        author: "rayners",
+        name: 'Rayners Modules',
+        url: 'https://errors.rayners.dev/report/rayners',
+        author: 'rayners',
         modules: [],
-        enabled: true
-      }
-    ]
+        enabled: true,
+      },
+    ],
   });
 
   // Internal settings (not shown in config)
@@ -143,28 +143,28 @@ function registerSettings(): void {
     scope: 'client',
     config: false,
     type: Boolean,
-    default: false
+    default: false,
   });
 
   game.settings.register('errors-and-echoes', 'consentDate', {
     scope: 'client',
     config: false,
     type: String,
-    default: null
+    default: null,
   });
 
   game.settings.register('errors-and-echoes', 'showReportNotifications', {
     scope: 'client',
     config: false,
     type: Boolean,
-    default: false
+    default: false,
   });
 
   game.settings.register('errors-and-echoes', 'endpointConsent', {
     scope: 'client',
     config: false,
     type: Object,
-    default: {}
+    default: {},
   });
 
   // Custom settings menu for endpoint configuration
@@ -174,7 +174,7 @@ function registerSettings(): void {
     hint: game.i18n.localize('ERRORS_AND_ECHOES.Settings.EndpointConfig.Hint'),
     icon: 'fas fa-cogs',
     type: EndpointConfigDialog,
-    restricted: true
+    restricted: true,
   });
 }
 
@@ -184,24 +184,24 @@ function registerSettings(): void {
 function setupPublicAPI(): void {
   const errorReporterModule = game.modules.get('errors-and-echoes');
   if (!errorReporterModule) return;
-  
+
   // Create API object
   const api: ErrorsAndEchoesAPI = {
     // For modules to register for enhanced reporting
     register: (config: ModuleRegistrationConfig): void => {
       ModuleRegistry.register(config);
     },
-    
+
     // For manual error reporting
     report: (error: Error, options: ReportOptions = {}): void => {
       if (!ConsentManager.hasConsent()) return;
-      
+
       const moduleId = options.module || getCallingModule();
       const attribution = {
         moduleId,
         confidence: 'none' as const,
         method: 'unknown' as const,
-        source: 'manual' as const
+        source: 'manual' as const,
       };
 
       const endpoint = getEndpointForModule(moduleId);
@@ -209,22 +209,22 @@ function setupPublicAPI(): void {
         ErrorReporter.sendReport(error, attribution, endpoint, options.context || {});
       }
     },
-    
+
     // Check consent status
     hasConsent: (): boolean => ConsentManager.hasConsent(),
-    
+
     // Get privacy level
     getPrivacyLevel: (): string => ConsentManager.getPrivacyLevel(),
-    
+
     // For debugging - get report statistics
-    getStats: (): ReportStats => ErrorReporter.getReportStats()
+    getStats: (): ReportStats => ErrorReporter.getReportStats(),
   };
-  
+
   // Expose API
   errorReporterModule.api = api;
   (window as any).ErrorsAndEchoes.API = api;
   (window as any).ErrorsAndEchoesAPI = api; // Also expose as ErrorsAndEchoesAPI for consistency
-  
+
   console.log('Errors and Echoes | Public API registered');
 
   // Load Quench integration tests if available
@@ -257,19 +257,19 @@ function getEndpointForModule(moduleId: string): EndpointConfig | undefined {
 
     // Fall back to configured endpoints
     const endpoints: EndpointConfig[] = game.settings.get('errors-and-echoes', 'endpoints') || [];
-    
+
     return endpoints.find(endpoint => {
       if (!endpoint.enabled) return false;
-      
+
       // Check if module is explicitly listed
       if (endpoint.modules?.includes(moduleId)) return true;
-      
+
       // Check if module matches author
       if (endpoint.author) {
         const module = game.modules.get(moduleId);
         return moduleMatchesAuthor(module, endpoint.author);
       }
-      
+
       return false;
     });
   } catch (error) {
@@ -279,4 +279,5 @@ function getEndpointForModule(moduleId: string): EndpointConfig | undefined {
 }
 
 // Export for debugging/testing
-(window as any).ErrorsAndEchoes.showWelcomeDialog = (): ErrorReporterWelcomeDialog | null => ErrorReporterWelcomeDialog.show();
+(window as any).ErrorsAndEchoes.showWelcomeDialog = (): ErrorReporterWelcomeDialog | null =>
+  ErrorReporterWelcomeDialog.show();
