@@ -102,4 +102,5 @@ jspm_packages/
 # Config/
 
 # Internal documentation (moved to ../local-docs/)
+CLAUDE.md
 FOUNDRY-COMPATIBILITY.md
