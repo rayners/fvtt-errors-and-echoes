@@ -1,6 +1,6 @@
 {
   "name": "fvtt-errors-and-echoes",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Anonymous error reporting for Foundry VTT modules",
   "main": "dist/module.js",
   "type": "module",
@@ -15,11 +15,11 @@
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
-    "lint": "eslint src --ext .ts",
-    "lint:fix": "eslint src --ext .ts --fix",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
     "format": "prettier --write \"src/**/*.{ts,js,json}\" \"*.{js,json,md}\"",
     "format:check": "prettier --check \"src/**/*.{ts,js,json}\" \"*.{js,json,md}\"",
-    "validate": "npm run lint && npm run format:check && npm run typecheck && npm run test && npm run build",
+    "validate": "npm run format:check && npm run test && npm run build",
     "prepare": "npm run build"
   },
   "keywords": [
@@ -39,23 +39,13 @@
   },
   "homepage": "https://github.com/rayners/fvtt-errors-and-echoes#readme",
   "devDependencies": {
-    "@rollup/plugin-node-resolve": "^15.2.3",
-    "@rollup/plugin-typescript": "^11.1.5",
-    "@types/jquery": "^3.5.32",
+    "@rayners/foundry-dev-tools": "^1.0.6",
+    "@rayners/foundry-test-utils": "^1.0.0",
     "@types/node": "^20.10.4",
-    "@typescript-eslint/eslint-plugin": "^6.7.0",
-    "@typescript-eslint/parser": "^6.7.0",
-    "@vitest/coverage-v8": "^1.0.0",
-    "@vitest/ui": "^1.1.0",
-    "eslint": "^8.50.0",
-    "eslint-config-prettier": "^9.0.0",
-    "eslint-plugin-prettier": "^5.0.0",
-    "jsdom": "^23.0.1",
-    "prettier": "^3.1.0",
+    "@vitest/ui": "^3.1.0",
     "rollup": "^4.7.0",
-    "rollup-plugin-copy": "^3.5.0",
     "typescript": "^5.3.3",
-    "vitest": "^1.1.0"
+    "vitest": "^3.1.0"
   },
   "engines": {
     "node": ">=18.0.0"

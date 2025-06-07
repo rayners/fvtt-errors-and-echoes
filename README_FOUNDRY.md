@@ -335,6 +335,6 @@ A: No. The default configuration works for most users. Just enable reporting and
 
 ---
 
-**Last Updated:** December 2024  
-**Module Version:** 0.1.0  
-**Foundry Compatibility:** v11, v12, v13+
+**Last Updated:** June 2025  
+**Module Version:** 0.1.2  
+**Foundry Compatibility:** v12, v13+

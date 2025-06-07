@@ -12,7 +12,7 @@ Anonymous error reporting for Foundry VTT modules to help authors improve their 
 | ⚙️ Settings UI                 | ✅ Complete     | Foundry-native configuration interface with registered modules display          |
 | 📊 Manual Reporting            | ✅ Complete     | Direct error reporting API for modules                                          |
 | 🔗 **Module Registration API** | ✅ **Complete** | **Full registration system with context providers and filters**                 |
-| 🧪 Testing Infrastructure      | ✅ **Complete** | **Comprehensive test suite with 35 passing tests**                              |
+| 🧪 Testing Infrastructure      | ⚠️ **Beta**     | **Test framework established (currently requires setup fixes)**                  |
 
 ## Overview
 
@@ -490,6 +490,44 @@ The reference implementation serves as both a working example and a starting poi
 - **Graceful degradation**: Module should work even if error reporting fails
 - **No dependencies**: Core error reporting works without external dependencies
 
+## Current Status and Roadmap
+
+### Beta Release Status
+
+Errors & Echoes is currently in **beta** with core functionality working but some areas needing refinement:
+
+**✅ Working Features:**
+- Error capture and attribution system
+- Privacy controls and consent management  
+- Module registration API
+- Settings UI with registered module display
+- Production infrastructure at https://errors.rayners.dev
+
+**⚠️ Known Issues:**
+- Test suite requires setup fixes to run properly
+- Module registration examples need real-world validation
+- Documentation may have gaps compared to implementation
+
+**🔄 Next Priorities:**
+- Fix test infrastructure for reliable quality assurance
+- Validate integration examples with popular modules
+- Improve error attribution accuracy based on real usage
+- Add comprehensive module compatibility testing
+
+### Upcoming Features
+
+**v0.2.0 Planned:**
+- Enhanced error attribution with machine learning patterns
+- Real-time error analytics and pattern detection
+- Additional context providers for common debugging scenarios
+- Improved module compatibility and integration testing
+
+**v0.3.0 Planned:**
+- Advanced filtering capabilities with smart noise reduction
+- Internationalization support for multiple languages
+- Integration with Foundry package browser for seamless setup
+- Performance optimizations based on production usage data
+
 ## Contributing
 
 ### Code Style
@@ -500,6 +538,7 @@ The reference implementation serves as both a working example and a starting poi
 
 ### Testing Requirements
 
+- Fix test infrastructure to run reliably
 - Test error attribution with your module's error patterns
 - Verify endpoint integration works correctly
 - Test privacy level filtering
@@ -508,7 +547,7 @@ The reference implementation serves as both a working example and a starting poi
 
 1. Fork the repository
 2. Create a feature branch
-3. Test your changes thoroughly
+3. Test your changes thoroughly (once test infrastructure is fixed)
 4. Submit a pull request with clear description
 
 ## License

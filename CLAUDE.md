@@ -1,0 +1,1 @@
+../local-docs/errors-and-echoes/development/CLAUDE.md

@@ -100,3 +100,6 @@ jspm_packages/
 # worlds/
 # Data/
 # Config/
+
+# Internal documentation (moved to ../local-docs/)
+FOUNDRY-COMPATIBILITY.md

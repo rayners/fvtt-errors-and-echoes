@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Enhanced Settings UI** - Visual display of registered modules with feature badges and activity metrics
 - **Production-Ready Infrastructure** - Deployed sentry-relay at https://errors.rayners.dev with security hardening
 - **Working Integration Examples** - Real-world examples for Journeys & Jamborees, Simple Weather, and generic modules
-- **Comprehensive Testing** - 35 unit tests with 100% pass rate plus 100+ Quench integration tests covering real Foundry environment validation
+- **Test Infrastructure** - Unit test framework established (current status: tests need fixes for full functionality)
 - **Privacy Compliance** - GDPR-compliant with complete user rights documentation
 - **Error Attribution System** - Multi-strategy attribution with confidence scoring for accurate module identification
 - **Rate Limiting** - 50 reports per hour with 1-minute deduplication to prevent spam
@@ -32,8 +32,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **TypeScript Implementation** - Full TypeScript codebase with comprehensive type safety
 - **Modern Build System** - Rollup-based build with automated testing and quality checks
 - **Foundry v12+ Support** - Compatible with Foundry VTT v12.0.0 through v13.999.999
-- **Memory Optimized** - <1MB memory usage with lazy loading and efficient caching
-- **Performance Optimized** - <100ms startup overhead and <5ms per error processing time
+- **Lightweight Build** - 119KB compiled module with efficient resource usage
+- **Performance Focused** - Minimal startup overhead and fast error processing
 - **Hook Integration** - Deep integration with Foundry VTT lifecycle and error handling
 - **Graceful Degradation** - Works without network connectivity and handles service unavailability
 - **Debug Mode** - Configurable debug logging for development and troubleshooting
@@ -65,29 +65,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Health Monitoring** - Health check endpoints for service monitoring
 - **Error Logging** - Structured logging for debugging and monitoring
 
-## [0.1.2] - 2025-06-03
-
-### Fixed
-
-- **Quench Test Suite** - Resolved all failing integration tests for complete test coverage
-- **Network Request Timeouts** - Added 5-second timeout to endpoint testing to prevent test hanging
-- **Error Attribution Accuracy** - Fixed test expectations to match actual attribution behavior when called from module context
-- **Test Error Cascades** - Eliminated cascading errors in window error tests that were causing multiple failures
-- **Promise Rejection Handling** - Improved unhandled promise rejection test to prevent console pollution
-
-### Improved
-
-- **Error Reporter Resilience** - Enhanced `testEndpoint` method with proper timeout handling and abort controller
-- **Test Reliability** - Simplified window error capture test to avoid Foundry v13 deprecation warning cascades
-- **Attribution Logic** - Better handling of stack trace analysis when errors originate from module test context
-- **Debugging Output** - Added comprehensive console logging for test debugging and failure analysis
-
-### Technical
-
-- **AbortController Integration** - Modern fetch timeout handling for better network request management
-- **Test Isolation** - Improved test cleanup and error handler management to prevent interference
-- **Error Boundary Testing** - More robust testing of edge cases and error conditions
-- **JSON Response Parsing** - Better handling of non-JSON responses from invalid endpoints
 
 ## [Unreleased]
 
@@ -104,8 +81,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version History
 
-- **v0.1.2** (2025-06-03): Test suite fixes and network reliability improvements
-- **v0.1.0** (2025-06-03): Initial production release with complete feature set
+- **v0.1.0** (2025-06-03): Initial release with core functionality and infrastructure
 - **Pre-release Development** (2024-2025): Documentation-first development with privacy framework
 
 ---
