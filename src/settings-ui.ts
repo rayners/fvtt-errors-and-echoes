@@ -175,7 +175,9 @@ export class EndpointConfigDialog extends foundry.applications.api.HandlebarsApp
 
         return { moduleId, moduleInfo };
       })
-      .filter((item): item is { moduleId: string; moduleInfo: Module } => item.moduleInfo !== undefined) // Only include modules that actually exist
+      .filter(
+        (item): item is { moduleId: string; moduleInfo: Module } => item.moduleInfo !== undefined
+      ) // Only include modules that actually exist
       .map(({ moduleId, moduleInfo }) => {
         // Extract author information using utility function
         const authors = getFormattedAuthorString(
