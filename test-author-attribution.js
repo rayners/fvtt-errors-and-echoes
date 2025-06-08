@@ -1,6 +1,6 @@
 /**
  * Comprehensive Author Attribution Testing for Errors & Echoes
- * 
+ *
  * This script thoroughly tests the author matching logic with various
  * module configurations to ensure robust endpoint matching.
  */
@@ -26,7 +26,13 @@ function runTest(testName, testFn) {
 }
 
 // Get the author utilities
-const { moduleMatchesAuthor, extractAuthorNames, getPrimaryAuthorName, getFormattedAuthorString, hasAuthorInfo } = window.ErrorsAndEchoes || {};
+const {
+  moduleMatchesAuthor,
+  extractAuthorNames,
+  getPrimaryAuthorName,
+  getFormattedAuthorString,
+  hasAuthorInfo,
+} = window.ErrorsAndEchoes || {};
 
 if (!moduleMatchesAuthor) {
   console.error('❌ CRITICAL: moduleMatchesAuthor function not available. Is E&E loaded?');
@@ -53,8 +59,10 @@ function test(name, fn) {
 
 test('Legacy string author matching', () => {
   const module = { author: 'rayners' };
-  return moduleMatchesAuthor(module, 'rayners') === true && 
-         moduleMatchesAuthor(module, 'someone-else') === false;
+  return (
+    moduleMatchesAuthor(module, 'rayners') === true &&
+    moduleMatchesAuthor(module, 'someone-else') === false
+  );
 });
 
 test('Legacy string author non-match', () => {
@@ -70,55 +78,47 @@ test('Authors array with name field', () => {
   const module = {
     authors: [
       { name: 'rayners', email: 'rayners@gmail.com' },
-      { name: 'collaborator', email: 'collab@example.com' }
-    ]
+      { name: 'collaborator', email: 'collab@example.com' },
+    ],
   };
-  return moduleMatchesAuthor(module, 'rayners') === true && 
-         moduleMatchesAuthor(module, 'collaborator') === true &&
-         moduleMatchesAuthor(module, 'unknown') === false;
+  return (
+    moduleMatchesAuthor(module, 'rayners') === true &&
+    moduleMatchesAuthor(module, 'collaborator') === true &&
+    moduleMatchesAuthor(module, 'unknown') === false
+  );
 });
 
 test('Authors array with github field', () => {
   const module = {
-    authors: [
-      { name: 'David Raynes', github: 'rayners', email: 'rayners@gmail.com' }
-    ]
+    authors: [{ name: 'David Raynes', github: 'rayners', email: 'rayners@gmail.com' }],
   };
   return moduleMatchesAuthor(module, 'rayners') === true;
 });
 
 test('Authors array with email field direct match', () => {
   const module = {
-    authors: [
-      { name: 'David Raynes', email: 'rayners@gmail.com' }
-    ]
+    authors: [{ name: 'David Raynes', email: 'rayners@gmail.com' }],
   };
   return moduleMatchesAuthor(module, 'rayners@gmail.com') === true;
 });
 
 test('Authors array with email username extraction', () => {
   const module = {
-    authors: [
-      { name: 'David Raynes', email: 'rayners@gmail.com' }
-    ]
+    authors: [{ name: 'David Raynes', email: 'rayners@gmail.com' }],
   };
   return moduleMatchesAuthor(module, 'rayners') === true;
 });
 
 test('Authors array with discord field', () => {
   const module = {
-    authors: [
-      { name: 'David Raynes', discord: 'rayners78' }
-    ]
+    authors: [{ name: 'David Raynes', discord: 'rayners78' }],
   };
   return moduleMatchesAuthor(module, 'rayners78') === true;
 });
 
 test('Authors array with URL field', () => {
   const module = {
-    authors: [
-      { name: 'David Raynes', url: 'https://github.com/rayners' }
-    ]
+    authors: [{ name: 'David Raynes', url: 'https://github.com/rayners' }],
   };
   return moduleMatchesAuthor(module, 'rayners') === true;
 });
@@ -129,23 +129,24 @@ test('Authors array with URL field', () => {
 
 test('Authors array with string values', () => {
   const module = {
-    authors: ['rayners', 'collaborator']
+    authors: ['rayners', 'collaborator'],
   };
-  return moduleMatchesAuthor(module, 'rayners') === true && 
-         moduleMatchesAuthor(module, 'collaborator') === true &&
-         moduleMatchesAuthor(module, 'unknown') === false;
+  return (
+    moduleMatchesAuthor(module, 'rayners') === true &&
+    moduleMatchesAuthor(module, 'collaborator') === true &&
+    moduleMatchesAuthor(module, 'unknown') === false
+  );
 });
 
 test('Mixed string and object authors', () => {
   const module = {
-    authors: [
-      'rayners',
-      { name: 'Collaborator', email: 'collab@example.com' }
-    ]
+    authors: ['rayners', { name: 'Collaborator', email: 'collab@example.com' }],
   };
-  return moduleMatchesAuthor(module, 'rayners') === true && 
-         moduleMatchesAuthor(module, 'Collaborator') === true &&
-         moduleMatchesAuthor(module, 'collab') === true;
+  return (
+    moduleMatchesAuthor(module, 'rayners') === true &&
+    moduleMatchesAuthor(module, 'Collaborator') === true &&
+    moduleMatchesAuthor(module, 'collab') === true
+  );
 });
 
 // =============================================================================
@@ -155,18 +156,22 @@ test('Mixed string and object authors', () => {
 test('Authors as Set collection', () => {
   const authorsSet = new Set([
     { name: 'rayners', email: 'rayners@gmail.com' },
-    { name: 'collaborator', email: 'collab@example.com' }
+    { name: 'collaborator', email: 'collab@example.com' },
   ]);
   const module = { authors: authorsSet };
-  return moduleMatchesAuthor(module, 'rayners') === true && 
-         moduleMatchesAuthor(module, 'collaborator') === true;
+  return (
+    moduleMatchesAuthor(module, 'rayners') === true &&
+    moduleMatchesAuthor(module, 'collaborator') === true
+  );
 });
 
 test('Authors as Set with strings', () => {
   const authorsSet = new Set(['rayners', 'collaborator']);
   const module = { authors: authorsSet };
-  return moduleMatchesAuthor(module, 'rayners') === true && 
-         moduleMatchesAuthor(module, 'collaborator') === true;
+  return (
+    moduleMatchesAuthor(module, 'rayners') === true &&
+    moduleMatchesAuthor(module, 'collaborator') === true
+  );
 });
 
 // =============================================================================
@@ -183,9 +188,11 @@ test('Undefined module handling', () => {
 
 test('Empty author identifier', () => {
   const module = { author: 'rayners' };
-  return moduleMatchesAuthor(module, '') === false &&
-         moduleMatchesAuthor(module, null) === false &&
-         moduleMatchesAuthor(module, undefined) === false;
+  return (
+    moduleMatchesAuthor(module, '') === false &&
+    moduleMatchesAuthor(module, null) === false &&
+    moduleMatchesAuthor(module, undefined) === false
+  );
 });
 
 test('Module with no author info', () => {
@@ -214,27 +221,21 @@ test('Authors array with empty objects', () => {
 
 test('Complex email domains', () => {
   const module = {
-    authors: [
-      { email: 'rayners@subdomain.company.co.uk' }
-    ]
+    authors: [{ email: 'rayners@subdomain.company.co.uk' }],
   };
   return moduleMatchesAuthor(module, 'rayners') === true;
 });
 
 test('Email with plus addressing', () => {
   const module = {
-    authors: [
-      { email: 'rayners+foundry@gmail.com' }
-    ]
+    authors: [{ email: 'rayners+foundry@gmail.com' }],
   };
   return moduleMatchesAuthor(module, 'rayners+foundry') === true;
 });
 
 test('Email with dots in username', () => {
   const module = {
-    authors: [
-      { email: 'david.rayners@example.com' }
-    ]
+    authors: [{ email: 'david.rayners@example.com' }],
   };
   return moduleMatchesAuthor(module, 'david.rayners') === true;
 });
@@ -249,9 +250,9 @@ test('GitHub URL patterns', () => {
     'http://github.com/rayners',
     'https://www.github.com/rayners',
     'https://github.com/rayners/',
-    'https://github.com/rayners/some-repo'
+    'https://github.com/rayners/some-repo',
   ];
-  
+
   return testCases.every(url => {
     const module = { authors: [{ url }] };
     return moduleMatchesAuthor(module, 'rayners');
@@ -260,9 +261,7 @@ test('GitHub URL patterns', () => {
 
 test('Non-GitHub URL handling', () => {
   const module = {
-    authors: [
-      { url: 'https://rayners.dev' }
-    ]
+    authors: [{ url: 'https://rayners.dev' }],
   };
   // Should not match since it's not a GitHub URL
   return moduleMatchesAuthor(module, 'rayners') === false;
@@ -276,20 +275,22 @@ test('Seasons & Stars module simulation', () => {
   const module = {
     id: 'seasons-and-stars',
     authors: [
-      { 
-        name: 'David Raynes', 
+      {
+        name: 'David Raynes',
         github: 'rayners',
         email: 'rayners@gmail.com',
         discord: 'rayners78',
-        url: 'https://github.com/rayners'
-      }
-    ]
+        url: 'https://github.com/rayners',
+      },
+    ],
   };
-  
-  return moduleMatchesAuthor(module, 'rayners') === true &&
-         moduleMatchesAuthor(module, 'David Raynes') === true &&
-         moduleMatchesAuthor(module, 'rayners@gmail.com') === true &&
-         moduleMatchesAuthor(module, 'rayners78') === true;
+
+  return (
+    moduleMatchesAuthor(module, 'rayners') === true &&
+    moduleMatchesAuthor(module, 'David Raynes') === true &&
+    moduleMatchesAuthor(module, 'rayners@gmail.com') === true &&
+    moduleMatchesAuthor(module, 'rayners78') === true
+  );
 });
 
 test('Foundry VTT processed module data', () => {
@@ -297,16 +298,16 @@ test('Foundry VTT processed module data', () => {
   const module = {
     id: 'test-module',
     authors: new Set([
-      { 
+      {
         name: 'David Raynes',
         email: 'rayners@gmail.com',
         // github field might be stripped by Foundry
         discord: 'rayners78',
-        url: 'https://github.com/rayners'
-      }
-    ])
+        url: 'https://github.com/rayners',
+      },
+    ]),
   };
-  
+
   return moduleMatchesAuthor(module, 'rayners') === true; // Should match via email extraction or URL
 });
 
@@ -318,20 +319,16 @@ test('extractAuthorNames with object authors', () => {
   const module = {
     authors: [
       { name: 'David Raynes', email: 'rayners@gmail.com' },
-      { name: 'Collaborator', github: 'collab' }
-    ]
+      { name: 'Collaborator', github: 'collab' },
+    ],
   };
   const names = extractAuthorNames(module);
-  return names.length === 2 && 
-         names.includes('David Raynes') && 
-         names.includes('Collaborator');
+  return names.length === 2 && names.includes('David Raynes') && names.includes('Collaborator');
 });
 
 test('extractAuthorNames preference order', () => {
   const module = {
-    authors: [
-      { name: 'Display Name', github: 'github-user', email: 'user@example.com' }
-    ]
+    authors: [{ name: 'Display Name', github: 'github-user', email: 'user@example.com' }],
   };
   const names = extractAuthorNames(module);
   return names.length === 1 && names[0] === 'Display Name'; // Should prefer name over github/email
@@ -340,27 +337,19 @@ test('extractAuthorNames preference order', () => {
 test('extractAuthorNames with string authors', () => {
   const module = { authors: ['author1', 'author2'] };
   const names = extractAuthorNames(module);
-  return names.length === 2 && 
-         names.includes('author1') && 
-         names.includes('author2');
+  return names.length === 2 && names.includes('author1') && names.includes('author2');
 });
 
 test('getPrimaryAuthorName', () => {
   const module = {
-    authors: [
-      { name: 'Primary Author' },
-      { name: 'Secondary Author' }
-    ]
+    authors: [{ name: 'Primary Author' }, { name: 'Secondary Author' }],
   };
   return getPrimaryAuthorName(module) === 'Primary Author';
 });
 
 test('getFormattedAuthorString', () => {
   const module = {
-    authors: [
-      { name: 'Author One' },
-      { name: 'Author Two' }
-    ]
+    authors: [{ name: 'Author One' }, { name: 'Author Two' }],
   };
   return getFormattedAuthorString(module) === 'Author One, Author Two';
 });
@@ -381,22 +370,22 @@ test('hasAuthorInfo negative', () => {
 
 test('Large authors array performance', () => {
   const startTime = performance.now();
-  
+
   // Create a large authors array
   const authors = [];
   for (let i = 0; i < 1000; i++) {
     authors.push({ name: `author${i}`, email: `author${i}@example.com` });
   }
   authors.push({ name: 'rayners', email: 'rayners@gmail.com' }); // Target author
-  
+
   const module = { authors };
   const result = moduleMatchesAuthor(module, 'rayners');
-  
+
   const endTime = performance.now();
   const duration = endTime - startTime;
-  
+
   console.log(`  ⏱️ Large array test took ${duration.toFixed(2)}ms`);
-  
+
   return result === true && duration < 100; // Should complete in under 100ms
 });
 
@@ -424,12 +413,12 @@ const seasonsStarsModule = game.modules?.get('seasons-and-stars');
 if (seasonsStarsModule) {
   console.log('Module found:', {
     id: seasonsStarsModule.id,
-    authors: seasonsStarsModule.authors ? Array.from(seasonsStarsModule.authors) : 'none'
+    authors: seasonsStarsModule.authors ? Array.from(seasonsStarsModule.authors) : 'none',
   });
-  
+
   const testResult = moduleMatchesAuthor(seasonsStarsModule, 'rayners');
   console.log(`moduleMatchesAuthor(seasons-and-stars, 'rayners'): ${testResult}`);
-  
+
   if (testResult) {
     console.log('✅ Real-world test PASSED');
   } else {

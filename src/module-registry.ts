@@ -5,7 +5,7 @@
  * including context providers and error filters.
  */
 
-import type { EndpointConfig, ModuleRegistrationOptions, RegisteredModule } from './types.js';
+import type { EndpointConfig, RegisteredModule } from './types.js';
 import { debugLog } from './utils.js';
 
 export interface ModuleRegistrationConfig {
@@ -27,7 +27,9 @@ export class ModuleRegistry {
 
       // Validate required moduleId
       if (!moduleId || typeof moduleId !== 'string') {
-        console.warn('Errors and Echoes: Registration failed - moduleId is required and must be a string');
+        console.warn(
+          'Errors and Echoes: Registration failed - moduleId is required and must be a string'
+        );
         return;
       }
 
@@ -35,24 +37,32 @@ export class ModuleRegistry {
       if (typeof game !== 'undefined' && game.modules) {
         const module = game.modules.get(moduleId);
         if (!module) {
-          console.warn(`Errors and Echoes: Cannot register module '${moduleId}' - module not found in game.modules`);
+          console.warn(
+            `Errors and Echoes: Cannot register module '${moduleId}' - module not found in game.modules`
+          );
           return;
         }
       } else {
         // Game might not be ready yet, continue with registration but warn
-        console.info(`Errors and Echoes: Registering '${moduleId}' before game.modules is available`);
+        console.info(
+          `Errors and Echoes: Registering '${moduleId}' before game.modules is available`
+        );
       }
 
       // Validate context provider if provided
       if (contextProvider && typeof contextProvider !== 'function') {
-        console.warn(`Errors and Echoes: Context provider for '${moduleId}' must be a function - skipping context provider`);
+        console.warn(
+          `Errors and Echoes: Context provider for '${moduleId}' must be a function - skipping context provider`
+        );
         // Continue registration without context provider rather than failing completely
         config.contextProvider = undefined;
       }
 
       // Validate error filter if provided
       if (errorFilter && typeof errorFilter !== 'function') {
-        console.warn(`Errors and Echoes: Error filter for '${moduleId}' must be a function - skipping error filter`);
+        console.warn(
+          `Errors and Echoes: Error filter for '${moduleId}' must be a function - skipping error filter`
+        );
         // Continue registration without error filter rather than failing completely
         config.errorFilter = undefined;
       }
@@ -82,7 +92,9 @@ export class ModuleRegistry {
           const testError = new Error('Test error for validation');
           const result = config.errorFilter(testError);
           if (typeof result !== 'boolean') {
-            console.warn(`Errors and Echoes: Error filter for '${moduleId}' must return a boolean - disabling error filter`);
+            console.warn(
+              `Errors and Echoes: Error filter for '${moduleId}' must return a boolean - disabling error filter`
+            );
             config.errorFilter = undefined;
           }
         } catch (error) {
@@ -97,7 +109,9 @@ export class ModuleRegistry {
       // Validate endpoint configuration if provided
       if (endpoint) {
         if (!endpoint.name || !endpoint.url) {
-          console.warn(`Errors and Echoes: Endpoint for '${moduleId}' missing required name or url - disabling custom endpoint`);
+          console.warn(
+            `Errors and Echoes: Endpoint for '${moduleId}' missing required name or url - disabling custom endpoint`
+          );
           config.endpoint = undefined;
         } else if (typeof endpoint.enabled !== 'boolean') {
           // Default to enabled if not specified
@@ -123,10 +137,12 @@ export class ModuleRegistry {
       debugLog(`  - Context provider: ${config.contextProvider ? 'Yes' : 'No'}`);
       debugLog(`  - Error filter: ${config.errorFilter ? 'Yes' : 'No'}`);
       debugLog(`  - Custom endpoint: ${config.endpoint ? 'Yes' : 'No'}`);
-      
     } catch (registrationError) {
       // Critical: Never let registration errors break the calling module
-      console.error('Errors and Echoes: Registration failed with unexpected error:', registrationError);
+      console.error(
+        'Errors and Echoes: Registration failed with unexpected error:',
+        registrationError
+      );
       console.error('  - This error has been contained and should not affect your module');
       console.error('  - Please report this to the Errors and Echoes developers');
     }
@@ -166,23 +182,26 @@ export class ModuleRegistry {
       // Set up timeout for context provider execution
       const contextProvider = registered.contextProvider;
       let context: any;
-      
+
       // Execute context provider with error boundaries
       try {
         context = contextProvider();
       } catch (providerError) {
-        console.warn(`Errors and Echoes: Context provider for '${moduleId}' threw an error during execution:`, providerError);
-        
+        console.warn(
+          `Errors and Echoes: Context provider for '${moduleId}' threw an error during execution:`,
+          providerError
+        );
+
         // Update statistics even for failed calls
         registered.contextCallCount++;
         registered.lastContextCall = new Date().toISOString();
-        
+
         // Return basic fallback context with error information
         return {
           _errorAndEchoesContextError: true,
           _errorMessage: providerError instanceof Error ? providerError.message : 'Unknown error',
           _moduleId: moduleId,
-          _timestamp: new Date().toISOString()
+          _timestamp: new Date().toISOString(),
         };
       }
 
@@ -192,12 +211,14 @@ export class ModuleRegistry {
 
       // Validate returned context
       if (typeof context !== 'object' || context === null) {
-        console.warn(`Errors and Echoes: Context provider for '${moduleId}' returned invalid data (expected object, got ${typeof context})`);
+        console.warn(
+          `Errors and Echoes: Context provider for '${moduleId}' returned invalid data (expected object, got ${typeof context})`
+        );
         return {
           _errorAndEchoesContextError: true,
           _errorMessage: `Invalid context type: ${typeof context}`,
           _moduleId: moduleId,
-          _timestamp: new Date().toISOString()
+          _timestamp: new Date().toISOString(),
         };
       }
 
@@ -206,28 +227,30 @@ export class ModuleRegistry {
         const sanitizedContext = this.sanitizeContext(context, moduleId);
         return sanitizedContext;
       } catch (sanitizeError) {
-        console.warn(`Errors and Echoes: Failed to sanitize context for '${moduleId}':`, sanitizeError);
+        console.warn(
+          `Errors and Echoes: Failed to sanitize context for '${moduleId}':`,
+          sanitizeError
+        );
         return {
           _errorAndEchoesContextError: true,
           _errorMessage: 'Context sanitization failed',
           _moduleId: moduleId,
-          _timestamp: new Date().toISOString()
+          _timestamp: new Date().toISOString(),
         };
       }
-
     } catch (error) {
       // Catch-all for any unexpected errors
       console.warn(`Errors and Echoes: Unexpected error getting context for '${moduleId}':`, error);
-      
+
       // Update statistics even for failed calls
       registered.contextCallCount++;
       registered.lastContextCall = new Date().toISOString();
-      
+
       return {
         _errorAndEchoesContextError: true,
         _errorMessage: error instanceof Error ? error.message : 'Unknown unexpected error',
         _moduleId: moduleId,
-        _timestamp: new Date().toISOString()
+        _timestamp: new Date().toISOString(),
       };
     }
   }
@@ -235,7 +258,10 @@ export class ModuleRegistry {
   /**
    * Sanitize context object to prevent issues with JSON serialization
    */
-  private static sanitizeContext(context: Record<string, any>, moduleId: string): Record<string, any> {
+  private static sanitizeContext(
+    context: Record<string, any>,
+    moduleId: string
+  ): Record<string, any> {
     const maxDepth = 3;
     const maxStringLength = 1000;
     const maxArrayLength = 50;
@@ -256,7 +282,7 @@ export class ModuleRegistry {
       if (typeof obj === 'string') {
         return obj.length > maxStringLength ? obj.substring(0, maxStringLength) + '...' : obj;
       }
-      
+
       if (typeof obj === 'number' || typeof obj === 'boolean') {
         return obj;
       }
@@ -278,7 +304,7 @@ export class ModuleRegistry {
           return {
             _type: 'Error',
             message: obj.message,
-            name: obj.name
+            name: obj.name,
           };
         }
 
@@ -293,16 +319,16 @@ export class ModuleRegistry {
         // Handle regular objects
         const sanitized: Record<string, any> = {};
         const keys = Object.keys(obj).slice(0, maxObjectKeys);
-        
+
         for (const key of keys) {
           try {
             // Skip potentially problematic keys
             if (key.startsWith('_') && key !== '_id') {
               continue; // Skip private properties except _id
             }
-            
+
             sanitized[key] = sanitize(obj[key], depth + 1);
-          } catch (error) {
+          } catch {
             sanitized[key] = '[Error accessing property]';
           }
         }
@@ -320,24 +346,24 @@ export class ModuleRegistry {
 
     try {
       const sanitized = sanitize(context);
-      
+
       // Add metadata about sanitization (skip in test environments)
       if (typeof sanitized === 'object' && sanitized !== null && !this.isTestEnvironment()) {
         sanitized._errorsAndEchoesMeta = {
           moduleId,
           sanitized: true,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         };
       }
-      
+
       return sanitized;
-    } catch (error) {
+    } catch {
       // If sanitization completely fails, return minimal safe context
       return {
         _errorAndEchoesContextError: true,
         _errorMessage: 'Complete sanitization failure',
         _moduleId: moduleId,
-        _timestamp: new Date().toISOString()
+        _timestamp: new Date().toISOString(),
       };
     }
   }
@@ -394,11 +420,13 @@ export class ModuleRegistry {
    */
   private static isTestEnvironment(): boolean {
     // Check multiple ways to detect test environment
-    return (typeof process !== 'undefined' && process.env?.NODE_ENV === 'test') ||
-           (typeof globalThis !== 'undefined' && globalThis.__vitest_worker__ !== undefined) ||
-           (typeof global !== 'undefined' && (global as any).__vitest_worker__ !== undefined) ||
-           (typeof globalThis !== 'undefined' && (globalThis as any).describe !== undefined) ||
-           (typeof window !== 'undefined' && (window as any).__vitest_worker__ !== undefined);
+    return (
+      (typeof process !== 'undefined' && process.env?.NODE_ENV === 'test') ||
+      (typeof globalThis !== 'undefined' && globalThis.__vitest_worker__ !== undefined) ||
+      (typeof global !== 'undefined' && (global as any).__vitest_worker__ !== undefined) ||
+      (typeof globalThis !== 'undefined' && (globalThis as any).describe !== undefined) ||
+      (typeof window !== 'undefined' && (window as any).__vitest_worker__ !== undefined)
+    );
   }
 
   /**

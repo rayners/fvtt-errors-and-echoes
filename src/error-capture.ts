@@ -159,7 +159,7 @@ export class ErrorCapture {
           };
           this.handleError(args[0], context);
         }
-      } catch (reportingError) {
+      } catch {
         // Don't let reporting errors affect console.error
         // Silent failure to avoid infinite loops
       }
@@ -186,7 +186,7 @@ export class ErrorCapture {
           };
           this.handleError(args[0], context);
         }
-      } catch (reportingError) {
+      } catch {
         // Silent failure to avoid infinite loops
       }
     };

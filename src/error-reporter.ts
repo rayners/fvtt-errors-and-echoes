@@ -275,7 +275,7 @@ export class ErrorReporter {
     try {
       // Use first 100 characters of stack trace as signature
       return btoa(stack.substring(0, 100)).substring(0, 10);
-    } catch (error) {
+    } catch {
       return 'invalid-stack';
     }
   }
@@ -301,7 +301,7 @@ export class ErrorReporter {
       const newId = 'anon-' + Math.random().toString(36).substring(2, 15);
       localStorage.setItem(storageKey, `${today}|${newId}`);
       return newId;
-    } catch (error) {
+    } catch {
       // Fallback if localStorage is not available
       return 'anon-' + Math.random().toString(36).substring(2, 15);
     }
@@ -344,7 +344,7 @@ export class ErrorReporter {
       }
 
       return 'Unknown';
-    } catch (error) {
+    } catch {
       return 'Unknown';
     }
   }
@@ -417,7 +417,7 @@ export class ErrorReporter {
         let testResponse: ErrorReportResponse;
         try {
           testResponse = await response.json();
-        } catch (parseError) {
+        } catch {
           // Handle cases where response is not valid JSON (e.g., HTML error pages)
           console.warn('Endpoint test failed: Invalid JSON response');
           return false;

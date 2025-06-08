@@ -107,7 +107,7 @@ export class ErrorReporterWelcomeDialog extends foundry.applications.api.Handleb
   /**
    * Handle enabling error reporting
    */
-  async _onEnable(event: Event, target: HTMLElement): Promise<void> {
+  async _onEnable(_event: Event, _target: HTMLElement): Promise<void> {
     try {
       const privacyLevel = this.getSelectedPrivacyLevel();
       await ConsentManager.setConsent(true, privacyLevel);
@@ -123,7 +123,7 @@ export class ErrorReporterWelcomeDialog extends foundry.applications.api.Handleb
   /**
    * Handle declining error reporting
    */
-  async _onDecline(event: Event, target: HTMLElement): Promise<void> {
+  async _onDecline(_event: Event, _target: HTMLElement): Promise<void> {
     try {
       await ConsentManager.setConsent(false);
       this.close();
@@ -135,7 +135,7 @@ export class ErrorReporterWelcomeDialog extends foundry.applications.api.Handleb
   /**
    * Handle learn more button - show privacy details dialog
    */
-  async _onLearnMore(event: Event, target: HTMLElement): Promise<void> {
+  async _onLearnMore(_event: Event, _target: HTMLElement): Promise<void> {
     try {
       // Dynamic import to avoid circular dependencies
       const { PrivacyDetailsDialog } = await import('./privacy-details-dialog.js');
@@ -149,7 +149,7 @@ export class ErrorReporterWelcomeDialog extends foundry.applications.api.Handleb
   /**
    * Handle privacy level selection
    */
-  async _onSelectPrivacyLevel(event: Event, target: HTMLElement): Promise<void> {
+  async _onSelectPrivacyLevel(_event: Event, _target: HTMLElement): Promise<void> {
     const input = target as HTMLInputElement;
     const level = input.value as PrivacyLevel;
     this.updatePrivacyPreview(level);

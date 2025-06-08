@@ -240,7 +240,9 @@ function setupPublicAPI(): void {
         if (endpoint) {
           ErrorReporter.sendReport(error, attribution, endpoint, options.context || {});
         } else {
-          console.debug(`Errors and Echoes: No endpoint found for manual report from module '${moduleId}'`);
+          console.debug(
+            `Errors and Echoes: No endpoint found for manual report from module '${moduleId}'`
+          );
         }
       } catch (reportError) {
         console.error('Errors and Echoes: API report() failed:', reportError);
@@ -250,11 +252,7 @@ function setupPublicAPI(): void {
 
     // Check consent status
     hasConsent: (): boolean => {
-      return safeExecute(
-        () => ConsentManager.hasConsent(),
-        false,
-        'API hasConsent() failed'
-      );
+      return safeExecute(() => ConsentManager.hasConsent(), false, 'API hasConsent() failed');
     },
 
     // Get privacy level
@@ -273,7 +271,7 @@ function setupPublicAPI(): void {
         {
           totalReports: 0,
           recentReports: 0,
-          lastReportTime: undefined
+          lastReportTime: undefined,
         },
         'API getStats() failed'
       );
@@ -290,7 +288,7 @@ function setupPublicAPI(): void {
   // Load Quench integration tests if available
   try {
     import('./quench-tests.js');
-  } catch (error) {
+  } catch {
     // Quench tests are optional - fail silently if import fails
   }
 }
@@ -300,7 +298,7 @@ function setupPublicAPI(): void {
  */
 function getCallingModule(): string {
   const stack = new Error().stack;
-  const moduleMatch = stack?.match(/\/modules\/([^\/]+)\//);
+  const moduleMatch = stack?.match(/\/modules\/([^/]+)\//);
   return moduleMatch?.[1] || 'unknown';
 }
 

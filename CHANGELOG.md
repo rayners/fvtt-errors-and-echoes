@@ -65,7 +65,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Health Monitoring** - Health check endpoints for service monitoring
 - **Error Logging** - Structured logging for debugging and monitoring
 
-
 ## [Unreleased]
 
 ### Planned Features

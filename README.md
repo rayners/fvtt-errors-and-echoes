@@ -89,8 +89,8 @@ try {
     window.ErrorsAndEchoesAPI.report(error, {
       context: {
         operation: 'riskyOperation',
-        userAction: 'button-click'
-      }
+        userAction: 'button-click',
+      },
     });
   }
 
@@ -133,11 +133,13 @@ async function applyStatusEffect(tokenId, effectData) {
 ### **What Gets Reported**
 
 **Attribution Analysis:**
+
 - **Module ID**: `advanced-combat-manager` (high confidence - detected from stack trace)
 - **Confidence**: `high` (stack trace clearly shows `/modules/advanced-combat-manager/`)
 - **Method**: `stack-trace` (most reliable attribution method)
 
 **Actual Payload Sent (Standard Privacy Level):**
+
 ```json
 {
   "error": {
@@ -159,9 +161,9 @@ async function applyStatusEffect(tokenId, effectData) {
       "version": "3.3.1"
     },
     "modules": [
-      {"id": "advanced-combat-manager", "version": "2.1.4"},
-      {"id": "lib-wrapper", "version": "1.12.14"},
-      {"id": "errors-and-echoes", "version": "0.1.2"}
+      { "id": "advanced-combat-manager", "version": "2.1.4" },
+      { "id": "lib-wrapper", "version": "1.12.14" },
+      { "id": "errors-and-echoes", "version": "0.1.2" }
     ]
   },
   "client": {
@@ -185,11 +187,13 @@ async function applyStatusEffect(tokenId, effectData) {
 ### **Privacy Level Comparison**
 
 **Minimal Level** would exclude:
+
 - `foundry.system` and `foundry.modules`
 - `client` section entirely
 - `moduleContext` data
 
 **Detailed Level** would add:
+
 - `foundry.scene`: "Goblin Ambush"
 - `client.browser`: Full browser details
 - Enhanced `moduleContext` with more debugging info
@@ -197,18 +201,21 @@ async function applyStatusEffect(tokenId, effectData) {
 ### **How This Helps The Module Author**
 
 **🎯 Immediate Value:**
+
 - **Root Cause**: Permission error during ActiveEffect creation
 - **User Context**: Player trying to apply effects (not GM)
 - **Environment**: D&D 5e system, specific module versions
 - **Frequency**: If multiple users report this, it's a priority issue
 
 **🔧 Action Items for Developer:**
+
 1. Add permission checks before attempting ActiveEffect creation
 2. Show user-friendly error message for permission failures
 3. Test the feature more thoroughly with player permissions
 4. Consider graceful fallbacks for restricted users
 
 **📊 Analytics Insights:**
+
 - Error frequency: Is this a common issue?
 - User patterns: Do only players encounter this?
 - Version correlation: Does this happen with specific D&D 5e versions?
@@ -620,17 +627,20 @@ The reference implementation serves as both a working example and a starting poi
 Errors & Echoes is currently in **beta** with core functionality working but some areas needing refinement:
 
 **✅ Working Features:**
+
 - Error capture and attribution system
-- Privacy controls and consent management  
+- Privacy controls and consent management
 - Module registration API
 - Settings UI with registered module display
 - Production infrastructure at https://errors.rayners.dev
 
 **⚠️ Known Issues:**
+
 - Module registration examples need real-world validation with popular modules
 - Error attribution accuracy could be improved with production usage data
 
 **🔄 Next Priorities (v0.2.0):**
+
 - Validate integration examples with popular modules in production
 - Improve error attribution accuracy based on real usage patterns
 - Enhanced error filtering capabilities with smart noise reduction
@@ -639,12 +649,14 @@ Errors & Echoes is currently in **beta** with core functionality working but som
 ### Upcoming Features
 
 **v0.2.0 Planned:**
+
 - Enhanced error attribution with machine learning patterns
 - Real-time error analytics and pattern detection
 - Additional context providers for common debugging scenarios
 - Improved module compatibility and integration testing
 
 **v0.3.0 Planned:**
+
 - Advanced filtering capabilities with smart noise reduction
 - Internationalization support for multiple languages
 - Integration with Foundry package browser for seamless setup
@@ -683,8 +695,9 @@ Love using Errors & Echoes? Consider supporting continued development:
 [![Patreon](https://img.shields.io/badge/Patreon-Support%20Development-ff424d?style=for-the-badge&logo=patreon)](https://patreon.com/rayners)
 
 Your support helps fund:
+
 - 🚀 **New Features**: Enhanced error attribution and reporting capabilities
-- 🐛 **Bug Fixes**: Faster resolution of issues and compatibility updates  
+- 🐛 **Bug Fixes**: Faster resolution of issues and compatibility updates
 - 📚 **Documentation**: Comprehensive guides and integration examples
 - 🎯 **Community Requests**: Implementation of user-requested features
 

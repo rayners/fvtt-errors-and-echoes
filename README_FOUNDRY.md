@@ -210,12 +210,14 @@ The button doesn't work, the effect isn't applied, and you're not sure why.
 ### **How Errors & Echoes Helps (If Enabled)**
 
 **What Happens Automatically:**
+
 1. The error is captured and analyzed
 2. The system identifies it came from the "Combat Helper" module
 3. Anonymous technical details are sent to the module author
 4. **You still see the same error** - nothing is hidden from you
 
 **What The Module Author Receives:**
+
 - **Error Message**: "Permission denied for ActiveEffect creation"
 - **When It Happened**: During combat, when clicking "Apply Poison"
 - **Your Setup**: D&D 5e system, which other modules are active
@@ -223,6 +225,7 @@ The button doesn't work, the effect isn't applied, and you're not sure why.
 
 **What Gets Fixed:**
 The author realizes players can't create effects directly and releases an update that:
+
 - Asks the GM to apply the effect instead
 - Shows a helpful message: "Permission needed - asking GM to apply poison effect"
 - Prevents the error from happening again
@@ -230,6 +233,7 @@ The author realizes players can't create effects directly and releases an update
 ### **Your Privacy Protection**
 
 **❌ NOT Included in the report:**
+
 - Your username or any personal information
 - The name of your game world or characters
 - Chat messages or story content
@@ -237,6 +241,7 @@ The author realizes players can't create effects directly and releases an update
 - Campaign-specific details
 
 **✅ Only Technical Information:**
+
 - The specific error that occurred
 - Which module caused it
 - Your system setup (D&D 5e, module versions)

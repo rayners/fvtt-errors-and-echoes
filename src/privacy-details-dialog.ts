@@ -181,7 +181,7 @@ export class PrivacyDetailsDialog extends foundry.applications.api.HandlebarsApp
     return (
       json
         // Highlight strings (including keys)
-        .replace(/"([^"\\]*(\\.[^"\\]*)*)"/g, (match, content) => {
+        .replace(/"([^"\\]*(\\.[^"\\]*)*)"/g, (match, _content) => {
           if (match.endsWith('":')) {
             // It's a key
             return `<span class="json-key">${match}</span>`;
@@ -212,7 +212,7 @@ export class PrivacyDetailsDialog extends foundry.applications.api.HandlebarsApp
         url: endpoint.url,
         enabled: endpoint.enabled,
       }));
-    } catch (error) {
+    } catch {
       return [];
     }
   }
@@ -220,7 +220,7 @@ export class PrivacyDetailsDialog extends foundry.applications.api.HandlebarsApp
   /**
    * Handle enabling error reporting
    */
-  async _onEnableReporting(event: Event, target: HTMLElement): Promise<void> {
+  async _onEnableReporting(_event: Event, _target: HTMLElement): Promise<void> {
     try {
       await ConsentManager.setConsent(true, 'standard');
       this.render(true); // Refresh to show updated status
@@ -233,7 +233,7 @@ export class PrivacyDetailsDialog extends foundry.applications.api.HandlebarsApp
   /**
    * Handle changing privacy level
    */
-  async _onChangePrivacy(event: Event, target: HTMLElement): Promise<void> {
+  async _onChangePrivacy(_event: Event, _target: HTMLElement): Promise<void> {
     try {
       // Import welcome dialog for privacy level selection
       const { ErrorReporterWelcomeDialog } = await import('./welcome-dialog.js');
@@ -253,7 +253,7 @@ export class PrivacyDetailsDialog extends foundry.applications.api.HandlebarsApp
   /**
    * Handle disabling error reporting
    */
-  async _onDisableReporting(event: Event, target: HTMLElement): Promise<void> {
+  async _onDisableReporting(_event: Event, _target: HTMLElement): Promise<void> {
     try {
       await ConsentManager.setConsent(false);
       this.render(true); // Refresh to show updated status
@@ -266,7 +266,7 @@ export class PrivacyDetailsDialog extends foundry.applications.api.HandlebarsApp
   /**
    * Handle revoking all consent
    */
-  async _onRevokeConsent(event: Event, target: HTMLElement): Promise<void> {
+  async _onRevokeConsent(_event: Event, _target: HTMLElement): Promise<void> {
     const confirmed = await Dialog.confirm({
       title: 'Revoke All Consent',
       content:
@@ -288,7 +288,7 @@ export class PrivacyDetailsDialog extends foundry.applications.api.HandlebarsApp
   /**
    * Handle refreshing the example payload
    */
-  async _onRefreshExample(event: Event, target: HTMLElement): Promise<void> {
+  async _onRefreshExample(_event: Event, _target: HTMLElement): Promise<void> {
     // Re-render to get fresh example with current privacy level
     this.render(true);
   }

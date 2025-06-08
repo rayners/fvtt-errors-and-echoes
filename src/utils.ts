@@ -16,11 +16,7 @@ export function debugLog(message: string, ...args: any[]): void {
 /**
  * Safely execute a function with error handling and default fallback
  */
-export function safeExecute<T>(
-  operation: () => T,
-  fallback: T,
-  context: string
-): T {
+export function safeExecute<T>(operation: () => T, fallback: T, context: string): T {
   try {
     return operation();
   } catch (error) {
@@ -52,7 +48,7 @@ export function getSetting<T>(key: string, fallback: T): T {
   return safeExecute(
     () => {
       const value = game.settings.get('errors-and-echoes', key) as T;
-      return (value !== undefined && value !== null) ? value : fallback;
+      return value !== undefined && value !== null ? value : fallback;
     },
     fallback,
     `Failed to get setting '${key}'`
@@ -76,9 +72,5 @@ export async function setSetting<T>(key: string, value: T): Promise<boolean> {
  * Safely get a module from the game modules registry
  */
 export function getModule(moduleId: string): any {
-  return safeExecute(
-    () => game.modules.get(moduleId),
-    null,
-    `Failed to get module '${moduleId}'`
-  );
+  return safeExecute(() => game.modules.get(moduleId), null, `Failed to get module '${moduleId}'`);
 }

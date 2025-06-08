@@ -17,7 +17,7 @@ export interface ModuleAuthor {
  * Check if a module matches a given author identifier
  */
 export function moduleMatchesAuthor(
-  module: Partial<Module> | null | undefined, 
+  module: Partial<Module> | null | undefined,
   authorIdentifier: string
 ): boolean {
   if (!module || !authorIdentifier) return false;
@@ -34,18 +34,22 @@ export function moduleMatchesAuthor(
         } else if (typeof author === 'object' && author) {
           const extendedAuthor = author as ModuleAuthor;
           // Check all available author fields
-          if (extendedAuthor.name === authorIdentifier ||
-              extendedAuthor.github === authorIdentifier ||
-              extendedAuthor.email === authorIdentifier) {
+          if (
+            extendedAuthor.name === authorIdentifier ||
+            extendedAuthor.github === authorIdentifier ||
+            extendedAuthor.email === authorIdentifier
+          ) {
             return true;
           }
-          
+
           // Check additional fields that Foundry provides
-          if (extendedAuthor.discord === authorIdentifier ||
-              extendedAuthor.url === authorIdentifier) {
+          if (
+            extendedAuthor.discord === authorIdentifier ||
+            extendedAuthor.url === authorIdentifier
+          ) {
             return true;
           }
-          
+
           // Extract username from email (user@host -> user)
           if (extendedAuthor.email && typeof extendedAuthor.email === 'string') {
             const emailUser = extendedAuthor.email.split('@')[0];
@@ -53,12 +57,12 @@ export function moduleMatchesAuthor(
               return true;
             }
           }
-          
+
           // Extract username from URL if present
           if (extendedAuthor.url && typeof extendedAuthor.url === 'string') {
             const url = extendedAuthor.url;
             // Handle GitHub URLs like https://github.com/rayners
-            const githubMatch = url.match(/github\.com\/([^\/]+)/);
+            const githubMatch = url.match(/github\.com\/([^/]+)/);
             if (githubMatch && githubMatch[1] === authorIdentifier) {
               return true;
             }
@@ -131,7 +135,10 @@ export function getPrimaryAuthorName(module: Partial<Module> | null | undefined)
 /**
  * Get a formatted author string for display (comma-separated list)
  */
-export function getFormattedAuthorString(module: Partial<Module> | null | undefined, unknownLabel: string = 'Unknown'): string {
+export function getFormattedAuthorString(
+  module: Partial<Module> | null | undefined,
+  unknownLabel: string = 'Unknown'
+): string {
   const authorNames = extractAuthorNames(module);
   return authorNames.length > 0 ? authorNames.join(', ') : unknownLabel;
 }

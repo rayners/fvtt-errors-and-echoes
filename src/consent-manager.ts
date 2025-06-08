@@ -5,7 +5,7 @@
  * Ensures all reporting is opt-in and respects user privacy choices.
  */
 
-import { getSetting, setSetting, safeExecute } from './utils.js';
+import { getSetting } from './utils.js';
 
 export type PrivacyLevel = 'minimal' | 'standard' | 'detailed';
 

@@ -6,7 +6,7 @@
 
 import { moduleMatchesAuthor, getFormattedAuthorString } from './author-utils.js';
 import { ModuleRegistry } from './module-registry.js';
-import type { EndpointConfig, RegisteredModule } from './types.js';
+import type { EndpointConfig } from './types.js';
 
 interface EndpointConfigWithIndex extends EndpointConfig {
   index: number;
@@ -102,7 +102,7 @@ export class EndpointConfigDialog extends foundry.applications.api.HandlebarsApp
       game.settings.get('errors-and-echoes', 'endpointConsent') || {};
 
     // Register Handlebars helper for OR operation
-    Handlebars.registerHelper('or', function(...args) {
+    Handlebars.registerHelper('or', function (...args) {
       // Remove the Handlebars options object (last argument)
       args.pop();
       return args.some(arg => !!arg);
@@ -224,7 +224,7 @@ export class EndpointConfigDialog extends foundry.applications.api.HandlebarsApp
 
   // Note: ApplicationV2 uses actions system instead of activateListeners
 
-  async _onAddEndpoint(event: Event, target: HTMLElement): Promise<void> {
+  async _onAddEndpoint(_event: Event, _target: HTMLElement): Promise<void> {
     const endpoints: EndpointConfig[] = game.settings.get('errors-and-echoes', 'endpoints') || [];
 
     endpoints.push({
@@ -271,7 +271,7 @@ export class EndpointConfigDialog extends foundry.applications.api.HandlebarsApp
     }
   }
 
-  async _onTestEndpoint(event: Event, target: HTMLElement): Promise<void> {
+  async _onTestEndpoint(_event: Event, _target: HTMLElement): Promise<void> {
     const index = parseInt(target.dataset.index || '0');
     const buttonElement = target;
     const endpoints: EndpointConfig[] = game.settings.get('errors-and-echoes', 'endpoints') || [];
@@ -345,7 +345,7 @@ export class EndpointConfigDialog extends foundry.applications.api.HandlebarsApp
     }
   }
 
-  async _onSaveSettings(event: Event, target: HTMLElement): Promise<void> {
+  async _onSaveSettings(_event: Event, _target: HTMLElement): Promise<void> {
     await this.saveSettingsInternal();
     ui.notifications.info(
       game.i18n.localize('ERRORS_AND_ECHOES.Settings.EndpointConfig.SaveSuccess')
@@ -368,7 +368,7 @@ export class EndpointConfigDialog extends foundry.applications.api.HandlebarsApp
       game.settings.get('errors-and-echoes', 'endpoints') || [];
 
     // Process consent checkboxes from the form
-    const endpointConsent: Record<string, boolean> = 
+    const endpointConsent: Record<string, boolean> =
       game.settings.get('errors-and-echoes', 'endpointConsent') || {};
 
     for (let i = 0; i < endpointCount; i++) {
@@ -383,12 +383,16 @@ export class EndpointConfigDialog extends foundry.applications.api.HandlebarsApp
           .map(m => m.trim())
           .filter(m => m) || [];
       // Process enabled checkbox directly from DOM (checkboxes don't appear in FormData when unchecked)
-      const enabledCheckbox = formElement.querySelector(`input[name="endpoint-enabled-${i}"]`) as HTMLInputElement;
+      const enabledCheckbox = formElement.querySelector(
+        `input[name="endpoint-enabled-${i}"]`
+      ) as HTMLInputElement;
       const enabled = enabledCheckbox ? enabledCheckbox.checked : false;
 
       // Process consent checkbox for this endpoint
       // The consent checkbox uses the pattern endpoint-consent-{index}
-      const consentCheckbox = formElement.querySelector(`input.endpoint-consent[data-index="${i}"]`) as HTMLInputElement;
+      const consentCheckbox = formElement.querySelector(
+        `input.endpoint-consent[data-index="${i}"]`
+      ) as HTMLInputElement;
       if (consentCheckbox && url) {
         endpointConsent[url] = consentCheckbox.checked;
       }
@@ -412,8 +416,9 @@ export class EndpointConfigDialog extends foundry.applications.api.HandlebarsApp
 
     // Save endpoint consent settings
     const currentEndpointConsent = game.settings.get('errors-and-echoes', 'endpointConsent') || {};
-    const consentChanged = JSON.stringify(endpointConsent) !== JSON.stringify(currentEndpointConsent);
-    
+    const consentChanged =
+      JSON.stringify(endpointConsent) !== JSON.stringify(currentEndpointConsent);
+
     if (consentChanged) {
       await game.settings.set('errors-and-echoes', 'endpointConsent', endpointConsent);
     }
