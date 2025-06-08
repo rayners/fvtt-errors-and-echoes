@@ -26,11 +26,37 @@ export function moduleMatchesAuthor(module: any, authorIdentifier: string): bool
         return author === authorIdentifier;
       }
       if (typeof author === 'object' && author) {
-        return (
-          author.name === authorIdentifier ||
-          author.github === authorIdentifier ||
-          author.email === authorIdentifier
-        );
+        // Check all available author fields
+        if (author.name === authorIdentifier ||
+            author.github === authorIdentifier ||
+            author.email === authorIdentifier) {
+          return true;
+        }
+        
+        // Check additional fields that Foundry provides
+        if ((author as any).discord === authorIdentifier ||
+            (author as any).url === authorIdentifier) {
+          return true;
+        }
+        
+        // Extract username from email (user@host -> user)
+        if (author.email && typeof author.email === 'string') {
+          const emailUser = author.email.split('@')[0];
+          if (emailUser === authorIdentifier) {
+            return true;
+          }
+        }
+        
+        // Extract username from URL if present
+        if ((author as any).url && typeof (author as any).url === 'string') {
+          const url = (author as any).url;
+          // Handle GitHub URLs like https://github.com/rayners
+          const githubMatch = url.match(/github\.com\/([^\/]+)/);
+          if (githubMatch && githubMatch[1] === authorIdentifier) {
+            return true;
+          }
+          // Handle other URL patterns as needed
+        }
       }
       return false;
     });

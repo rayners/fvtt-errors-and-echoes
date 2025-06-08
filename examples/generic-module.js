@@ -1,23 +1,18 @@
 /**
  * Integration Example: Generic Module Template
  * 
- * This template shows the basic pattern for integrating any module
+ * This template shows the hook-based pattern for integrating any module
  * with the Errors and Echoes Registration API.
  * 
  * Copy this template and customize for your specific module.
  */
 
-// Wait for the Errors and Echoes module to be ready
-Hooks.once('ready', () => {
-  // Check if Errors and Echoes is available
-  if (!window.ErrorsAndEchoesAPI) {
-    console.warn('Your Module: Errors and Echoes API not available');
-    return;
-  }
-
+// Hook-based registration (RECOMMENDED - eliminates timing issues)
+Hooks.on('errorsAndEchoesReady', (errorsAndEchoesAPI) => {
+  // E&E is guaranteed to be ready when this hook is called
   try {
     // Register with enhanced error reporting
-    window.ErrorsAndEchoesAPI.register({
+    errorsAndEchoesAPI.register({
       // REQUIRED: Your module ID (must match module.json)
       moduleId: 'your-module-id',
       
@@ -105,14 +100,13 @@ Hooks.once('ready', () => {
         return true;
       },
       
-      // OPTIONAL: Custom endpoint
+      // OPTIONAL: Module reporting endpoint
       // Remove this section to use the configured endpoints in settings
-      endpoint: {
+      // User controls enabled/disabled via E&E settings UI
+      reportingEndpoint: {
         name: 'Your Module Error Reports',
-        url: 'https://your-domain.com/error-reports',
-        author: 'your-author-name',
-        modules: ['your-module-id'],
-        enabled: true
+        url: 'https://your-domain.com/error-reports'
+        // URL is not editable by user (provided by module)
       }
     });
     
@@ -124,11 +118,14 @@ Hooks.once('ready', () => {
        * Report a specific type of error with additional context
        */
       reportSpecificError: (error, additionalContext = {}) => {
-        if (window.ErrorsAndEchoesAPI?.reportError) {
-          window.ErrorsAndEchoesAPI.reportError(error, {
-            category: 'your-module-specific-category',
-            ...additionalContext,
-            timestamp: new Date().toISOString()
+        if (errorsAndEchoesAPI?.report) {
+          errorsAndEchoesAPI.report(error, {
+            module: 'your-module-id',
+            context: {
+              category: 'your-module-specific-category',
+              ...additionalContext,
+              timestamp: new Date().toISOString()
+            }
           });
         }
       }
@@ -167,13 +164,19 @@ function yourModuleFunction() {
 /**
  * INTEGRATION CHECKLIST:
  * 
- * 1. Replace 'your-module-id' with your actual module ID
- * 2. Replace 'your-author-name' with your GitHub username or author identifier
- * 3. Update the contextProvider to return relevant debugging information for your module
- * 4. Customize the errorFilter to focus on errors relevant to your module
- * 5. Update the endpoint URL to point to your error collection service
- * 6. Add manual error reporting calls in critical functions
- * 7. Test the integration in development
+ * 1. Replace 'your-module-id' with your actual module ID (must match module.json)
+ * 2. Update the contextProvider to return relevant debugging information for your module
+ * 3. Customize the errorFilter to focus on errors relevant to your module
+ * 4. Update the reportingEndpoint URL to point to your error collection service (optional)
+ * 5. Add manual error reporting calls in critical functions (optional)
+ * 6. Test the integration in development
+ * 
+ * HOOK-BASED REGISTRATION BENEFITS:
+ * 
+ * - No timing issues: Works regardless of module load order
+ * - Automatic retry: If E&E loads after your module, registration still works
+ * - Cleaner code: No manual checking if E&E is available
+ * - Future-proof: Works with any E&E initialization changes
  * 
  * BEST PRACTICES:
  * 
@@ -181,6 +184,6 @@ function yourModuleFunction() {
  * - Don't include sensitive user data in context
  * - Use error filters to reduce noise and focus on actionable errors
  * - Test your error filter thoroughly to avoid missing important errors
- * - Use manual reporting for critical error paths
+ * - Users control endpoint enabling - your reportingEndpoint is just a suggestion
  * - Consider your users' privacy when designing context providers
  */

@@ -49,6 +49,7 @@ interface EndpointConfig {
   ErrorReporter,
   ConsentManager,
   ModuleRegistry,
+  moduleMatchesAuthor, // Export author utility function for debugging/testing
 };
 
 /**
@@ -80,6 +81,15 @@ Hooks.once('ready', async (): Promise<void> => {
     // Wait for next tick to ensure UI is fully rendered
     await new Promise(resolve => setTimeout(resolve, 100));
     ErrorReporterWelcomeDialog.show();
+  }
+
+  // Call hook to notify other modules that E&E is ready for registration
+  // This allows modules to register via Hooks.on('errorsAndEchoesReady', (api) => { ... })
+  // instead of worrying about init vs ready timing
+  const errorReporterModule = game.modules.get('errors-and-echoes');
+  if (errorReporterModule?.api) {
+    Hooks.callAll('errorsAndEchoesReady', errorReporterModule.api);
+    console.log('Errors and Echoes | Hook-based registration system ready');
   }
 });
 

@@ -534,158 +534,91 @@
 
 /* Settings page styling */
 .errors-and-echoes-config {
+  font-family: var(--font-primary);
+  line-height: 1.4;
   max-height: 70vh;
   overflow-y: auto;
-  font-family: var(--font-primary);
 }
 
 .errors-and-echoes-config .config-section {
-  margin-bottom: 1.5rem;
-  padding: 1.25rem;
-  background: linear-gradient(135deg, var(--color-bg-option), var(--color-bg));
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  background: var(--color-bg-option);
   border: 1px solid var(--color-border-light-tertiary);
-  border-radius: var(--border-radius);
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  border-radius: 3px;
 }
 
 .errors-and-echoes-config .config-section h2 {
-  margin: 0 0 0.75rem 0;
+  margin: 0 0 0.5rem 0;
   color: var(--color-text-dark-primary);
-  font-size: 1.3em;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.errors-and-echoes-config .config-section h2::before {
-  content: '';
-  width: 4px;
-  height: 1.5em;
-  background: var(--color-text-hyperlink);
-  border-radius: 2px;
-}
-
-.errors-and-echoes-config .config-section h2 i {
-  color: var(--color-text-hyperlink);
-  margin-right: 0.25rem;
+  font-size: 1.1em;
+  font-weight: bold;
+  border-bottom: 1px solid var(--color-border-light-tertiary);
+  padding-bottom: 0.25rem;
 }
 
 .errors-and-echoes-config .config-description {
   margin: 0;
   color: var(--color-text-dark-secondary);
   line-height: 1.4;
-  font-size: 0.95em;
+  font-size: 0.9em;
 }
 
 .endpoints-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
-  padding: 1rem;
-  background: var(--color-bg-highlight);
-  border: 1px solid var(--color-border-light-tertiary);
-  border-radius: var(--border-radius);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  margin-bottom: 0.75rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--color-border-light-tertiary);
 }
 
 .endpoints-header h3 {
   margin: 0;
   color: var(--color-text-dark-primary);
-  font-size: 1.2em;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.endpoints-header h3::before {
-  content: '🔗';
-  font-size: 1.2em;
+  font-size: 1em;
+  font-weight: bold;
 }
 
 .endpoint-config {
   background: var(--color-bg);
-  border: 2px solid var(--color-border-light-tertiary);
-  border-radius: var(--border-radius);
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  transition: all 0.2s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.endpoint-config::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, var(--color-text-blue, #4dabf7), var(--color-text-hyperlink));
-}
-
-.endpoint-config:hover {
-  border-color: var(--color-border-light-secondary);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-  transform: translateY(-1px);
+  border: 1px solid var(--color-border-light-tertiary);
+  border-radius: 3px;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
 }
 
 .endpoint-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 2px solid var(--color-border-light-tertiary);
-  position: relative;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--color-border-light-tertiary);
 }
 
 .endpoint-header h4 {
   margin: 0;
   color: var(--color-text-dark-primary);
-  font-size: 1.1em;
-  font-weight: 600;
-  padding-left: 1.5rem;
-  position: relative;
-}
-
-.endpoint-header h4::before {
-  content: '📡';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 1.2em;
+  font-size: 1em;
+  font-weight: bold;
 }
 
 .endpoint-controls {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 0.75rem;
   flex-wrap: wrap;
 }
 
 .endpoint-controls .checkbox-label {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.25rem;
   font-size: 0.9em;
   color: var(--color-text-dark-primary);
   margin: 0;
-  padding: 0.375rem 0.75rem;
-  background: var(--color-bg-option);
-  border: 1px solid var(--color-border-light-tertiary);
-  border-radius: var(--border-radius);
   cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.endpoint-controls .checkbox-label:hover {
-  background: var(--color-bg-highlight);
-  border-color: var(--color-border-light-secondary);
 }
 
 .endpoint-controls .checkbox-label input[type="checkbox"] {
@@ -694,21 +627,13 @@
 }
 
 .endpoint-controls button {
-  padding: 0.5rem 1rem;
-  border-radius: var(--border-radius);
-  font-size: 0.9em;
-  font-weight: 500;
-  transition: all 0.2s ease;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.8em;
   border: 1px solid var(--color-border-light-primary);
   background: var(--color-bg-option);
   color: var(--color-text-dark-primary);
   cursor: pointer;
-}
-
-.endpoint-controls button:hover {
-  background: var(--color-bg-highlight);
-  border-color: var(--color-border-light-secondary);
-  transform: translateY(-1px);
+  border-radius: 3px;
 }
 
 .endpoint-controls .btn-danger {
@@ -722,84 +647,54 @@
   opacity: 0.9;
 }
 
-.form-row {
+.errors-and-echoes-config .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-  margin-bottom: 1.25rem;
-  padding: 1rem;
-  background: var(--color-bg-option);
-  border: 1px solid var(--color-border-light-tertiary);
-  border-radius: var(--border-radius);
-  transition: all 0.2s ease;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
 }
 
-.form-row:hover {
-  background: var(--color-bg-highlight);
-  border-color: var(--color-border-light-secondary);
-}
-
-.form-row.single-column {
+.errors-and-echoes-config .form-row.single-column {
   grid-template-columns: 1fr;
 }
 
-.form-group {
+.errors-and-echoes-config .form-group {
   display: flex;
   flex-direction: column;
-  position: relative;
 }
 
-.form-group label {
-  margin-bottom: 0.5rem;
-  font-weight: 600;
+.errors-and-echoes-config .form-group label {
+  margin-bottom: 0.25rem;
+  font-weight: bold;
   color: var(--color-text-dark-primary);
-  font-size: 0.95em;
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
+  font-size: 0.9em;
 }
 
-.form-group label::before {
-  content: '';
-  width: 3px;
-  height: 1em;
-  background: var(--color-text-hyperlink);
-  border-radius: 1px;
-}
-
-.form-group input[type="text"],
-.form-group input[type="url"],
-.form-group textarea {
-  padding: 0.75rem;
-  border: 2px solid var(--color-border-light-primary);
-  border-radius: var(--border-radius);
+.errors-and-echoes-config .form-group input[type="text"],
+.errors-and-echoes-config .form-group input[type="url"],
+.errors-and-echoes-config .form-group textarea {
+  padding: 0.375rem;
+  border: 1px solid var(--color-border-light-primary);
+  border-radius: 3px;
   background: var(--color-bg);
   color: var(--color-text-dark-primary);
   font-family: inherit;
-  font-size: 0.95em;
-  transition: all 0.2s ease;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  font-size: 0.9em;
 }
 
-.form-group input[type="text"]:focus,
-.form-group input[type="url"]:focus,
-.form-group textarea:focus {
+.errors-and-echoes-config .form-group input[type="text"]:focus,
+.errors-and-echoes-config .form-group input[type="url"]:focus,
+.errors-and-echoes-config .form-group textarea:focus {
   outline: none;
   border-color: var(--color-text-hyperlink);
-  box-shadow: 0 0 0 3px rgba(var(--color-text-hyperlink-rgb, 77, 171, 247), 0.2);
-  background: var(--color-bg-highlight);
-  transform: translateY(-1px);
 }
 
-.form-group .hint {
-  margin: 0.5rem 0 0 0;
-  font-size: 0.85em;
+.errors-and-echoes-config .form-group .hint {
+  margin: 0.25rem 0 0 0;
+  font-size: 0.8em;
   color: var(--color-text-dark-secondary);
-  line-height: 1.4;
-  padding: 0.5rem;
-  background: var(--color-bg-highlight);
-  border-radius: calc(var(--border-radius) / 2);
-  border-left: 3px solid var(--color-text-blue, #4dabf7);
+  line-height: 1.3;
+  font-style: italic;
 }
 
 /* Enhanced modules selector */
@@ -1240,6 +1135,8 @@
   border-radius: var(--border-radius);
   padding: 1rem;
   margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
 }
 
 .summary-stats, .activity-stats {
@@ -1250,9 +1147,20 @@
 }
 
 .activity-stats {
-  margin-top: 0.75rem;
-  padding-top: 0.75rem;
-  border-top: 1px solid var(--color-border-light-tertiary);
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px dashed var(--color-border-light-tertiary);
+  order: 999; /* Move to end in flex layouts */
+  font-size: 0.7em;
+  opacity: 0.5;
+}
+
+/* Much smaller activity stats */
+.activity-stats .stat-item {
+  padding: 0.125rem 0.375rem;
+  font-size: 0.8em;
+  background: transparent;
+  border: none;
 }
 
 .modules-grid.registered {
@@ -1433,7 +1341,7 @@
 
 /* Mobile responsiveness */
 @media (max-width: 768px) {
-  .form-row {
+  .errors-and-echoes-config .form-row {
     grid-template-columns: 1fr;
   }
   

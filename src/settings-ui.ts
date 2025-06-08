@@ -48,6 +48,7 @@ interface RegisteredModuleInfo {
 interface SettingsData {
   endpoints: EndpointConfigWithIndex[];
   installedModules: ModuleInfo[];
+  enabledInstalledModules: ModuleInfo[];
   registeredModules: RegisteredModuleInfo[];
   registrationStats: {
     totalRegistered: number;
@@ -107,6 +108,16 @@ export class EndpointConfigDialog extends foundry.applications.api.HandlebarsApp
     const endpointConsent: Record<string, boolean> =
       game.settings.get('errors-and-echoes', 'endpointConsent') || {};
 
+    // Register Handlebars helper for OR operation
+    Handlebars.registerHelper('or', function(...args) {
+      // Remove the Handlebars options object (last argument)
+      args.pop();
+      return args.some(arg => !!arg);
+    });
+
+    // Filter out disabled modules for cleaner display
+    const enabledInstalledModules = installedModules.filter(module => module.enabled);
+
     return Object.assign(context, {
       endpoints: endpoints.map((endpoint, index) => ({
         ...endpoint,
@@ -116,6 +127,7 @@ export class EndpointConfigDialog extends foundry.applications.api.HandlebarsApp
         isProtected: endpoint.author === 'rayners',
       })),
       installedModules,
+      enabledInstalledModules,
       registeredModules,
       registrationStats,
       privacyLevel: game.settings.get('errors-and-echoes', 'privacyLevel') || 'standard',
@@ -363,6 +375,10 @@ export class EndpointConfigDialog extends foundry.applications.api.HandlebarsApp
     const existingEndpoints: EndpointConfig[] =
       game.settings.get('errors-and-echoes', 'endpoints') || [];
 
+    // Process consent checkboxes from the form
+    const endpointConsent: Record<string, boolean> = 
+      game.settings.get('errors-and-echoes', 'endpointConsent') || {};
+
     for (let i = 0; i < endpointCount; i++) {
       const name = data[`endpoint-name-${i}`] as string;
       const url = data[`endpoint-url-${i}`] as string;
@@ -374,7 +390,16 @@ export class EndpointConfigDialog extends foundry.applications.api.HandlebarsApp
           ?.split(/[,\n]+/)
           .map(m => m.trim())
           .filter(m => m) || [];
-      const enabled = data[`endpoint-enabled-${i}`] || false;
+      // Process enabled checkbox directly from DOM (checkboxes don't appear in FormData when unchecked)
+      const enabledCheckbox = formElement.querySelector(`input[name="endpoint-enabled-${i}"]`) as HTMLInputElement;
+      const enabled = enabledCheckbox ? enabledCheckbox.checked : false;
+
+      // Process consent checkbox for this endpoint
+      // The consent checkbox uses the pattern endpoint-consent-{index}
+      const consentCheckbox = formElement.querySelector(`input.endpoint-consent[data-index="${i}"]`) as HTMLInputElement;
+      if (consentCheckbox && url) {
+        endpointConsent[url] = consentCheckbox.checked;
+      }
 
       // Force author to 'rayners' for protected entries
       const existingEndpoint = existingEndpoints[i];
@@ -393,7 +418,15 @@ export class EndpointConfigDialog extends foundry.applications.api.HandlebarsApp
       }
     }
 
-    // Only save if the endpoints have actually changed to avoid unnecessary saves
+    // Save endpoint consent settings
+    const currentEndpointConsent = game.settings.get('errors-and-echoes', 'endpointConsent') || {};
+    const consentChanged = JSON.stringify(endpointConsent) !== JSON.stringify(currentEndpointConsent);
+    
+    if (consentChanged) {
+      await game.settings.set('errors-and-echoes', 'endpointConsent', endpointConsent);
+    }
+
+    // Only save endpoints if they have actually changed to avoid unnecessary saves
     const currentEndpoints = game.settings.get('errors-and-echoes', 'endpoints') || [];
     const endpointsChanged = JSON.stringify(endpoints) !== JSON.stringify(currentEndpoints);
 
