@@ -56,7 +56,7 @@ jobs:
       - name: Create module archive
         run: |
           cd dist
-          zip -r ../fvtt-errors-and-echoes-${{ needs.release-please.outputs.tag_name }}.zip .
+          zip -r ../module.zip .
           cd ..
 
       - name: Upload Release Assets
@@ -64,7 +64,7 @@ jobs:
         with:
           tag_name: ${{ needs.release-please.outputs.tag_name }}
           files: |
-            fvtt-errors-and-echoes-${{ needs.release-please.outputs.tag_name }}.zip
+            module.zip
             dist/module.json
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
