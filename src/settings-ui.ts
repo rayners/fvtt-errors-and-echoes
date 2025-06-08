@@ -162,7 +162,7 @@ export class EndpointConfigDialog extends foundry.applications.api.HandlebarsApp
       if (endpoint.author) {
         // Find modules by author
         game.modules.contents
-          .filter(mod => moduleMatchesAuthor(mod, endpoint.author))
+          .filter(mod => endpoint.author && moduleMatchesAuthor(mod, endpoint.author))
           .forEach(mod => monitoredModules.add(mod.id));
       }
     });
@@ -175,7 +175,7 @@ export class EndpointConfigDialog extends foundry.applications.api.HandlebarsApp
 
         return { moduleId, moduleInfo };
       })
-      .filter(({ moduleInfo }) => moduleInfo !== undefined) // Only include modules that actually exist
+      .filter((item): item is { moduleId: string; moduleInfo: Module } => item.moduleInfo !== undefined) // Only include modules that actually exist
       .map(({ moduleId, moduleInfo }) => {
         // Extract author information using utility function
         const authors = getFormattedAuthorString(
@@ -271,7 +271,7 @@ export class EndpointConfigDialog extends foundry.applications.api.HandlebarsApp
     }
   }
 
-  async _onTestEndpoint(_event: Event, _target: HTMLElement): Promise<void> {
+  async _onTestEndpoint(_event: Event, target: HTMLElement): Promise<void> {
     const index = parseInt(target.dataset.index || '0');
     const buttonElement = target;
     const endpoints: EndpointConfig[] = game.settings.get('errors-and-echoes', 'endpoints') || [];

@@ -16,8 +16,8 @@ interface ErrorContext {
 
 export interface Attribution {
   moduleId: string;
-  confidence: 'high' | 'medium' | 'low' | 'none';
-  method: 'stack-trace' | 'hook-context' | 'pattern-match' | 'registry-context' | 'unknown';
+  confidence: 'high' | 'medium' | 'low' | 'none' | 'manual';
+  method: 'stack-trace' | 'hook-context' | 'pattern-match' | 'registry-context' | 'unknown' | 'api-call';
   source: string;
   domain?: string; // Functional domain of the error (e.g., 'time-calendar', 'ui-rendering')
 }

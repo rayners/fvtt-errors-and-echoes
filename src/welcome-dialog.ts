@@ -40,7 +40,7 @@ export class ErrorReporterWelcomeDialog extends foundry.applications.api.Handleb
     },
     position: {
       width: 600,
-      height: 'auto',
+      height: 'auto' as const,
     },
     actions: {
       enable: ErrorReporterWelcomeDialog.prototype._onEnable,
@@ -149,7 +149,7 @@ export class ErrorReporterWelcomeDialog extends foundry.applications.api.Handleb
   /**
    * Handle privacy level selection
    */
-  async _onSelectPrivacyLevel(_event: Event, _target: HTMLElement): Promise<void> {
+  async _onSelectPrivacyLevel(_event: Event, target: HTMLElement): Promise<void> {
     const input = target as HTMLInputElement;
     const level = input.value as PrivacyLevel;
     this.updatePrivacyPreview(level);

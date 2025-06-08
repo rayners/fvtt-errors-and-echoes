@@ -4,6 +4,35 @@
  */
 
 declare global {
+  // Node.js globals for test environment detection
+  declare var process: {
+    env?: {
+      NODE_ENV?: string;
+      [key: string]: string | undefined;
+    };
+  };
+  
+  declare var global: {
+    __vitest_worker__?: boolean;
+    [key: string]: any;
+  };
+
+  // Foundry module globals
+  declare var quench: {
+    registerBatch(name: string, callback: (context: any) => void): void;
+    [key: string]: any;
+  } | undefined;
+
+  declare var libWrapper: {
+    register(module: string, target: string, fn: Function, type: string): void;
+    [key: string]: any;
+  } | undefined;
+
+  declare var Handlebars: {
+    registerHelper(name: string, helper: Function): void;
+    [key: string]: any;
+  };
+
   // Import the types we need for proper Window interface
   interface ErrorsAndEchoesAPI {
     register(config: {
@@ -81,6 +110,16 @@ declare global {
     map<U>(mapper: (item: T) => U): U[];
   }
 
+  interface HooksManager {
+    on(hook: string, fn: Function): void;
+    once(hook: string, fn: Function): void;
+    off(hook: string, fn?: Function): void;
+    call(hook: string, ...args: any[]): any;
+    callAll(hook: string, ...args: any[]): any[] | void;
+  }
+
+  const Hooks: HooksManager;
+
   interface ClientSettings {
     register(module: string, key: string, options: SettingConfig): void;
     registerMenu(module: string, key: string, options: SettingMenuConfig): void;
@@ -104,7 +143,7 @@ declare global {
     label: string;
     hint: string;
     icon: string;
-    type: new (...args: any[]) => FormApplication;
+    type: new (...args: any[]) => FormApplication | ApplicationV2;
     restricted: boolean;
   }
 
@@ -117,6 +156,22 @@ declare global {
   interface Localization {
     localize(key: string): string;
     format(key: string, data: Record<string, any>): string;
+  }
+
+  // Basic ApplicationV2 interface for settings menu compatibility
+  interface ApplicationV2 {
+    render(force?: boolean): Promise<ApplicationV2>;
+    close(): Promise<ApplicationV2>;
+    element?: HTMLElement;
+  }
+
+  // Basic FormApplication interface for legacy compatibility  
+  interface FormApplication {
+    render(force?: boolean): void;
+    close(): void;
+    _updateObject(event: Event, formData: any): Promise<void>;
+    activateListeners(html: JQuery): void;
+    getData(): any;
   }
 
   interface ActorsCollection extends Collection<Actor> {

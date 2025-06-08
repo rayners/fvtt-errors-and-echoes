@@ -243,7 +243,7 @@ if (typeof quench !== 'undefined') {
           }
         } catch (error) {
           console.error('attributeToModule threw error:', error);
-          assert.fail(`attributeToModule should not throw errors: ${error.message}`);
+          assert.fail(`attributeToModule should not throw errors: ${(error as Error).message}`);
         }
       });
     });
@@ -276,7 +276,7 @@ if (typeof quench !== 'undefined') {
         // Test that our module exists in the game
         const ourModule = game.modules.get('errors-and-echoes');
         assert.ok(ourModule, 'Errors and Echoes module should be loaded');
-        assert.equal(ourModule.active, true, 'Module should be active');
+        assert.equal(ourModule?.active, true, 'Module should be active');
       });
 
       it('integrates with FoundryVTT settings system', () => {
@@ -403,7 +403,7 @@ if (typeof quench !== 'undefined') {
           assert.equal(result, false, `Invalid endpoint should return false, got ${result}`);
         } catch (error) {
           console.error('testEndpoint threw error:', error);
-          assert.fail(`testEndpoint should not throw errors: ${error.message}`);
+          assert.fail(`testEndpoint should not throw errors: ${(error as Error).message}`);
         }
       });
     });

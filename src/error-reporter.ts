@@ -433,7 +433,7 @@ export class ErrorReporter {
       } catch (fetchError) {
         clearTimeout(timeoutId);
         // Handle fetch errors (network issues, timeouts, etc.)
-        if (fetchError.name === 'AbortError') {
+        if ((fetchError as Error).name === 'AbortError') {
           console.warn('Endpoint test failed: Request timeout');
         } else {
           console.warn('Endpoint test failed: Network error', fetchError);
