@@ -4,62 +4,73 @@
  * Utility functions for handling module author information and matching logic
  */
 
+// Extended author interface to handle all Foundry author formats
 export interface ModuleAuthor {
   name?: string;
   github?: string;
   email?: string;
+  discord?: string;
+  url?: string;
 }
 
 /**
  * Check if a module matches a given author identifier
  */
-export function moduleMatchesAuthor(module: any, authorIdentifier: string): boolean {
+export function moduleMatchesAuthor(
+  module: Partial<Module> | null | undefined, 
+  authorIdentifier: string
+): boolean {
   if (!module || !authorIdentifier) return false;
 
-  // Handle modern modules with authors collection (Array, Set, or other iterable)
+  // Handle modern modules with authors collection
   if (module.authors) {
-    const authorsIterable = Array.isArray(module.authors)
-      ? module.authors
-      : Array.from(module.authors);
-    return authorsIterable.some((author: ModuleAuthor | string) => {
-      if (typeof author === 'string') {
-        return author === authorIdentifier;
-      }
-      if (typeof author === 'object' && author) {
-        // Check all available author fields
-        if (author.name === authorIdentifier ||
-            author.github === authorIdentifier ||
-            author.email === authorIdentifier) {
-          return true;
-        }
-        
-        // Check additional fields that Foundry provides
-        if ((author as any).discord === authorIdentifier ||
-            (author as any).url === authorIdentifier) {
-          return true;
-        }
-        
-        // Extract username from email (user@host -> user)
-        if (author.email && typeof author.email === 'string') {
-          const emailUser = author.email.split('@')[0];
-          if (emailUser === authorIdentifier) {
+    // Fail fast - only handle actual arrays (legacy) or Sets (v13)
+    if (Array.isArray(module.authors) || module.authors instanceof Set) {
+      for (const author of module.authors) {
+        if (typeof author === 'string') {
+          if (author === authorIdentifier) {
             return true;
           }
-        }
-        
-        // Extract username from URL if present
-        if ((author as any).url && typeof (author as any).url === 'string') {
-          const url = (author as any).url;
-          // Handle GitHub URLs like https://github.com/rayners
-          const githubMatch = url.match(/github\.com\/([^\/]+)/);
-          if (githubMatch && githubMatch[1] === authorIdentifier) {
+        } else if (typeof author === 'object' && author) {
+          const extendedAuthor = author as ModuleAuthor;
+          // Check all available author fields
+          if (extendedAuthor.name === authorIdentifier ||
+              extendedAuthor.github === authorIdentifier ||
+              extendedAuthor.email === authorIdentifier) {
             return true;
           }
-          // Handle other URL patterns as needed
+          
+          // Check additional fields that Foundry provides
+          if (extendedAuthor.discord === authorIdentifier ||
+              extendedAuthor.url === authorIdentifier) {
+            return true;
+          }
+          
+          // Extract username from email (user@host -> user)
+          if (extendedAuthor.email && typeof extendedAuthor.email === 'string') {
+            const emailUser = extendedAuthor.email.split('@')[0];
+            if (emailUser === authorIdentifier) {
+              return true;
+            }
+          }
+          
+          // Extract username from URL if present
+          if (extendedAuthor.url && typeof extendedAuthor.url === 'string') {
+            const url = extendedAuthor.url;
+            // Handle GitHub URLs like https://github.com/rayners
+            const githubMatch = url.match(/github\.com\/([^\/]+)/);
+            if (githubMatch && githubMatch[1] === authorIdentifier) {
+              return true;
+            }
+            // Handle other URL patterns as needed
+          }
         }
       }
+    } else {
+      // Invalid authors format - fail fast
+      console.warn('Invalid authors format - expected Array or Set, got:', typeof module.authors);
       return false;
-    });
+    }
   }
 
   // Handle legacy modules with single author field
@@ -73,31 +84,31 @@ export function moduleMatchesAuthor(module: any, authorIdentifier: string): bool
 /**
  * Extract all author names from a module's author information
  */
-export function extractAuthorNames(module: any): string[] {
+export function extractAuthorNames(module: Partial<Module> | null | undefined): string[] {
   if (!module) return [];
 
   const authorNames: string[] = [];
 
-  // Handle modern modules with authors collection (Array, Set, or other iterable)
+  // Handle modern modules with authors collection
   if (module.authors) {
-    try {
-      const authorsIterable = Array.isArray(module.authors)
-        ? module.authors
-        : Array.from(module.authors);
-      for (const author of authorsIterable) {
+    // Fail fast - only handle actual arrays (legacy) or Sets (v13)
+    if (Array.isArray(module.authors) || module.authors instanceof Set) {
+      for (const author of module.authors) {
         if (typeof author === 'string') {
           authorNames.push(author);
         } else if (typeof author === 'object' && author) {
+          const typedAuthor = author as ModuleAuthor;
           // Prefer name, then github, then email
-          const name = author.name || author.github || author.email;
+          const name = typedAuthor.name || typedAuthor.github || typedAuthor.email;
           if (name) {
             authorNames.push(name);
           }
         }
       }
-    } catch (error) {
-      // If authors is not iterable, fall back to checking for legacy author field
-      console.warn('Error parsing module authors:', error);
+    } else {
+      // Invalid authors format - fail fast and return empty
+      console.warn('Invalid authors format - expected Array or Set, got:', typeof module.authors);
+      return [];
     }
   }
 
@@ -112,7 +123,7 @@ export function extractAuthorNames(module: any): string[] {
 /**
  * Get the primary author name for display purposes
  */
-export function getPrimaryAuthorName(module: any): string {
+export function getPrimaryAuthorName(module: Partial<Module> | null | undefined): string {
   const authorNames = extractAuthorNames(module);
   return authorNames.length > 0 ? authorNames[0] : 'Unknown';
 }
@@ -120,7 +131,7 @@ export function getPrimaryAuthorName(module: any): string {
 /**
  * Get a formatted author string for display (comma-separated list)
  */
-export function getFormattedAuthorString(module: any, unknownLabel: string = 'Unknown'): string {
+export function getFormattedAuthorString(module: Partial<Module> | null | undefined, unknownLabel: string = 'Unknown'): string {
   const authorNames = extractAuthorNames(module);
   return authorNames.length > 0 ? authorNames.join(', ') : unknownLabel;
 }
@@ -128,6 +139,6 @@ export function getFormattedAuthorString(module: any, unknownLabel: string = 'Un
 /**
  * Check if a module has any author information
  */
-export function hasAuthorInfo(module: any): boolean {
+export function hasAuthorInfo(module: Partial<Module> | null | undefined): boolean {
   return extractAuthorNames(module).length > 0;
 }

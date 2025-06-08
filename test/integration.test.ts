@@ -123,7 +123,7 @@ describe('Registration API Integration', () => {
         method: 'POST',
         headers: expect.objectContaining({
           'Content-Type': 'application/json',
-          'X-Foundry-Version': '12.0.0'
+          'X-Foundry-Version': '13.331'
         }),
         body: expect.stringContaining('"sessionId":"test-session-123"')
       })
@@ -156,13 +156,22 @@ describe('Registration API Integration', () => {
 
     expect(ModuleRegistry.isRegistered('non-existent-module')).toBe(false);
 
-    // Try to register with invalid context provider
+    // Try to register with invalid context provider (need to set up mock first)
+    setMockModule('test-module', {
+      id: 'test-module',
+      title: 'Test Module',
+      active: true
+    });
+    
     ModuleRegistry.register({
       moduleId: 'test-module',
       contextProvider: (() => 'invalid') as any
     });
 
-    expect(ModuleRegistry.isRegistered('test-module')).toBe(false);
+    // Should register but context provider should be disabled
+    expect(ModuleRegistry.isRegistered('test-module')).toBe(true);
+    const registered = ModuleRegistry.getRegisteredModule('test-module');
+    expect(registered?.contextProvider).toBeUndefined();
   });
 
   it('should provide registry statistics', async () => {

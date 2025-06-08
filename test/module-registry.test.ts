@@ -110,8 +110,11 @@ describe('ModuleRegistry', () => {
     
     ModuleRegistry.register(config);
     
-    // Should not be registered due to invalid context provider
-    expect(ModuleRegistry.isRegistered('test-module')).toBe(false);
+    // Should be registered but context provider should be disabled
+    expect(ModuleRegistry.isRegistered('test-module')).toBe(true);
+    
+    const registered = ModuleRegistry.getRegisteredModule('test-module');
+    expect(registered?.contextProvider).toBeUndefined();
   });
 
   it('should handle context provider errors gracefully', async () => {
@@ -129,8 +132,11 @@ describe('ModuleRegistry', () => {
     
     ModuleRegistry.register(config);
     
-    // Should not be registered due to throwing context provider
-    expect(ModuleRegistry.isRegistered('test-module')).toBe(false);
+    // Should be registered but context provider should be disabled
+    expect(ModuleRegistry.isRegistered('test-module')).toBe(true);
+    
+    const registered = ModuleRegistry.getRegisteredModule('test-module');
+    expect(registered?.contextProvider).toBeUndefined();
   });
 
   it('should reject invalid error filters', async () => {
@@ -146,8 +152,11 @@ describe('ModuleRegistry', () => {
     
     ModuleRegistry.register(config);
     
-    // Should not be registered due to invalid error filter
-    expect(ModuleRegistry.isRegistered('test-module')).toBe(false);
+    // Should be registered but error filter should be disabled
+    expect(ModuleRegistry.isRegistered('test-module')).toBe(true);
+    
+    const registered = ModuleRegistry.getRegisteredModule('test-module');
+    expect(registered?.errorFilter).toBeUndefined();
   });
 
   it('should handle error filter errors gracefully', async () => {
@@ -165,8 +174,11 @@ describe('ModuleRegistry', () => {
     
     ModuleRegistry.register(config);
     
-    // Should not be registered due to throwing error filter
-    expect(ModuleRegistry.isRegistered('test-module')).toBe(false);
+    // Should be registered but error filter should be disabled
+    expect(ModuleRegistry.isRegistered('test-module')).toBe(true);
+    
+    const registered = ModuleRegistry.getRegisteredModule('test-module');
+    expect(registered?.errorFilter).toBeUndefined();
   });
 
   it('should register module with custom endpoint', async () => {

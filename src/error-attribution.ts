@@ -19,27 +19,61 @@ export interface Attribution {
   confidence: 'high' | 'medium' | 'low' | 'none';
   method: 'stack-trace' | 'hook-context' | 'pattern-match' | 'registry-context' | 'unknown';
   source: string;
+  domain?: string; // Functional domain of the error (e.g., 'time-calendar', 'ui-rendering')
 }
 
-interface ModulePattern {
+interface DomainPattern {
   pattern: RegExp;
-  module: string;
+  domain: string;
+  description: string;
 }
 
 export class ErrorAttribution {
-  // Known patterns for common modules (can be extended)
-  private static modulePatterns: ModulePattern[] = [
-    { pattern: /PartyActor|PartySheet|PartyModel/, module: 'journeys-and-jamborees' },
-    { pattern: /RealmManager|BiomeLayer/, module: 'realms-and-reaches' },
-    { pattern: /CalendarWidget|CalendarEngine/, module: 'seasons-and-stars' },
-    { pattern: /ErrorCapture|ErrorReporter|ConsentManager/, module: 'errors-and-echoes' },
-    // Add more patterns as needed
+  // Domain-based patterns for functional areas (more sustainable than module-specific patterns)
+  private static domainPatterns: DomainPattern[] = [
+    // Time and calendar related errors
+    { 
+      pattern: /worldTime|game\.time|calendar|date.*conversion|time.*conversion/i, 
+      domain: 'time-calendar', 
+      description: 'Time and calendar system errors' 
+    },
+    
+    // UI and rendering errors
+    { 
+      pattern: /widget|canvas|render|position|ui\.notifications|dialog/i, 
+      domain: 'ui-rendering', 
+      description: 'User interface and rendering errors' 
+    },
+    
+    // Database and document errors
+    { 
+      pattern: /database|document|collection|actor|item|scene/i, 
+      domain: 'data-management', 
+      description: 'Data storage and document management errors' 
+    },
+    
+    // Hook and integration errors
+    { 
+      pattern: /hook|integration|api|registration/i, 
+      domain: 'integration', 
+      description: 'Module integration and hook system errors' 
+    },
+    
+    // Audio/visual effects errors
+    { 
+      pattern: /audio|sound|video|animation|effect/i, 
+      domain: 'media-effects', 
+      description: 'Audio/visual effects and media errors' 
+    }
   ];
 
   /**
    * Attribute an error to a specific module using multiple detection methods
    */
   static attributeToModule(error: Error, context: ErrorContext): Attribution {
+    // Get domain information early for use as metadata
+    const errorDomain = this.identifyErrorDomain(error);
+
     // Method 1: Stack trace analysis (highest confidence)
     const moduleFromStack = this.parseStackTrace(error.stack);
     if (moduleFromStack) {
@@ -48,6 +82,7 @@ export class ErrorAttribution {
         confidence: 'high',
         method: 'stack-trace',
         source: context.source,
+        domain: errorDomain,
       };
     }
 
@@ -60,6 +95,7 @@ export class ErrorAttribution {
           confidence: 'medium',
           method: 'hook-context',
           source: context.source,
+          domain: errorDomain,
         };
       }
     }
@@ -72,21 +108,11 @@ export class ErrorAttribution {
         confidence: 'medium',
         method: 'registry-context',
         source: context.source,
+        domain: errorDomain,
       };
     }
 
-    // Method 3: Pattern matching (low confidence)
-    const moduleFromPattern = this.matchKnownPatterns(error);
-    if (moduleFromPattern) {
-      return {
-        moduleId: moduleFromPattern,
-        confidence: 'low',
-        method: 'pattern-match',
-        source: context.source,
-      };
-    }
-
-    // Method 4: Current active module detection
+    // Method 3: Current active module detection from call stack
     const moduleFromCallStack = this.getActiveModuleFromCallStack();
     if (moduleFromCallStack) {
       return {
@@ -94,34 +120,64 @@ export class ErrorAttribution {
         confidence: 'medium',
         method: 'stack-trace',
         source: context.source,
+        domain: errorDomain,
       };
     }
 
-    // Default: unknown module
+    // Default: unknown module (but include domain information as helpful metadata)
     return {
       moduleId: 'unknown',
       confidence: 'none',
       method: 'unknown',
       source: context.source,
+      domain: errorDomain,
     };
   }
 
   /**
-   * Parse stack trace to identify module
+   * Parse stack trace to identify module using enhanced path detection
    */
   private static parseStackTrace(stack?: string): string | null {
     if (!stack) return null;
 
-    // Look for module patterns in stack trace
+    // Method 1: Standard module path patterns
     const moduleMatch = stack.match(/\/modules\/([^\/]+)\//);
     if (moduleMatch && moduleMatch[1]) {
       return moduleMatch[1];
     }
 
-    // Alternative patterns for different Foundry setups
+    // Method 2: Alternative patterns for different Foundry setups (Windows, development, etc.)
     const altModuleMatch = stack.match(/modules[\/\\]([^\/\\]+)[\/\\]/);
     if (altModuleMatch && altModuleMatch[1]) {
       return altModuleMatch[1];
+    }
+
+    // Method 3: Browser file:// URLs (common in development)
+    const fileUrlMatch = stack.match(/file:\/\/.*\/modules\/([^\/]+)\//);
+    if (fileUrlMatch && fileUrlMatch[1]) {
+      return fileUrlMatch[1];
+    }
+
+    // Method 4: HTTP/HTTPS module URLs (common in hosted environments)
+    const httpUrlMatch = stack.match(/https?:\/\/[^\/]+\/modules\/([^\/]+)\//);
+    if (httpUrlMatch && httpUrlMatch[1]) {
+      return httpUrlMatch[1];
+    }
+
+    // Method 5: Webpack/bundled module patterns (for built modules)
+    const webpackMatch = stack.match(/webpack:\/\/\/\.\/modules\/([^\/]+)\//);
+    if (webpackMatch && webpackMatch[1]) {
+      return webpackMatch[1];
+    }
+
+    // Method 6: Source map patterns (for TypeScript/compiled modules)
+    const sourceMapMatch = stack.match(/\/([^\/]+)\/dist\/[^\/]*\.js/);
+    if (sourceMapMatch && sourceMapMatch[1]) {
+      // Verify this looks like a module ID (not a generic path like 'js' or 'dist')
+      const potentialModule = sourceMapMatch[1];
+      if (potentialModule.length > 2 && !['js', 'css', 'dist', 'src'].includes(potentialModule)) {
+        return potentialModule;
+      }
     }
 
     return null;
@@ -151,20 +207,6 @@ export class ErrorAttribution {
     }
   }
 
-  /**
-   * Match known patterns to identify modules
-   */
-  private static matchKnownPatterns(error: Error): string | null {
-    const searchText = `${error.stack || ''} ${error.message || ''}`;
-
-    for (const { pattern, module } of this.modulePatterns) {
-      if (pattern.test(searchText)) {
-        return module;
-      }
-    }
-
-    return null;
-  }
 
   /**
    * Get module from registry-based context analysis
@@ -204,24 +246,39 @@ export class ErrorAttribution {
   }
 
   /**
-   * Add a new pattern for module detection
+   * Identify the functional domain of an error for metadata purposes
    */
-  static addModulePattern(pattern: RegExp, moduleId: string): void {
-    this.modulePatterns.push({ pattern, module: moduleId });
+  private static identifyErrorDomain(error: Error): string | undefined {
+    const searchText = `${error.stack || ''} ${error.message || ''}`;
+
+    for (const { pattern, domain } of this.domainPatterns) {
+      if (pattern.test(searchText)) {
+        return domain;
+      }
+    }
+
+    return undefined;
   }
 
   /**
-   * Remove a pattern for module detection
+   * Add a new domain pattern for error classification
    */
-  static removeModulePattern(moduleId: string): void {
-    this.modulePatterns = this.modulePatterns.filter(p => p.module !== moduleId);
+  static addDomainPattern(pattern: RegExp, domain: string, description: string): void {
+    this.domainPatterns.push({ pattern, domain, description });
   }
 
   /**
-   * Get all known module patterns (for debugging)
+   * Remove a domain pattern
    */
-  static getModulePatterns(): ModulePattern[] {
-    return [...this.modulePatterns];
+  static removeDomainPattern(domain: string): void {
+    this.domainPatterns = this.domainPatterns.filter(p => p.domain !== domain);
+  }
+
+  /**
+   * Get all known domain patterns (for debugging)
+   */
+  static getDomainPatterns(): DomainPattern[] {
+    return [...this.domainPatterns];
   }
 
   /**

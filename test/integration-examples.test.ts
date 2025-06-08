@@ -75,6 +75,39 @@ describe('Integration Examples', () => {
     // Clear registry between tests
     ModuleRegistry.clearAll();
     
+    // Set up test modules in the mock modules collection
+    const testModules = new Map();
+    testModules.set('journeys-and-jamborees', {
+      id: 'journeys-and-jamborees',
+      title: 'Test Travel Module',
+      version: '1.0.0',
+      active: true
+    });
+    testModules.set('test-weather-module', {
+      id: 'test-weather-module',
+      title: 'Test Weather Module',
+      version: '1.0.0',
+      active: true,
+      authors: [{ name: 'Test Author', email: 'test@example.com' }]
+    });
+    testModules.set('foundry-simple-weather', {
+      id: 'foundry-simple-weather',
+      title: 'Test Weather System',
+      version: '1.0.0',
+      active: true,
+      authors: [{ name: 'Test Author', email: 'test@example.com' }]
+    });
+    testModules.set('generic-module', {
+      id: 'generic-module',
+      title: 'Generic Test Module',
+      version: '0.1.0',
+      active: true
+    });
+    
+    // Add contents property to make it compatible with Foundry's Collection interface
+    (testModules as any).contents = Array.from(testModules.values());
+    mockFoundryEnv.game.modules = testModules;
+    
     // Set up ErrorsAndEchoesAPI
     mockFoundryEnv.window.ErrorsAndEchoesAPI = {
       register: ModuleRegistry.register.bind(ModuleRegistry),

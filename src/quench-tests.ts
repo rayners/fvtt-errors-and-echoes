@@ -40,7 +40,7 @@ if (typeof quench !== 'undefined') {
         // This test verifies the error capture system is active without triggering cascading errors
         // The error capture functionality is verified through integration testing instead
         assert.ok(
-          (window as any).ErrorsAndEchoes?.ErrorCapture,
+          window.ErrorsAndEchoes?.ErrorCapture,
           'Error capture system should be available'
         );
         assert.ok(
@@ -79,7 +79,7 @@ if (typeof quench !== 'undefined') {
         const originalGet = game.modules.get;
         game.modules.get = (id: string) => {
           if (id === testModuleId) {
-            return { id: testModuleId, version: '1.0.0', active: true } as any;
+            return { id: testModuleId, version: '1.0.0', active: true, title: 'Test Module' };
           }
           return originalGet.call(game.modules, id);
         };
@@ -93,16 +93,16 @@ if (typeof quench !== 'undefined') {
           };
 
           assert.doesNotThrow(() => {
-            (window as any).ErrorsAndEchoes.ModuleRegistry.register(config);
+            window.ErrorsAndEchoes.ModuleRegistry.register(config);
           }, 'Module registration should not throw errors');
 
           // Verify registration was successful
           assert.ok(
-            (window as any).ErrorsAndEchoes.ModuleRegistry.isRegistered(testModuleId),
+            window.ErrorsAndEchoes.ModuleRegistry.isRegistered(testModuleId),
             'Module should be registered'
           );
 
-          const registration = (window as any).ErrorsAndEchoes.ModuleRegistry.getRegisteredModule(
+          const registration = window.ErrorsAndEchoes.ModuleRegistry.getRegisteredModule(
             testModuleId
           );
           assert.equal(
@@ -129,11 +129,11 @@ if (typeof quench !== 'undefined') {
 
         // Should not throw, but should warn and not register
         assert.doesNotThrow(() => {
-          (window as any).ErrorsAndEchoes.ModuleRegistry.register(config);
+          window.ErrorsAndEchoes.ModuleRegistry.register(config);
         });
 
         assert.ok(
-          !(window as any).ErrorsAndEchoes.ModuleRegistry.isRegistered(
+          !window.ErrorsAndEchoes.ModuleRegistry.isRegistered(
             'non-existent-module-quench'
           ),
           'Non-existent module should not be registered'
@@ -144,14 +144,14 @@ if (typeof quench !== 'undefined') {
     describe('Privacy and Consent', () => {
       it('respects user consent settings', () => {
         // Test that error reporting is disabled by default
-        const hasConsent = (window as any).ErrorsAndEchoes.ConsentManager.hasConsent();
+        const hasConsent = window.ErrorsAndEchoes.ConsentManager.hasConsent();
 
         if (!hasConsent) {
           assert.equal(hasConsent, false, 'Should not have consent by default');
         }
 
         // Test privacy level retrieval
-        const privacyLevel = (window as any).ErrorsAndEchoes.ConsentManager.getPrivacyLevel();
+        const privacyLevel = window.ErrorsAndEchoes.ConsentManager.getPrivacyLevel();
         assert.ok(
           ['minimal', 'standard', 'detailed'].includes(privacyLevel),
           'Privacy level should be one of the valid options'
@@ -161,11 +161,11 @@ if (typeof quench !== 'undefined') {
       it('handles settings access gracefully', () => {
         // Test that settings access doesn't throw errors even if settings aren't fully initialized
         assert.doesNotThrow(() => {
-          (window as any).ErrorsAndEchoes.ConsentManager.getPrivacyLevel();
+          window.ErrorsAndEchoes.ConsentManager.getPrivacyLevel();
         }, 'Getting privacy level should not throw');
 
         assert.doesNotThrow(() => {
-          (window as any).ErrorsAndEchoes.ConsentManager.hasConsent();
+          window.ErrorsAndEchoes.ConsentManager.hasConsent();
         }, 'Checking consent should not throw');
       });
     });
@@ -173,21 +173,21 @@ if (typeof quench !== 'undefined') {
     describe('Error Attribution', () => {
       it('has required global APIs available', () => {
         // Check that all required APIs are available
-        assert.ok((window as any).ErrorsAndEchoes, 'ErrorsAndEchoes global should be available');
+        assert.ok(window.ErrorsAndEchoes, 'ErrorsAndEchoes global should be available');
         assert.ok(
-          (window as any).ErrorsAndEchoes.ErrorAttribution,
+          window.ErrorsAndEchoes.ErrorAttribution,
           'ErrorAttribution should be available'
         );
         assert.ok(
-          (window as any).ErrorsAndEchoes.ErrorReporter,
+          window.ErrorsAndEchoes.ErrorReporter,
           'ErrorReporter should be available'
         );
         assert.ok(
-          typeof (window as any).ErrorsAndEchoes.ErrorAttribution.attributeToModule === 'function',
+          typeof window.ErrorsAndEchoes.ErrorAttribution.attributeToModule === 'function',
           'attributeToModule should be a function'
         );
         assert.ok(
-          typeof (window as any).ErrorsAndEchoes.ErrorReporter.testEndpoint === 'function',
+          typeof window.ErrorsAndEchoes.ErrorReporter.testEndpoint === 'function',
           'testEndpoint should be a function'
         );
       });
@@ -198,7 +198,7 @@ if (typeof quench !== 'undefined') {
     at Object.test (modules/test-module/test.js:10:5)
     at foundry.js:1234:10`;
 
-        const attribution = (window as any).ErrorsAndEchoes.ErrorAttribution.attributeToModule(
+        const attribution = window.ErrorsAndEchoes.ErrorAttribution.attributeToModule(
           testError,
           {
             source: 'javascript',
@@ -215,7 +215,7 @@ if (typeof quench !== 'undefined') {
       it('handles errors without stack traces', () => {
         // Verify the method exists
         assert.ok(
-          typeof (window as any).ErrorsAndEchoes.ErrorAttribution.attributeToModule === 'function',
+          typeof window.ErrorsAndEchoes.ErrorAttribution.attributeToModule === 'function',
           'attributeToModule method should exist'
         );
 
@@ -224,7 +224,7 @@ if (typeof quench !== 'undefined') {
 
         // Test attribution without interfering with other registrations
         try {
-          const attribution = (window as any).ErrorsAndEchoes.ErrorAttribution.attributeToModule(
+          const attribution = window.ErrorsAndEchoes.ErrorAttribution.attributeToModule(
             testError,
             {
               source: 'javascript',
@@ -322,8 +322,8 @@ if (typeof quench !== 'undefined') {
         assert.ok(ourModule, 'Module should exist');
 
         // Test that API is available
-        assert.ok((window as any).ErrorsAndEchoes, 'ErrorsAndEchoes global should be available');
-        assert.ok((window as any).ErrorsAndEchoesAPI, 'Public API should be available');
+        assert.ok(window.ErrorsAndEchoes, 'ErrorsAndEchoes global should be available');
+        assert.ok(window.ErrorsAndEchoesAPI, 'Public API should be available');
       });
     });
 
@@ -350,7 +350,7 @@ if (typeof quench !== 'undefined') {
         for (let i = 0; i < errorCount; i++) {
           const testError = new Error(`Performance test error ${i}`);
           try {
-            (window as any).ErrorsAndEchoes.ErrorAttribution.attributeToModule(testError, {
+            window.ErrorsAndEchoes.ErrorAttribution.attributeToModule(testError, {
               source: 'javascript',
               timestamp: Date.now(),
             });
@@ -371,7 +371,7 @@ if (typeof quench !== 'undefined') {
 
     describe('API Surface Validation', () => {
       it('exposes correct public API methods', () => {
-        const api = (window as any).ErrorsAndEchoesAPI;
+        const api = window.ErrorsAndEchoesAPI;
         assert.ok(api, 'Public API should be available');
 
         assert.equal(typeof api.register, 'function', 'register method should be available');
@@ -386,7 +386,7 @@ if (typeof quench !== 'undefined') {
       });
 
       it('provides useful statistics', () => {
-        const stats = (window as any).ErrorsAndEchoesAPI.getStats();
+        const stats = window.ErrorsAndEchoesAPI.getStats();
 
         assert.equal(typeof stats.totalReports, 'number', 'totalReports should be a number');
         assert.equal(typeof stats.recentReports, 'number', 'recentReports should be a number');
@@ -401,14 +401,14 @@ if (typeof quench !== 'undefined') {
       it('handles network request failures gracefully', async () => {
         // Verify the method exists
         assert.ok(
-          typeof (window as any).ErrorsAndEchoes.ErrorReporter.testEndpoint === 'function',
+          typeof window.ErrorsAndEchoes.ErrorReporter.testEndpoint === 'function',
           'testEndpoint method should exist'
         );
 
         // Test with invalid endpoint that matches expected URL format
         try {
           console.log('Testing invalid endpoint...');
-          const result = await (window as any).ErrorsAndEchoes.ErrorReporter.testEndpoint(
+          const result = await window.ErrorsAndEchoes.ErrorReporter.testEndpoint(
             'https://invalid-endpoint-test.invalid/report/'
           );
           console.log('testEndpoint result:', result, 'type:', typeof result);
@@ -429,10 +429,10 @@ if (typeof quench !== 'undefined') {
     describe('Rate Limiting Validation', () => {
       it('enforces rate limits properly', () => {
         // Clear any existing rate limit state
-        (window as any).ErrorsAndEchoes.ErrorReporter.clearStats();
+        window.ErrorsAndEchoes.ErrorReporter.clearStats();
 
         // Test rate limiting by checking report statistics
-        const initialStats = (window as any).ErrorsAndEchoesAPI.getStats();
+        const initialStats = window.ErrorsAndEchoesAPI.getStats();
         assert.equal(typeof initialStats.recentReports, 'number', 'Should track recent reports');
       });
 
@@ -441,10 +441,10 @@ if (typeof quench !== 'undefined') {
         const testError2 = new Error('Duplicate test error');
 
         // Both errors should have same signature for deduplication
-        const sig1 = (window as any).ErrorsAndEchoes.ErrorReporter.getStackSignature?.(
+        const sig1 = window.ErrorsAndEchoes.ErrorReporter.getStackSignature?.(
           testError1.stack
         );
-        const sig2 = (window as any).ErrorsAndEchoes.ErrorReporter.getStackSignature?.(
+        const sig2 = window.ErrorsAndEchoes.ErrorReporter.getStackSignature?.(
           testError2.stack
         );
 
@@ -457,7 +457,7 @@ if (typeof quench !== 'undefined') {
     describe('Settings Integration', () => {
       it('responds to settings changes', () => {
         // Test that privacy level can be retrieved
-        const currentLevel = (window as any).ErrorsAndEchoes.ConsentManager.getPrivacyLevel();
+        const currentLevel = window.ErrorsAndEchoes.ConsentManager.getPrivacyLevel();
         assert.ok(
           ['minimal', 'standard', 'detailed'].includes(currentLevel),
           'Should return valid privacy level'
@@ -467,8 +467,8 @@ if (typeof quench !== 'undefined') {
       it('handles missing or corrupted settings gracefully', () => {
         // Test edge case handling
         assert.doesNotThrow(() => {
-          const hasConsent = (window as any).ErrorsAndEchoes.ConsentManager.hasConsent();
-          const privacyLevel = (window as any).ErrorsAndEchoes.ConsentManager.getPrivacyLevel();
+          const hasConsent = window.ErrorsAndEchoes.ConsentManager.hasConsent();
+          const privacyLevel = window.ErrorsAndEchoes.ConsentManager.getPrivacyLevel();
         }, 'Should handle settings access gracefully');
       });
     });
@@ -500,7 +500,7 @@ if (typeof quench !== 'undefined') {
         const malformedError = { message: 'Not a real Error object' };
 
         assert.doesNotThrow(() => {
-          (window as any).ErrorsAndEchoes.ErrorAttribution.attributeToModule(
+          window.ErrorsAndEchoes.ErrorAttribution.attributeToModule(
             malformedError as Error,
             {
               source: 'javascript',
@@ -518,7 +518,7 @@ if (typeof quench !== 'undefined') {
         const startTime = performance.now();
 
         assert.doesNotThrow(() => {
-          (window as any).ErrorsAndEchoes.ErrorAttribution.attributeToModule(testError, {
+          window.ErrorsAndEchoes.ErrorAttribution.attributeToModule(testError, {
             source: 'javascript',
             timestamp: Date.now(),
           });

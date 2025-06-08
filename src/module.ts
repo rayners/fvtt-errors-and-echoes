@@ -8,18 +8,20 @@
 import { ErrorCapture } from './error-capture.js';
 import { ErrorAttribution } from './error-attribution.js';
 import { ErrorReporter } from './error-reporter.js';
-import { ConsentManager } from './consent-manager.js';
+import { ConsentManager, type PrivacyLevel } from './consent-manager.js';
 import { ErrorReporterWelcomeDialog } from './welcome-dialog.js';
 import { EndpointConfigDialog } from './settings-ui.js';
 import { moduleMatchesAuthor } from './author-utils.js';
 import { ModuleRegistry, type ModuleRegistrationConfig } from './module-registry.js';
+import { safeExecute, getModule, debugLog } from './utils.js';
+import type { EndpointConfig } from './types.js';
 
 // Types for the module
 interface ErrorsAndEchoesAPI {
   register: (config: ModuleRegistrationConfig) => void;
   report: (error: Error, options?: ReportOptions) => void;
   hasConsent: () => boolean;
-  getPrivacyLevel: () => string;
+  getPrivacyLevel: () => PrivacyLevel;
   getStats: () => ReportStats;
 }
 
@@ -34,16 +36,8 @@ interface ReportStats {
   lastReportTime?: string | undefined;
 }
 
-interface EndpointConfig {
-  name: string;
-  url: string;
-  author?: string;
-  modules?: string[];
-  enabled: boolean;
-}
-
 // Global namespace for the module
-(window as any).ErrorsAndEchoes = {
+window.ErrorsAndEchoes = {
   ErrorCapture,
   ErrorAttribution,
   ErrorReporter,
@@ -73,7 +67,7 @@ Hooks.once('ready', async (): Promise<void> => {
   // Start error capture if user has consented
   if (ConsentManager.hasConsent()) {
     ErrorCapture.startListening();
-    console.log('Errors and Echoes | Error capture started (user has consented)');
+    debugLog('Errors and Echoes | Error capture started (user has consented)');
   }
 
   // Show welcome dialog if needed - do this after everything else is set up
@@ -89,7 +83,7 @@ Hooks.once('ready', async (): Promise<void> => {
   const errorReporterModule = game.modules.get('errors-and-echoes');
   if (errorReporterModule?.api) {
     Hooks.callAll('errorsAndEchoesReady', errorReporterModule.api);
-    console.log('Errors and Echoes | Hook-based registration system ready');
+    debugLog('Errors and Echoes | Hook-based registration system ready');
   }
 });
 
@@ -108,10 +102,10 @@ function registerSettings(): void {
     onChange: async (enabled: boolean): Promise<void> => {
       if (enabled) {
         ErrorCapture.startListening();
-        console.log('Errors and Echoes | Error capture enabled via settings');
+        debugLog('Errors and Echoes | Error capture enabled via settings');
       } else {
         ErrorCapture.stopListening();
-        console.log('Errors and Echoes | Error capture disabled via settings');
+        debugLog('Errors and Echoes | Error capture disabled via settings');
       }
     },
   });
@@ -195,45 +189,101 @@ function setupPublicAPI(): void {
   const errorReporterModule = game.modules.get('errors-and-echoes');
   if (!errorReporterModule) return;
 
-  // Create API object
+  // Create API object with enhanced error handling
   const api: ErrorsAndEchoesAPI = {
     // For modules to register for enhanced reporting
     register: (config: ModuleRegistrationConfig): void => {
-      ModuleRegistry.register(config);
+      try {
+        // Validate config object exists
+        if (!config || typeof config !== 'object') {
+          console.warn('Errors and Echoes: register() requires a configuration object');
+          return;
+        }
+
+        ModuleRegistry.register(config);
+      } catch (error) {
+        console.error('Errors and Echoes: API register() failed:', error);
+        console.error('  - This error has been contained and should not affect your module');
+      }
     },
 
     // For manual error reporting
     report: (error: Error, options: ReportOptions = {}): void => {
-      if (!ConsentManager.hasConsent()) return;
+      try {
+        // Validate error parameter
+        if (!error || !(error instanceof Error)) {
+          console.warn('Errors and Echoes: report() requires an Error object as first parameter');
+          return;
+        }
 
-      const moduleId = options.module || getCallingModule();
-      const attribution = {
-        moduleId,
-        confidence: 'none' as const,
-        method: 'unknown' as const,
-        source: 'manual' as const,
-      };
+        // Check consent before any processing
+        if (!ConsentManager.hasConsent()) {
+          console.debug('Errors and Echoes: Manual report skipped - user has not consented');
+          return;
+        }
 
-      const endpoint = getEndpointForModule(moduleId);
-      if (endpoint) {
-        ErrorReporter.sendReport(error, attribution, endpoint, options.context || {});
+        // Validate options parameter
+        if (options && typeof options !== 'object') {
+          console.warn('Errors and Echoes: report() options parameter must be an object');
+          options = {};
+        }
+
+        const moduleId = options.module || getCallingModule();
+        const attribution = {
+          moduleId,
+          confidence: 'manual' as const,
+          method: 'api-call' as const,
+          source: 'manual' as const,
+        };
+
+        const endpoint = getEndpointForModule(moduleId);
+        if (endpoint) {
+          ErrorReporter.sendReport(error, attribution, endpoint, options.context || {});
+        } else {
+          console.debug(`Errors and Echoes: No endpoint found for manual report from module '${moduleId}'`);
+        }
+      } catch (reportError) {
+        console.error('Errors and Echoes: API report() failed:', reportError);
+        console.error('  - This error has been contained and should not affect your module');
       }
     },
 
     // Check consent status
-    hasConsent: (): boolean => ConsentManager.hasConsent(),
+    hasConsent: (): boolean => {
+      return safeExecute(
+        () => ConsentManager.hasConsent(),
+        false,
+        'API hasConsent() failed'
+      );
+    },
 
     // Get privacy level
-    getPrivacyLevel: (): string => ConsentManager.getPrivacyLevel(),
+    getPrivacyLevel: (): PrivacyLevel => {
+      return safeExecute(
+        () => ConsentManager.getPrivacyLevel(),
+        'minimal' as PrivacyLevel,
+        'API getPrivacyLevel() failed'
+      );
+    },
 
     // For debugging - get report statistics
-    getStats: (): ReportStats => ErrorReporter.getReportStats(),
+    getStats: (): ReportStats => {
+      return safeExecute(
+        () => ErrorReporter.getReportStats(),
+        {
+          totalReports: 0,
+          recentReports: 0,
+          lastReportTime: undefined
+        },
+        'API getStats() failed'
+      );
+    },
   };
 
   // Expose API
   errorReporterModule.api = api;
-  (window as any).ErrorsAndEchoes.API = api;
-  (window as any).ErrorsAndEchoesAPI = api; // Also expose as ErrorsAndEchoesAPI for consistency
+  window.ErrorsAndEchoes.API = api;
+  window.ErrorsAndEchoesAPI = api; // Also expose as ErrorsAndEchoesAPI for consistency
 
   console.log('Errors and Echoes | Public API registered');
 
@@ -276,8 +326,8 @@ function getEndpointForModule(moduleId: string): EndpointConfig | undefined {
 
       // Check if module matches author
       if (endpoint.author) {
-        const module = game.modules.get(moduleId);
-        return moduleMatchesAuthor(module, endpoint.author);
+        const module = getModule(moduleId);
+        return module && moduleMatchesAuthor(module, endpoint.author);
       }
 
       return false;
@@ -289,5 +339,5 @@ function getEndpointForModule(moduleId: string): EndpointConfig | undefined {
 }
 
 // Export for debugging/testing
-(window as any).ErrorsAndEchoes.showWelcomeDialog = (): ErrorReporterWelcomeDialog | null =>
+window.ErrorsAndEchoes.showWelcomeDialog = (): ErrorReporterWelcomeDialog | null =>
   ErrorReporterWelcomeDialog.show();

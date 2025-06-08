@@ -31,7 +31,7 @@ interface ErrorsAndEchoesAPI {
   register(config: ModuleRegistrationConfig): void;
   report(error: Error, options?: ReportOptions): void;
   hasConsent(): boolean;
-  getPrivacyLevel(): string;
+  getPrivacyLevel(): PrivacyLevel;
   getStats(): ReportStats;
 }
 ```

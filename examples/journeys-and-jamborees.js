@@ -5,58 +5,66 @@
  * with the Journeys and Jamborees module for enhanced error reporting.
  */
 
-// Wait for the Errors and Echoes module to be ready
-Hooks.once('ready', () => {
-  // Check if Errors and Echoes is available
-  if (!window.ErrorsAndEchoesAPI) {
-    console.warn('Journeys and Jamborees: Errors and Echoes API not available');
-    return;
-  }
-
+// Hook-based registration (RECOMMENDED - eliminates timing issues)
+Hooks.on('errorsAndEchoesReady', (errorsAndEchoesAPI) => {
+  // E&E is guaranteed to be ready when this hook is called
   try {
     // Register with enhanced error reporting
-    window.ErrorsAndEchoesAPI.register({
+    errorsAndEchoesAPI.register({
       moduleId: 'journeys-and-jamborees',
       
       // Context provider - adds useful debugging information
       contextProvider: () => {
+        // Use defensive programming to prevent context provider errors
         const context = {};
         
-        // Add party information if available
-        if (game.actors) {
-          const partyActors = game.actors.filter(a => a.type === 'party');
-          context.partyCount = partyActors.length;
-          
-          if (partyActors.length > 0) {
-            const activeParty = partyActors.find(p => p.getFlag('journeys-and-jamborees', 'isActive'));
-            if (activeParty) {
-              context.activePartyId = activeParty.id;
-              context.activePartyName = activeParty.name;
-              context.partyMemberCount = activeParty.system?.members?.length || 0;
+        try {
+          // Add party information if available
+          if (game.actors) {
+            const partyActors = game.actors.filter(a => a.type === 'party');
+            context.partyCount = partyActors.length;
+            
+            if (partyActors.length > 0) {
+              const activeParty = partyActors.find(p => p.getFlag('journeys-and-jamborees', 'isActive'));
+              if (activeParty) {
+                context.activePartyId = activeParty.id;
+                context.activePartyName = activeParty.name;
+                context.partyMemberCount = activeParty.system?.members?.length || 0;
+              }
             }
           }
+        } catch (error) {
+          context.partyDataError = 'Failed to access party data';
         }
         
-        // Add current scene travel information
-        if (game.scenes?.active) {
-          const scene = game.scenes.active;
-          const travelData = scene.getFlag('journeys-and-jamborees', 'travel');
-          if (travelData) {
-            context.sceneHasTravelData = true;
-            context.travelMode = travelData.mode;
-            context.currentBiome = travelData.biome;
-          }
-        }
-        
-        // Add system information
-        context.gameSystem = game.system.id;
-        context.systemVersion = game.system.version;
-        
-        // Add key module settings that might affect behavior
         try {
+          // Add current scene travel information
+          if (game.scenes?.active) {
+            const scene = game.scenes.active;
+            const travelData = scene.getFlag('journeys-and-jamborees', 'travel');
+            if (travelData) {
+              context.sceneHasTravelData = true;
+              context.travelMode = travelData.mode;
+              context.currentBiome = travelData.biome;
+            }
+          }
+        } catch (error) {
+          context.sceneDataError = 'Failed to access scene travel data';
+        }
+        
+        try {
+          // Add system information
+          context.gameSystem = game.system.id;
+          context.systemVersion = game.system.version;
+        } catch (error) {
+          context.systemDataError = 'Failed to access system data';
+        }
+        
+        try {
+          // Add key module settings that might affect behavior
           context.autoGatherFood = game.settings.get('journeys-and-jamborees', 'autoGatherFood') || false;
           context.partyHudEnabled = game.settings.get('journeys-and-jamborees', 'showPartyHud') || false;
-        } catch (e) {
+        } catch (error) {
           // Settings might not be registered yet
           context.settingsError = 'Could not read module settings';
         }

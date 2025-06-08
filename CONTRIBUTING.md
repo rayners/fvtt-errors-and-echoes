@@ -177,6 +177,7 @@ npm run validate
 ### CI/CD Pipeline
 
 All pull requests automatically run:
+
 - **Linting**: ESLint with TypeScript support
 - **Formatting**: Prettier code style checks
 - **Type Checking**: TypeScript compilation validation
@@ -236,6 +237,7 @@ describe('ErrorReporter', () => {
 ```
 
 **Test Coverage Guidelines:**
+
 - Unit tests for all public APIs
 - Integration tests for FoundryVTT hooks
 - Mock external dependencies (game, ui, canvas)
@@ -294,18 +296,21 @@ Please include:
 ### Review Process
 
 1. **Automated Checks**: Full CI pipeline with comprehensive validation
+
    - Multi-node testing (Node 18 & 20)
    - Security scanning and dependency analysis
    - Bundle size impact assessment
    - Code quality and formatting verification
 
 2. **Code Review**: Focus on privacy, security, and code quality
+
    - Privacy-first approach verification
    - FoundryVTT best practices compliance
    - TypeScript usage and type safety
    - Performance impact assessment
 
 3. **Testing**: Manual verification of functionality
+
    - Cross-browser compatibility
    - Multiple FoundryVTT version testing
    - Game system compatibility

@@ -120,7 +120,7 @@ describe('ErrorReporter', () => {
         method: 'POST',
         headers: expect.objectContaining({
           'Content-Type': 'application/json',
-          'X-Foundry-Version': '12.0.0',
+          'X-Foundry-Version': '13.331',
           'X-Privacy-Level': 'standard'
         }),
         body: expect.stringContaining('"message":"Test error"')

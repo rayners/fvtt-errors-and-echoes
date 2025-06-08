@@ -4,8 +4,42 @@
  */
 
 declare global {
+  // Import the types we need for proper Window interface
+  interface ErrorsAndEchoesAPI {
+    register(config: {
+      moduleId: string;
+      contextProvider?: () => Record<string, any>;
+      errorFilter?: (error: Error) => boolean;
+      endpoint?: {
+        name: string;
+        url: string;
+        author?: string;
+        modules?: string[];
+        enabled: boolean;
+      };
+    }): void;
+    report(error: Error, options?: { module?: string; context?: Record<string, any> }): void;
+    hasConsent(): boolean;
+    getPrivacyLevel(): 'minimal' | 'standard' | 'detailed';
+    getStats(): {
+      totalReports: number;
+      recentReports: number;
+      lastReportTime?: string;
+    };
+  }
+
   interface Window {
-    ErrorsAndEchoes: any;
+    ErrorsAndEchoes: {
+      ErrorCapture: any;
+      ErrorAttribution: any;
+      ErrorReporter: any;
+      ConsentManager: any;
+      ModuleRegistry: any;
+      moduleMatchesAuthor: (module: any, authorIdentifier: string) => boolean;
+      API?: ErrorsAndEchoesAPI;
+      showWelcomeDialog?: () => any;
+    };
+    ErrorsAndEchoesAPI: ErrorsAndEchoesAPI;
   }
 
   interface Game {
@@ -18,11 +52,22 @@ declare global {
     user: User;
   }
 
+  // Extended author interface to handle all Foundry author formats
+  interface ModuleAuthor {
+    name?: string;
+    github?: string;
+    email?: string;
+    discord?: string;
+    url?: string;
+  }
+
   interface Module {
     id: string;
     title: string;
     version: string;
-    authors: Array<{ name?: string; github?: string; email?: string }>;
+    // Support both legacy single author and modern authors collection (Array or Set)
+    author?: string;
+    authors?: Array<ModuleAuthor | string> | Set<ModuleAuthor | string>;
     active: boolean;
     api?: any;
   }

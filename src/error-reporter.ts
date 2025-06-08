@@ -8,23 +8,8 @@
 import { ConsentManager, type PrivacyLevel } from './consent-manager.js';
 import { ModuleRegistry } from './module-registry.js';
 import type { Attribution } from './error-attribution.js';
-
-interface EndpointConfig {
-  name: string;
-  url: string;
-  author?: string;
-  modules?: string[];
-  enabled: boolean;
-}
-
-interface ErrorReportResponse {
-  success: boolean;
-  eventId?: string; // Unique identifier for this error report
-  message?: string; // Human-readable status message
-  timestamp?: string; // ISO timestamp when the error was processed
-  endpoint?: string; // Endpoint that processed the request
-  retryAfter?: number; // Seconds to wait before retrying (for rate limiting)
-}
+import type { EndpointConfig, ErrorReportResponse } from './types.js';
+import { debugLog } from './utils.js';
 
 interface ReportPayload {
   error: {
@@ -87,7 +72,7 @@ export class ErrorReporter {
 
     // Check module-specific error filtering
     if (ModuleRegistry.shouldFilterError(attribution.moduleId, error)) {
-      console.log(
+      debugLog(
         `Errors and Echoes: Error filtered by module '${attribution.moduleId}' error filter`
       );
       return;

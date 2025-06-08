@@ -9,20 +9,14 @@ import { ErrorAttribution } from './error-attribution.js';
 import { ErrorReporter } from './error-reporter.js';
 import { ConsentManager } from './consent-manager.js';
 import { moduleMatchesAuthor } from './author-utils.js';
+import { getModule, debugLog } from './utils.js';
+import type { EndpointConfig } from './types.js';
 
 interface ErrorContext {
   source: 'javascript' | 'promise' | 'console' | 'hook';
   event?: Event | PromiseRejectionEvent;
   hookName?: string;
   timestamp: number;
-}
-
-interface EndpointConfig {
-  name: string;
-  url: string;
-  author?: string;
-  modules?: string[];
-  enabled: boolean;
 }
 
 export class ErrorCapture {
@@ -38,7 +32,7 @@ export class ErrorCapture {
   static startListening(): void {
     if (this.isListening) return;
 
-    console.log('Errors and Echoes: Starting error capture (errors will remain visible)');
+    debugLog('Errors and Echoes: Starting error capture (errors will remain visible)');
 
     // JavaScript errors - NEVER preventDefault()
     window.addEventListener('error', this.handleWindowError.bind(this));
@@ -64,7 +58,7 @@ export class ErrorCapture {
   static stopListening(): void {
     if (!this.isListening) return;
 
-    console.log('Errors and Echoes: Stopping error capture');
+    debugLog('Errors and Echoes: Stopping error capture');
 
     // Remove error listeners
     window.removeEventListener('error', this.handleWindowError);
@@ -300,8 +294,8 @@ export class ErrorCapture {
 
         // Check if module matches author
         if (endpoint.author) {
-          const module = game.modules.get(moduleId);
-          return moduleMatchesAuthor(module, endpoint.author);
+          const module = getModule(moduleId);
+          return module && moduleMatchesAuthor(module, endpoint.author);
         }
 
         return false;

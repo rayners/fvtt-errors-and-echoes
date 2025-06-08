@@ -5,6 +5,8 @@
  * Ensures all reporting is opt-in and respects user privacy choices.
  */
 
+import { getSetting, setSetting, safeExecute } from './utils.js';
+
 export type PrivacyLevel = 'minimal' | 'standard' | 'detailed';
 
 export class ConsentManager {
@@ -13,13 +15,7 @@ export class ConsentManager {
    */
   static hasConsent(): boolean {
     if (!game?.settings) return false;
-
-    try {
-      return game.settings.get('errors-and-echoes', 'globalEnabled') === true;
-    } catch (error) {
-      console.warn('Errors and Echoes: Failed to check consent:', error);
-      return false;
-    }
+    return getSetting<boolean>('globalEnabled', false);
   }
 
   /**
@@ -27,14 +23,7 @@ export class ConsentManager {
    */
   static getPrivacyLevel(): PrivacyLevel {
     if (!game?.settings) return 'standard';
-
-    try {
-      const level = game.settings.get('errors-and-echoes', 'privacyLevel') || 'standard';
-      return level as PrivacyLevel;
-    } catch (error) {
-      console.warn('Errors and Echoes: Failed to get privacy level:', error);
-      return 'standard';
-    }
+    return getSetting<PrivacyLevel>('privacyLevel', 'standard');
   }
 
   /**

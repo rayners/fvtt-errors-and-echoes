@@ -5,15 +5,8 @@
  */
 
 import { moduleMatchesAuthor, getFormattedAuthorString } from './author-utils.js';
-import { ModuleRegistry, type RegisteredModule } from './module-registry.js';
-
-interface EndpointConfig {
-  name: string;
-  url: string;
-  author?: string;
-  modules?: string[];
-  enabled: boolean;
-}
+import { ModuleRegistry } from './module-registry.js';
+import type { EndpointConfig, RegisteredModule } from './types.js';
 
 interface EndpointConfigWithIndex extends EndpointConfig {
   index: number;
@@ -184,7 +177,6 @@ export class EndpointConfigDialog extends foundry.applications.api.HandlebarsApp
       })
       .filter(({ moduleInfo }) => moduleInfo !== undefined) // Only include modules that actually exist
       .map(({ moduleId, moduleInfo }) => {
-        console.log(moduleInfo);
         // Extract author information using utility function
         const authors = getFormattedAuthorString(
           moduleInfo,

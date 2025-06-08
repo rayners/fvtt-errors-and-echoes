@@ -35,7 +35,6 @@ const mockGame = {
     id: 'dnd5e',
     version: '2.0.0'
   },
-  version: '11.315',
   scenes: {
     active: {
       name: 'Test Scene'
@@ -58,16 +57,22 @@ export function setupMocks() {
   // Set up basic Foundry mocks from our test utils
   setupFoundryMocks();
   
+  // Add console.debug polyfill if it doesn't exist (Node.js compatibility)
+  if (!console.debug) {
+    console.debug = console.log;
+  }
+  
   // Store originals
   originalGlobal = {
     game: (global as any).game,
     ui: (global as any).ui
   };
   
-  // Override with our specific mocks
+  // Override with our specific mocks, preserving version from foundry-test-utils
   (global as any).game = {
     ...(global as any).game,
-    ...mockGame
+    ...mockGame,
+    version: (global as any).game?.version || '13.331'  // Preserve version from foundry-test-utils
   };
   (global as any).ui = {
     ...(global as any).ui,
