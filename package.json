@@ -1,6 +1,6 @@
 {
   "name": "fvtt-errors-and-echoes",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Anonymous error reporting for Foundry VTT modules",
   "main": "dist/module.js",
   "type": "module",

@@ -5,6 +5,30 @@ All notable changes to the Errors and Echoes module will be documented in this f
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2025-06-08
+
+### Added
+
+- **Hook-Based Registration System** - New `errorsAndEchoesReady` hook eliminates timing issues between init/ready phases for module integration
+- **Enhanced Author Attribution** - Comprehensive author matching system with 36 test scenarios covering legacy string authors, modern author arrays, email parsing, GitHub URL extraction, and Discord username support
+- **Advanced Email Processing** - Username extraction from email addresses (user@host → user) with support for complex domains and plus addressing
+- **GitHub Integration** - Automatic username parsing from GitHub profile URLs in module manifests
+- **Improved Settings UI** - Native Foundry styling integration with better visual consistency and reduced clutter when activity stats are zero
+- **CSS Scope Fixes** - Resolved styling conflicts that were affecting the core Game Settings dialog
+
+### Changed
+
+- **Recommended Integration Pattern** - Modules should now use hook-based registration (`Hooks.on('errorsAndEchoesReady', (api) => { ... })`) instead of direct API access
+- **Settings Interface** - Enhanced visual layout with better spacing and native Foundry appearance
+- **Module Examples** - Updated generic module example to demonstrate new hook-based registration pattern
+
+### Technical Improvements
+
+- **Complete CI/CD Modernization** - Upgraded to foundry-module-actions@v2 with enhanced security workflows
+- **Enhanced Test Coverage** - Added 36 comprehensive test cases for author attribution scenarios
+- **Code Quality** - Applied consistent Prettier formatting and fixed TypeScript compilation issues
+- **Security Enhancements** - Improved GitHub Actions workflows with proper SARIF upload and codecov integration
+
 ## [0.1.2] - 2025-06-08
 
 ### Added

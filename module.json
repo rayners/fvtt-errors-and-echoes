@@ -2,7 +2,7 @@
   "id": "errors-and-echoes",
   "title": "Errors and Echoes",
   "description": "Privacy-first anonymous error reporting system for FoundryVTT modules. Helps module authors identify and fix issues while respecting user privacy with configurable data collection levels and full transparency.",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "authors": [
     {
       "name": "David Raynes",
