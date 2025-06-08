@@ -23,7 +23,7 @@ jobs:
           build-command: 'npm run build'
           working-directory: 'dist'
           module-files: 'module.js module.json templates/ styles/ languages/ examples/ README.md CHANGELOG.md LICENSE'
-          zip-name: 'fvtt-errors-and-echoes.zip'
+          zip-name: 'module.zip'
 
       # Foundry VTT Package Release submission commented out until package is registered
       # - name: Submit to Foundry VTT Package Release API
