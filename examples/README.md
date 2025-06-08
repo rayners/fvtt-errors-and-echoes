@@ -88,10 +88,12 @@ window.ErrorsAndEchoesAPI.register({
 try {
   performRiskyOperation();
 } catch (error) {
-  window.ErrorsAndEchoesAPI.reportError(error, {
-    operation: 'performRiskyOperation',
-    userInput: sanitizedInput,
-    timestamp: new Date().toISOString()
+  window.ErrorsAndEchoesAPI.report(error, {
+    context: {
+      operation: 'performRiskyOperation',
+      userInput: sanitizedInput,
+      timestamp: new Date().toISOString()
+    }
   });
 }
 ```
@@ -200,7 +202,7 @@ Examples: Developer tools, automation scripts
 
 For questions about integration:
 1. Check the [API Reference](../API-REFERENCE.md)
-2. Review the [Technical Architecture](../TECHNICAL-ARCHITECTURE.md)
+2. Review the [main README](../README.md) for technical details
 3. Open an issue on the Errors and Echoes repository
 4. Join the community discussion forums
 

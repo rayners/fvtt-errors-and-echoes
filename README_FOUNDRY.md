@@ -1,10 +1,14 @@
-# Errors and Echoes
+# 🚨 Errors and Echoes
 
-**Anonymous error reporting to help improve Foundry VTT modules**
+**Privacy-first anonymous error reporting for FoundryVTT modules**
+
+[![Support on Patreon](https://img.shields.io/badge/Patreon-Support%20Development-ff424d?style=flat-square&logo=patreon)](https://patreon.com/rayners)
+
+Help module authors identify and fix bugs faster with intelligent error reporting that respects your privacy.
 
 ---
 
-## What is Errors and Echoes?
+## 🌟 What is Errors and Echoes?
 
 Errors and Echoes is a privacy-focused error reporting module that helps Foundry VTT module authors identify and fix bugs faster. When enabled, it anonymously reports JavaScript errors to module authors, providing valuable debugging information while protecting your privacy.
 
@@ -18,7 +22,7 @@ Errors and Echoes is a privacy-focused error reporting module that helps Foundry
 
 ---
 
-## Privacy and Data Collection
+## 🔒 Privacy and Data Collection
 
 **Your privacy is our top priority.** Here's exactly what we collect and what we don't:
 
@@ -75,7 +79,7 @@ Error reports are used exclusively to:
 
 ---
 
-## Installation
+## 📦 Installation
 
 1. **Install via Foundry VTT:**
 
@@ -97,7 +101,7 @@ Error reports are used exclusively to:
 
 ---
 
-## Configuration
+## ⚙️ Configuration
 
 ### Initial Setup
 
@@ -134,7 +138,7 @@ Access privacy settings through **Settings → Module Settings → Errors and Ec
 
 ---
 
-## Privacy Levels Explained
+## 📊 Privacy Levels Explained
 
 ### When to Use Each Level
 
@@ -191,7 +195,67 @@ Access privacy settings through **Settings → Module Settings → Errors and Ec
 
 ---
 
-## Testing and Verification
+## 💡 Real Example: How Error Reporting Helps
+
+### **What You Might Experience**
+
+You're running a D&D 5e game with the "Combat Helper" module. During combat, you click the "Apply Poison" button on a player's token, but instead of the poison effect appearing, you see an error message in the console:
+
+```
+Error: You do not have permission to create ActiveEffect
+```
+
+The button doesn't work, the effect isn't applied, and you're not sure why.
+
+### **How Errors & Echoes Helps (If Enabled)**
+
+**What Happens Automatically:**
+1. The error is captured and analyzed
+2. The system identifies it came from the "Combat Helper" module
+3. Anonymous technical details are sent to the module author
+4. **You still see the same error** - nothing is hidden from you
+
+**What The Module Author Receives:**
+- **Error Message**: "Permission denied for ActiveEffect creation"
+- **When It Happened**: During combat, when clicking "Apply Poison"
+- **Your Setup**: D&D 5e system, which other modules are active
+- **Your Role**: You're a player (not GM), which explains the permission issue
+
+**What Gets Fixed:**
+The author realizes players can't create effects directly and releases an update that:
+- Asks the GM to apply the effect instead
+- Shows a helpful message: "Permission needed - asking GM to apply poison effect"
+- Prevents the error from happening again
+
+### **Your Privacy Protection**
+
+**❌ NOT Included in the report:**
+- Your username or any personal information
+- The name of your game world or characters
+- Chat messages or story content
+- Your IP address or location
+- Campaign-specific details
+
+**✅ Only Technical Information:**
+- The specific error that occurred
+- Which module caused it
+- Your system setup (D&D 5e, module versions)
+- When it happened (for debugging patterns)
+
+### **The Result**
+
+- **Faster Fixes**: The author knows exactly what went wrong
+- **Better Experience**: Future players won't hit the same bug
+- **No Privacy Risk**: Your game content stays private
+- **Community Benefit**: Everyone benefits from improved modules
+
+This is why many users choose to enable error reporting - it creates a feedback loop that makes the entire Foundry ecosystem more stable and reliable.
+
+**🔍 Want More Technical Details?** See the [complete technical documentation](https://github.com/rayners/fvtt-errors-and-echoes/blob/main/README.md) for developers, including exact data payloads and integration examples.
+
+---
+
+## 🧪 Testing and Verification
 
 ### Verify Your Privacy Settings
 
@@ -222,7 +286,7 @@ The module includes built-in endpoint testing:
 
 ---
 
-## Troubleshooting
+## 🔧 Troubleshooting
 
 ### Error Reporting Not Working
 
@@ -262,7 +326,7 @@ The module includes built-in endpoint testing:
 
 ---
 
-## Your Rights and Controls
+## 🛡️ Your Rights and Controls
 
 ### Complete Control Over Your Data
 
@@ -288,7 +352,7 @@ For privacy-related questions or concerns:
 
 ---
 
-## Supporting Module Development
+## 💖 Supporting Module Development
 
 By enabling error reporting, you're helping:
 
@@ -308,7 +372,7 @@ If you're a module author interested in receiving error reports:
 
 ---
 
-## Support
+## 📞 Support
 
 ### Getting Help
 

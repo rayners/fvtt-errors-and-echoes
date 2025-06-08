@@ -30,8 +30,15 @@
   "bugs": "https://github.com/rayners/fvtt-errors-and-echoes/issues",
   "changelog": "https://github.com/rayners/fvtt-errors-and-echoes/blob/main/CHANGELOG.md",
   "readme": "https://github.com/rayners/fvtt-errors-and-echoes/blob/main/README.md",
+  "documentation": "https://docs.rayners.dev/errors-and-echoes",
   "license": "MIT",
   "keywords": ["error-reporting", "debugging", "module-development", "privacy", "anonymous"],
+  "funding": [
+    {
+      "type": "patreon",
+      "url": "https://patreon.com/rayners"
+    }
+  ],
   "media": [
     {
       "type": "icon",

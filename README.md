@@ -1,6 +1,14 @@
-# Errors and Echoes
+# 🚨 Errors and Echoes
 
-Anonymous error reporting for Foundry VTT modules to help authors improve their modules.
+**Privacy-first anonymous error reporting for FoundryVTT modules**
+
+[![Patreon](https://img.shields.io/badge/Patreon-Support%20Development-ff424d?style=for-the-badge&logo=patreon)](https://patreon.com/rayners)
+[![FoundryVTT](https://img.shields.io/badge/FoundryVTT-v12+-blue?style=for-the-badge)](https://foundryvtt.com)
+[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
+[![Tests](https://img.shields.io/badge/Tests-142%20Passing-success?style=for-the-badge)]()
+[![TypeScript](https://img.shields.io/badge/TypeScript-Strict-blue?style=for-the-badge&logo=typescript)]()
+
+Help module authors identify and fix bugs faster with intelligent error reporting that respects user privacy.
 
 ## Implementation Status
 
@@ -12,15 +20,21 @@ Anonymous error reporting for Foundry VTT modules to help authors improve their 
 | ⚙️ Settings UI                 | ✅ Complete     | Foundry-native configuration interface with registered modules display          |
 | 📊 Manual Reporting            | ✅ Complete     | Direct error reporting API for modules                                          |
 | 🔗 **Module Registration API** | ✅ **Complete** | **Full registration system with context providers and filters**                 |
-| 🧪 Testing Infrastructure      | ⚠️ **Beta**     | **Test framework established (currently requires setup fixes)**                  |
+| 🧪 Testing Infrastructure      | ✅ Complete     | Complete test suite with 142 passing tests                                      |
 
-## Overview
+## 👥 Who Should Use This?
+
+**🔧 Module Developers**: Get detailed bug reports from users automatically, with rich debugging context and privacy protection.
+
+**🎯 Users Who Want to Help**: Enable anonymous error reporting to help your favorite module authors fix bugs faster.
+
+## 🌟 Overview
 
 Errors and Echoes is a privacy-focused error reporting system for Foundry VTT that helps module developers identify and fix issues in their modules. The system captures JavaScript errors, promise rejections, console errors, and Foundry hook errors, then reports them to configured endpoints with sophisticated module attribution and privacy controls.
 
 **🔒 Privacy First**: All error reporting is opt-in only with granular privacy controls. The module never swallows errors - all errors remain visible to users in the console and dev tools.
 
-## Key Features
+## 🚀 Key Features
 
 - **Anonymous Error Reporting**: No personally identifiable information is collected
 - **Sophisticated Module Attribution**: Advanced stack trace analysis to identify which module caused an error
@@ -29,7 +43,7 @@ Errors and Echoes is a privacy-focused error reporting system for Foundry VTT th
 - **Foundry-Native Integration**: Built on Foundry's settings system with proper GM-only controls
 - **Never Swallows Errors**: All errors remain visible to users - reporting happens in addition to normal error display
 
-## Quick Start for Module Developers
+## ⚡ Quick Start for Module Developers
 
 ### Registration API (Production Ready)
 
@@ -71,9 +85,10 @@ try {
   riskyOperation();
 } catch (error) {
   // Report to error monitoring
-  if (window.ErrorsAndEchoesAPI?.reportError) {
-    window.ErrorsAndEchoesAPI.reportError(error, {
-      operation: 'riskyOperation',
+  if (window.ErrorsAndEchoesAPI?.report) {
+    window.ErrorsAndEchoesAPI.report(error, {
+      context: {
+        operation: 'riskyOperation',
         userAction: 'button-click'
       }
     });
@@ -95,6 +110,111 @@ Complete working examples are available in the [`examples/`](./examples/) direct
 
 Each example demonstrates real-world integration patterns and best practices.
 
+## 📋 Real-World Example: Module Error Scenario
+
+### **Scenario: Token Update Failure**
+
+A user clicks a custom HUD button in the "Advanced Combat Manager" module to apply a status effect, but the token update fails due to a permissions issue:
+
+```javascript
+// What happens in the module
+async function applyStatusEffect(tokenId, effectData) {
+  try {
+    const token = canvas.tokens.get(tokenId);
+    await token.actor.createEmbeddedDocuments('ActiveEffect', [effectData]);
+  } catch (error) {
+    // Error occurs here: "You do not have permission to create ActiveEffect"
+    // Errors & Echoes automatically captures and reports this
+    throw error;
+  }
+}
+```
+
+### **What Gets Reported**
+
+**Attribution Analysis:**
+- **Module ID**: `advanced-combat-manager` (high confidence - detected from stack trace)
+- **Confidence**: `high` (stack trace clearly shows `/modules/advanced-combat-manager/`)
+- **Method**: `stack-trace` (most reliable attribution method)
+
+**Actual Payload Sent (Standard Privacy Level):**
+```json
+{
+  "error": {
+    "message": "You do not have permission to create ActiveEffect",
+    "stack": "Error: You do not have permission to create ActiveEffect\n    at Actor.createEmbeddedDocuments (foundry.js:45234)\n    at applyStatusEffect (modules/advanced-combat-manager/scripts/hud.js:156)\n    at HTMLButtonElement.onClick (modules/advanced-combat-manager/scripts/hud.js:89)",
+    "type": "Error",
+    "source": "javascript"
+  },
+  "attribution": {
+    "moduleId": "advanced-combat-manager",
+    "confidence": "high",
+    "method": "stack-trace",
+    "source": "error-capture"
+  },
+  "foundry": {
+    "version": "12.331",
+    "system": {
+      "id": "dnd5e",
+      "version": "3.3.1"
+    },
+    "modules": [
+      {"id": "advanced-combat-manager", "version": "2.1.4"},
+      {"id": "lib-wrapper", "version": "1.12.14"},
+      {"id": "errors-and-echoes", "version": "0.1.2"}
+    ]
+  },
+  "client": {
+    "sessionId": "anon-x8k2m9p4q7",
+    "browser": "Chrome/120"
+  },
+  "meta": {
+    "timestamp": "2025-06-08T14:23:17.442Z",
+    "privacyLevel": "standard",
+    "reporterVersion": "0.1.2"
+  },
+  "moduleContext": {
+    "activeHUD": "combat-manager",
+    "selectedTokens": 2,
+    "combatActive": true,
+    "userRole": "player"
+  }
+}
+```
+
+### **Privacy Level Comparison**
+
+**Minimal Level** would exclude:
+- `foundry.system` and `foundry.modules`
+- `client` section entirely
+- `moduleContext` data
+
+**Detailed Level** would add:
+- `foundry.scene`: "Goblin Ambush"
+- `client.browser`: Full browser details
+- Enhanced `moduleContext` with more debugging info
+
+### **How This Helps The Module Author**
+
+**🎯 Immediate Value:**
+- **Root Cause**: Permission error during ActiveEffect creation
+- **User Context**: Player trying to apply effects (not GM)
+- **Environment**: D&D 5e system, specific module versions
+- **Frequency**: If multiple users report this, it's a priority issue
+
+**🔧 Action Items for Developer:**
+1. Add permission checks before attempting ActiveEffect creation
+2. Show user-friendly error message for permission failures
+3. Test the feature more thoroughly with player permissions
+4. Consider graceful fallbacks for restricted users
+
+**📊 Analytics Insights:**
+- Error frequency: Is this a common issue?
+- User patterns: Do only players encounter this?
+- Version correlation: Does this happen with specific D&D 5e versions?
+
+This single error report provides the module author with comprehensive information to understand, reproduce, and fix the issue efficiently.
+
 ## API Documentation
 
 ### ErrorsAndEchoesAPI Interface
@@ -104,7 +224,10 @@ The main API is exposed via `window.ErrorsAndEchoesAPI`:
 ```typescript
 interface ErrorsAndEchoesAPI {
   register: (config: ModuleRegistrationConfig) => void;
-  reportError: (error: Error, context?: Record<string, any>) => void;
+  report: (error: Error, options?: ReportOptions) => void;
+  hasConsent: () => boolean;
+  getPrivacyLevel: () => PrivacyLevel;
+  getStats: () => ReportStats;
 }
 ```
 
@@ -504,15 +627,14 @@ Errors & Echoes is currently in **beta** with core functionality working but som
 - Production infrastructure at https://errors.rayners.dev
 
 **⚠️ Known Issues:**
-- Test suite requires setup fixes to run properly
-- Module registration examples need real-world validation
-- Documentation may have gaps compared to implementation
+- Module registration examples need real-world validation with popular modules
+- Error attribution accuracy could be improved with production usage data
 
-**🔄 Next Priorities:**
-- Fix test infrastructure for reliable quality assurance
-- Validate integration examples with popular modules
-- Improve error attribution accuracy based on real usage
-- Add comprehensive module compatibility testing
+**🔄 Next Priorities (v0.2.0):**
+- Validate integration examples with popular modules in production
+- Improve error attribution accuracy based on real usage patterns
+- Enhanced error filtering capabilities with smart noise reduction
+- Additional context providers for common debugging scenarios
 
 ### Upcoming Features
 
@@ -538,25 +660,38 @@ Errors & Echoes is currently in **beta** with core functionality working but som
 
 ### Testing Requirements
 
-- Fix test infrastructure to run reliably
 - Test error attribution with your module's error patterns
 - Verify endpoint integration works correctly
 - Test privacy level filtering
+- Run the complete test suite (142 tests available)
 
 ### Pull Request Process
 
 1. Fork the repository
 2. Create a feature branch
-3. Test your changes thoroughly (once test infrastructure is fixed)
+3. Test your changes thoroughly with `npm test`
 4. Submit a pull request with clear description
 
 ## License
 
 MIT License - see [LICENSE](LICENSE) file for details.
 
-## Contact and Support
+## 💖 Support This Project
+
+Love using Errors & Echoes? Consider supporting continued development:
+
+[![Patreon](https://img.shields.io/badge/Patreon-Support%20Development-ff424d?style=for-the-badge&logo=patreon)](https://patreon.com/rayners)
+
+Your support helps fund:
+- 🚀 **New Features**: Enhanced error attribution and reporting capabilities
+- 🐛 **Bug Fixes**: Faster resolution of issues and compatibility updates  
+- 📚 **Documentation**: Comprehensive guides and integration examples
+- 🎯 **Community Requests**: Implementation of user-requested features
+
+## 📞 Contact and Support
 
 - **GitHub Issues**: [fvtt-errors-and-echoes/issues](https://github.com/rayners/fvtt-errors-and-echoes/issues)
+- **Documentation**: [docs.rayners.dev/errors-and-echoes](https://docs.rayners.dev/errors-and-echoes)
 - **Author**: David Raynes ([@rayners](https://github.com/rayners))
 - **Discord**: rayners78
 

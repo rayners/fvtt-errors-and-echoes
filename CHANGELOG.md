@@ -5,7 +5,7 @@ All notable changes to the Errors and Echoes module will be documented in this f
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.1.0] - 2025-06-03
+## [0.1.2] - 2025-06-08
 
 ### Added
 
@@ -81,11 +81,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version History
 
-- **v0.1.0** (2025-06-03): Initial release with core functionality and infrastructure
+- **v0.1.2** (2025-06-08): Current release with core functionality and infrastructure
 - **Pre-release Development** (2024-2025): Documentation-first development with privacy framework
 
 ---
 
-_For detailed technical information, see the [Technical Architecture Documentation](TECHNICAL-ARCHITECTURE.md)._  
 _For user guidance, see the [User Guide](README_FOUNDRY.md)._  
-_For developer integration, see the [API Reference](API-REFERENCE.md)._
+_For developer integration, see the [API Reference](API-REFERENCE.md)._  
+_For integration examples, see the [examples directory](examples/)._
