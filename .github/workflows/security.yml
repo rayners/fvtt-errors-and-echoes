@@ -11,6 +11,9 @@ on:
 jobs:
   audit:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -19,10 +22,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: 'npm'
+          registry-url: 'https://npm.pkg.github.com'
 
       - name: Install dependencies
         run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run security audit
         run: npm audit --audit-level moderate
@@ -47,6 +52,7 @@ jobs:
     permissions:
       actions: read
       contents: read
+      packages: read
       security-events: write
     strategy:
       fail-fast: false
@@ -66,10 +72,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: 'npm'
+          registry-url: 'https://npm.pkg.github.com'
 
       - name: Install dependencies
         run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build project
         run: npm run build
