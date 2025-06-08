@@ -12,15 +12,17 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Required for version tag extraction
 
       - name: Build and Release Module
         id: module_release
-        uses: rayners/foundry-module-actions/release@v1
+        uses: rayners/foundry-module-actions/release@v2
         with:
           node-version: '18'
           build-command: 'npm run build'
           working-directory: 'dist'
-          module-files: 'module.json module.js styles/ templates/ languages/ examples/'
+          module-files: 'module.js module.json templates/ styles/ languages/ examples/ README.md CHANGELOG.md LICENSE'
           zip-name: 'fvtt-errors-and-echoes.zip'
 
       # Foundry VTT Package Release submission commented out until package is registered
