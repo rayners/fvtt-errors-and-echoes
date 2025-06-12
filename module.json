@@ -2,7 +2,7 @@
   "id": "errors-and-echoes",
   "title": "Errors and Echoes",
   "description": "Privacy-first anonymous error reporting system for FoundryVTT modules. Helps module authors identify and fix issues while respecting user privacy with configurable data collection levels and full transparency.",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "authors": [
     {
       "name": "David Raynes",
@@ -15,8 +15,12 @@
     "verified": "13.0.0",
     "maximum": "13.999.999"
   },
-  "esmodules": ["module.js"],
-  "styles": ["styles/errors-and-echoes.css"],
+  "esmodules": [
+    "module.js"
+  ],
+  "styles": [
+    "styles/errors-and-echoes.css"
+  ],
   "languages": [
     {
       "lang": "en",
@@ -32,7 +36,13 @@
   "readme": "https://github.com/rayners/fvtt-errors-and-echoes/blob/main/README.md",
   "documentation": "https://docs.rayners.dev/errors-and-echoes",
   "license": "MIT",
-  "keywords": ["error-reporting", "debugging", "module-development", "privacy", "anonymous"],
+  "keywords": [
+    "error-reporting",
+    "debugging",
+    "module-development",
+    "privacy",
+    "anonymous"
+  ],
   "funding": [
     {
       "type": "patreon",
