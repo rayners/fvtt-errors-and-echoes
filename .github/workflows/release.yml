@@ -17,7 +17,7 @@ jobs:
 
       - name: Build and Release Module
         id: module_release
-        uses: rayners/foundry-module-actions/release@v2
+        uses: rayners/foundry-module-actions/release@v5
         with:
           node-version: '18'
           build-command: 'npm run build'
