@@ -1,0 +1,1381 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="142" failures="0" errors="0" time="0.520422006">
+    <testsuite name="test/api-methods.test.ts" timestamp="2025-09-28T21:54:11.893Z" hostname="runnervm3ublj" tests="25" failures="0" errors="0" skipped="0" time="0.124398711">
+        <testcase classname="test/api-methods.test.ts" name="Errors &amp; Echoes API Methods &gt; register() API method &gt; should register a module successfully" time="0.006570241">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Module &apos;test-module&apos; registered successfully
+  - Context provider: Yes
+  - Error filter: Yes
+  - Custom endpoint: No
+
+Errors and Echoes: Cleared 1 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/api-methods.test.ts" name="Errors &amp; Echoes API Methods &gt; register() API method &gt; should handle registration errors gracefully" time="0.002813358">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+            <system-err>
+Errors and Echoes: Cannot register module &apos;non-existent-module&apos; - module not found in game.modules
+
+            </system-err>
+        </testcase>
+        <testcase classname="test/api-methods.test.ts" name="Errors &amp; Echoes API Methods &gt; register() API method &gt; should validate context provider return type" time="0.004494441">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Module &apos;test-module&apos; registered successfully
+  - Context provider: No
+  - Error filter: No
+  - Custom endpoint: No
+
+Errors and Echoes: Cleared 1 module registrations
+
+            </system-out>
+            <system-err>
+Errors and Echoes: Context provider for &apos;test-module&apos; must return an object - disabling context provider
+
+            </system-err>
+        </testcase>
+        <testcase classname="test/api-methods.test.ts" name="Errors &amp; Echoes API Methods &gt; register() API method &gt; should validate error filter return type" time="0.006655952">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Module &apos;test-module&apos; registered successfully
+  - Context provider: No
+  - Error filter: No
+  - Custom endpoint: No
+
+Errors and Echoes: Cleared 1 module registrations
+
+            </system-out>
+            <system-err>
+Errors and Echoes: Error filter for &apos;test-module&apos; must return a boolean - disabling error filter
+
+            </system-err>
+        </testcase>
+        <testcase classname="test/api-methods.test.ts" name="Errors &amp; Echoes API Methods &gt; report() API method &gt; should report errors when consent is given" time="0.005419507">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/api-methods.test.ts" name="Errors &amp; Echoes API Methods &gt; report() API method &gt; should not report errors when consent is not given" time="0.00305034">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/api-methods.test.ts" name="Errors &amp; Echoes API Methods &gt; report() API method &gt; should handle missing module option" time="0.003832667">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/api-methods.test.ts" name="Errors &amp; Echoes API Methods &gt; report() API method &gt; should handle context in report options" time="0.003315842">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/api-methods.test.ts" name="Errors &amp; Echoes API Methods &gt; hasConsent() API method &gt; should return true when user has given consent" time="0.002860257">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/api-methods.test.ts" name="Errors &amp; Echoes API Methods &gt; hasConsent() API method &gt; should return false when global is disabled" time="0.004959142">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/api-methods.test.ts" name="Errors &amp; Echoes API Methods &gt; hasConsent() API method &gt; should return false when global setting is undefined" time="0.002993036">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/api-methods.test.ts" name="Errors &amp; Echoes API Methods &gt; hasConsent() API method &gt; should return false when global setting is null" time="0.002605657">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/api-methods.test.ts" name="Errors &amp; Echoes API Methods &gt; getPrivacyLevel() API method &gt; should return the current privacy level" time="0.002745149">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/api-methods.test.ts" name="Errors &amp; Echoes API Methods &gt; getPrivacyLevel() API method &gt; should return minimal privacy level" time="0.005694434">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/api-methods.test.ts" name="Errors &amp; Echoes API Methods &gt; getPrivacyLevel() API method &gt; should return detailed privacy level" time="0.011566281">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/api-methods.test.ts" name="Errors &amp; Echoes API Methods &gt; getPrivacyLevel() API method &gt; should handle missing privacy level setting" time="0.004491479">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/api-methods.test.ts" name="Errors &amp; Echoes API Methods &gt; getStats() API method &gt; should return error reporting statistics" time="0.003385463">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/api-methods.test.ts" name="Errors &amp; Echoes API Methods &gt; getStats() API method &gt; should return statistics with optional lastReportTime" time="0.002538972">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/api-methods.test.ts" name="Errors &amp; Echoes API Methods &gt; getStats() API method &gt; should return consistent statistics format" time="0.002405893">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/api-methods.test.ts" name="Errors &amp; Echoes API Methods &gt; API Integration Tests &gt; should allow chaining API calls" time="0.003526027">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Module &apos;test-module&apos; registered successfully
+  - Context provider: Yes
+  - Error filter: No
+  - Custom endpoint: No
+
+Errors and Echoes: Cleared 1 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/api-methods.test.ts" name="Errors &amp; Echoes API Methods &gt; API Integration Tests &gt; should handle API calls without consent" time="0.002272161">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/api-methods.test.ts" name="Errors &amp; Echoes API Methods &gt; API Integration Tests &gt; should handle API calls with missing module data" time="0.002418045">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+            <system-err>
+Errors and Echoes: Cannot register module &apos;missing-module&apos; - module not found in game.modules
+
+            </system-err>
+        </testcase>
+        <testcase classname="test/api-methods.test.ts" name="Errors &amp; Echoes API Methods &gt; API Error Handling &gt; should handle errors in context provider during registration" time="0.018172067">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Module &apos;test-module&apos; registered successfully
+  - Context provider: No
+  - Error filter: No
+  - Custom endpoint: No
+
+Errors and Echoes: Cleared 1 module registrations
+
+            </system-out>
+            <system-err>
+Errors and Echoes: Context provider for &apos;test-module&apos; threw an error during test - disabling context provider: Error: Context provider error
+    at Object.contextProvider [90m(/home/runner/work/fvtt-errors-and-echoes/fvtt-errors-and-echoes/[39mtest/api-methods.test.ts:363:17[90m)[39m
+    at Function.register [90m(/home/runner/work/fvtt-errors-and-echoes/fvtt-errors-and-echoes/[39msrc/module-registry.ts:73:38[90m)[39m
+    at Object.register [90m(/home/runner/work/fvtt-errors-and-echoes/fvtt-errors-and-echoes/[39mtest/api-methods.test.ts:39:49[90m)[39m
+    at [90m/home/runner/work/fvtt-errors-and-echoes/fvtt-errors-and-echoes/[39mtest/api-methods.test.ts:367:28
+    at Proxy.assertThrows [90m(file:///home/runner/work/fvtt-errors-and-echoes/fvtt-errors-and-echoes/[39mnode_modules/[4mchai[24m/index.js:2767:5[90m)[39m
+    at Proxy.methodWrapper [90m(file:///home/runner/work/fvtt-errors-and-echoes/fvtt-errors-and-echoes/[39mnode_modules/[4mchai[24m/index.js:1686:25[90m)[39m
+    at Proxy.&lt;anonymous&gt; [90m(file:///home/runner/work/fvtt-errors-and-echoes/fvtt-errors-and-echoes/[39mnode_modules/[4m@vitest[24m/expect/dist/index.js:1088:12[90m)[39m
+    at Proxy.overwritingMethodWrapper [90m(file:///home/runner/work/fvtt-errors-and-echoes/fvtt-errors-and-echoes/[39mnode_modules/[4mchai[24m/index.js:1735:33[90m)[39m
+    at Proxy.&lt;anonymous&gt; [90m(file:///home/runner/work/fvtt-errors-and-echoes/fvtt-errors-and-echoes/[39mnode_modules/[4m@vitest[24m/expect/dist/index.js:1420:16[90m)[39m
+    at Proxy.&lt;anonymous&gt; [90m(file:///home/runner/work/fvtt-errors-and-echoes/fvtt-errors-and-echoes/[39mnode_modules/[4m@vitest[24m/expect/dist/index.js:1029:14[90m)[39m
+
+            </system-err>
+        </testcase>
+        <testcase classname="test/api-methods.test.ts" name="Errors &amp; Echoes API Methods &gt; API Error Handling &gt; should handle errors in error filter during registration" time="0.003655463">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Module &apos;test-module&apos; registered successfully
+  - Context provider: No
+  - Error filter: No
+  - Custom endpoint: No
+
+Errors and Echoes: Cleared 1 module registrations
+
+            </system-out>
+            <system-err>
+Errors and Echoes: Error filter for &apos;test-module&apos; threw an error during test - disabling error filter: Error: Filter error
+    at Object.errorFilter [90m(/home/runner/work/fvtt-errors-and-echoes/fvtt-errors-and-echoes/[39mtest/api-methods.test.ts:386:17[90m)[39m
+    at Function.register [90m(/home/runner/work/fvtt-errors-and-echoes/fvtt-errors-and-echoes/[39msrc/module-registry.ts:93:33[90m)[39m
+    at Object.register [90m(/home/runner/work/fvtt-errors-and-echoes/fvtt-errors-and-echoes/[39mtest/api-methods.test.ts:39:49[90m)[39m
+    at [90m/home/runner/work/fvtt-errors-and-echoes/fvtt-errors-and-echoes/[39mtest/api-methods.test.ts:390:28
+    at Proxy.assertThrows [90m(file:///home/runner/work/fvtt-errors-and-echoes/fvtt-errors-and-echoes/[39mnode_modules/[4mchai[24m/index.js:2767:5[90m)[39m
+    at Proxy.methodWrapper [90m(file:///home/runner/work/fvtt-errors-and-echoes/fvtt-errors-and-echoes/[39mnode_modules/[4mchai[24m/index.js:1686:25[90m)[39m
+    at Proxy.&lt;anonymous&gt; [90m(file:///home/runner/work/fvtt-errors-and-echoes/fvtt-errors-and-echoes/[39mnode_modules/[4m@vitest[24m/expect/dist/index.js:1088:12[90m)[39m
+    at Proxy.overwritingMethodWrapper [90m(file:///home/runner/work/fvtt-errors-and-echoes/fvtt-errors-and-echoes/[39mnode_modules/[4mchai[24m/index.js:1735:33[90m)[39m
+    at Proxy.&lt;anonymous&gt; [90m(file:///home/runner/work/fvtt-errors-and-echoes/fvtt-errors-and-echoes/[39mnode_modules/[4m@vitest[24m/expect/dist/index.js:1420:16[90m)[39m
+    at Proxy.&lt;anonymous&gt; [90m(file:///home/runner/work/fvtt-errors-and-echoes/fvtt-errors-and-echoes/[39mnode_modules/[4m@vitest[24m/expect/dist/index.js:1029:14[90m)[39m
+
+            </system-err>
+        </testcase>
+        <testcase classname="test/api-methods.test.ts" name="Errors &amp; Echoes API Methods &gt; API Error Handling &gt; should handle null/undefined errors in report" time="0.009392315">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+    </testsuite>
+    <testsuite name="test/author-attribution.test.ts" timestamp="2025-09-28T21:54:11.912Z" hostname="runnervm3ublj" tests="36" failures="0" errors="0" skipped="0" time="0.025458925">
+        <testcase classname="test/author-attribution.test.ts" name="Author Attribution &gt; moduleMatchesAuthor &gt; should match legacy string author" time="0.002270257">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/author-attribution.test.ts" name="Author Attribution &gt; moduleMatchesAuthor &gt; should match authors array with name field" time="0.000722979">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/author-attribution.test.ts" name="Author Attribution &gt; moduleMatchesAuthor &gt; should match authors array with github field" time="0.000593526">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/author-attribution.test.ts" name="Author Attribution &gt; moduleMatchesAuthor &gt; should match authors array with email field direct match" time="0.000453713">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/author-attribution.test.ts" name="Author Attribution &gt; moduleMatchesAuthor &gt; should match authors array with email username extraction" time="0.000659663">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/author-attribution.test.ts" name="Author Attribution &gt; moduleMatchesAuthor &gt; should match authors array with discord field" time="0.000453492">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/author-attribution.test.ts" name="Author Attribution &gt; moduleMatchesAuthor &gt; should match authors array with URL field" time="0.0004842">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/author-attribution.test.ts" name="Author Attribution &gt; moduleMatchesAuthor &gt; should match string authors in array" time="0.000629604">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/author-attribution.test.ts" name="Author Attribution &gt; moduleMatchesAuthor &gt; should match mixed string and object authors" time="0.000903949">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/author-attribution.test.ts" name="Author Attribution &gt; moduleMatchesAuthor &gt; should match authors as Set collection" time="0.000869321">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/author-attribution.test.ts" name="Author Attribution &gt; moduleMatchesAuthor &gt; should handle null/undefined module" time="0.000399791">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/author-attribution.test.ts" name="Author Attribution &gt; moduleMatchesAuthor &gt; should handle empty/null author identifier" time="0.000490862">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/author-attribution.test.ts" name="Author Attribution &gt; moduleMatchesAuthor &gt; should handle module with no author info" time="0.000337484">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/author-attribution.test.ts" name="Author Attribution &gt; moduleMatchesAuthor &gt; should handle empty authors array" time="0.000675489">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/author-attribution.test.ts" name="Author Attribution &gt; moduleMatchesAuthor &gt; should handle authors array with null/undefined values" time="0.000519396">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/author-attribution.test.ts" name="Author Attribution &gt; moduleMatchesAuthor &gt; should handle complex email domains" time="0.000444576">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/author-attribution.test.ts" name="Author Attribution &gt; moduleMatchesAuthor &gt; should handle email with plus addressing" time="0.00098428">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/author-attribution.test.ts" name="Author Attribution &gt; moduleMatchesAuthor &gt; should match various GitHub URL patterns" time="0.000651695">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/author-attribution.test.ts" name="Author Attribution &gt; moduleMatchesAuthor &gt; should not match non-GitHub URLs" time="0.000314642">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/author-attribution.test.ts" name="Author Attribution &gt; moduleMatchesAuthor &gt; should handle real-world Seasons &amp; Stars module simulation" time="0.000890203">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/author-attribution.test.ts" name="Author Attribution &gt; moduleMatchesAuthor &gt; should handle Foundry processed module data with Set" time="0.000384433">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/author-attribution.test.ts" name="Author Attribution &gt; extractAuthorNames &gt; should extract names from object authors" time="0.002116568">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/author-attribution.test.ts" name="Author Attribution &gt; extractAuthorNames &gt; should prefer name over github/email" time="0.000346471">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/author-attribution.test.ts" name="Author Attribution &gt; extractAuthorNames &gt; should extract string authors" time="0.000737767">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/author-attribution.test.ts" name="Author Attribution &gt; extractAuthorNames &gt; should handle legacy single author field" time="0.000423786">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/author-attribution.test.ts" name="Author Attribution &gt; extractAuthorNames &gt; should handle empty module" time="0.000419739">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/author-attribution.test.ts" name="Author Attribution &gt; extractAuthorNames &gt; should handle null module" time="0.000421393">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/author-attribution.test.ts" name="Author Attribution &gt; getPrimaryAuthorName &gt; should return first author name" time="0.000355848">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/author-attribution.test.ts" name="Author Attribution &gt; getPrimaryAuthorName &gt; should return Unknown for module with no authors" time="0.00027664">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/author-attribution.test.ts" name="Author Attribution &gt; getFormattedAuthorString &gt; should format multiple authors with commas" time="0.000369525">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/author-attribution.test.ts" name="Author Attribution &gt; getFormattedAuthorString &gt; should return custom unknown label" time="0.000487616">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/author-attribution.test.ts" name="Author Attribution &gt; hasAuthorInfo &gt; should return true for module with authors" time="0.00037201">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/author-attribution.test.ts" name="Author Attribution &gt; hasAuthorInfo &gt; should return false for module without authors" time="0.000299584">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/author-attribution.test.ts" name="Author Attribution &gt; Performance Tests &gt; should handle large authors array efficiently" time="0.001175811">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/author-attribution.test.ts" name="Author Attribution &gt; Integration with Mock Game Modules &gt; should work with modules registered in mock game" time="0.00044157">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/author-attribution.test.ts" name="Author Attribution &gt; Integration with Mock Game Modules &gt; should work with modules that have various author formats" time="0.000493207">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+    </testsuite>
+    <testsuite name="test/endpoint-resolution.test.ts" timestamp="2025-09-28T21:54:11.925Z" hostname="runnervm3ublj" tests="23" failures="0" errors="0" skipped="0" time="0.100514745">
+        <testcase classname="test/endpoint-resolution.test.ts" name="Module Endpoint Resolution and Author Matching &gt; Author Matching Utilities &gt; should match modules by author name" time="0.003322065">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/endpoint-resolution.test.ts" name="Module Endpoint Resolution and Author Matching &gt; Author Matching Utilities &gt; should match modules by author email" time="0.001579028">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/endpoint-resolution.test.ts" name="Module Endpoint Resolution and Author Matching &gt; Author Matching Utilities &gt; should match modules by author GitHub username" time="0.002759898">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/endpoint-resolution.test.ts" name="Module Endpoint Resolution and Author Matching &gt; Author Matching Utilities &gt; should match modules by email username part" time="0.002453321">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/endpoint-resolution.test.ts" name="Module Endpoint Resolution and Author Matching &gt; Author Matching Utilities &gt; should match modules by GitHub URL" time="0.002711106">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/endpoint-resolution.test.ts" name="Module Endpoint Resolution and Author Matching &gt; Author Matching Utilities &gt; should handle legacy single author field" time="0.002360107">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/endpoint-resolution.test.ts" name="Module Endpoint Resolution and Author Matching &gt; Author Matching Utilities &gt; should handle authors as array of strings" time="0.007879813">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/endpoint-resolution.test.ts" name="Module Endpoint Resolution and Author Matching &gt; Author Matching Utilities &gt; should extract author names correctly" time="0.003200345">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/endpoint-resolution.test.ts" name="Module Endpoint Resolution and Author Matching &gt; Author Matching Utilities &gt; should get primary author name" time="0.002165972">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/endpoint-resolution.test.ts" name="Module Endpoint Resolution and Author Matching &gt; Author Matching Utilities &gt; should handle modules with no author info" time="0.005701658">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/endpoint-resolution.test.ts" name="Module Endpoint Resolution and Author Matching &gt; Module Registry Endpoint Resolution &gt; should register module with custom endpoint" time="0.00287832">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Module &apos;test-module&apos; registered successfully
+  - Context provider: No
+  - Error filter: No
+  - Custom endpoint: Yes
+
+Errors and Echoes: Cleared 1 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/endpoint-resolution.test.ts" name="Module Endpoint Resolution and Author Matching &gt; Module Registry Endpoint Resolution &gt; should return undefined for module without custom endpoint" time="0.002156433">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Module &apos;no-endpoint-module&apos; registered successfully
+  - Context provider: No
+  - Error filter: No
+  - Custom endpoint: No
+
+Errors and Echoes: Cleared 1 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/endpoint-resolution.test.ts" name="Module Endpoint Resolution and Author Matching &gt; Module Registry Endpoint Resolution &gt; should return undefined for unregistered module" time="0.003381987">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/endpoint-resolution.test.ts" name="Module Endpoint Resolution and Author Matching &gt; Author-Based Endpoint Selection Logic &gt; should find endpoint by author matching" time="0.004463319">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/endpoint-resolution.test.ts" name="Module Endpoint Resolution and Author Matching &gt; Author-Based Endpoint Selection Logic &gt; should prioritize explicit module listing over author matching" time="0.00260172">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/endpoint-resolution.test.ts" name="Module Endpoint Resolution and Author Matching &gt; Author-Based Endpoint Selection Logic &gt; should skip disabled endpoints" time="0.003002464">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/endpoint-resolution.test.ts" name="Module Endpoint Resolution and Author Matching &gt; Author-Based Endpoint Selection Logic &gt; should handle complex author matching scenarios" time="0.005838023">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/endpoint-resolution.test.ts" name="Module Endpoint Resolution and Author Matching &gt; Integration with Module Registry &gt; should integrate endpoint resolution with module registration" time="0.005842191">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Module &apos;integrated-module&apos; registered successfully
+  - Context provider: Yes
+  - Error filter: No
+  - Custom endpoint: Yes
+
+Errors and Echoes: Cleared 1 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/endpoint-resolution.test.ts" name="Module Endpoint Resolution and Author Matching &gt; Integration with Module Registry &gt; should track statistics for modules with endpoints" time="0.006053336">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Module &apos;endpoint-module-1&apos; registered successfully
+  - Context provider: No
+  - Error filter: No
+  - Custom endpoint: Yes
+Errors and Echoes: Module &apos;endpoint-module-2&apos; registered successfully
+  - Context provider: No
+  - Error filter: No
+  - Custom endpoint: Yes
+Errors and Echoes: Module &apos;no-endpoint-module&apos; registered successfully
+  - Context provider: No
+  - Error filter: No
+  - Custom endpoint: No
+
+Errors and Echoes: Cleared 3 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/endpoint-resolution.test.ts" name="Module Endpoint Resolution and Author Matching &gt; Error Scenarios &gt; should handle malformed author data gracefully" time="0.00284632">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+            <system-err>
+Invalid authors format - expected Array or Set, got: string
+Invalid authors format - expected Array or Set, got: string
+
+            </system-err>
+        </testcase>
+        <testcase classname="test/endpoint-resolution.test.ts" name="Module Endpoint Resolution and Author Matching &gt; Error Scenarios &gt; should handle null/undefined modules gracefully" time="0.01743435">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/endpoint-resolution.test.ts" name="Module Endpoint Resolution and Author Matching &gt; Error Scenarios &gt; should handle empty author identifier gracefully" time="0.004631957">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/endpoint-resolution.test.ts" name="Module Endpoint Resolution and Author Matching &gt; Error Scenarios &gt; should handle modules with no endpoint when endpoint requested" time="0.002778433">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Module &apos;no-endpoint-module&apos; registered successfully
+  - Context provider: No
+  - Error filter: No
+  - Custom endpoint: No
+
+Errors and Echoes: Cleared 1 module registrations
+
+            </system-out>
+        </testcase>
+    </testsuite>
+    <testsuite name="test/error-flow-e2e.test.ts" timestamp="2025-09-28T21:54:11.937Z" hostname="runnervm3ublj" tests="14" failures="0" errors="0" skipped="0" time="0.089528177">
+        <testcase classname="test/error-flow-e2e.test.ts" name="End-to-End Error Flow &gt; Complete Error Flow Integration &gt; should handle JavaScript error from registration to reporting" time="0.01427898">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Module &apos;test-module&apos; registered successfully
+  - Context provider: Yes
+  - Error filter: Yes
+  - Custom endpoint: No
+
+🚨 Error reported to monitoring service | Module: test-module | Event ID: test-event-123
+   Users can reference this ID when reporting issues or requesting support.
+
+Errors and Echoes: Cleared 1 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/error-flow-e2e.test.ts" name="End-to-End Error Flow &gt; Complete Error Flow Integration &gt; should filter errors when module error filter returns true" time="0.004198902">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Module &apos;filtering-module&apos; registered successfully
+  - Context provider: No
+  - Error filter: Yes
+  - Custom endpoint: No
+Errors and Echoes: Error filtered by module &apos;filtering-module&apos; error filter
+
+Errors and Echoes: Cleared 1 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/error-flow-e2e.test.ts" name="End-to-End Error Flow &gt; Complete Error Flow Integration &gt; should handle errors from unknown modules" time="0.004451628">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+🚨 Error reported to monitoring service | Module: unknown | Event ID: test-event-123
+   Users can reference this ID when reporting issues or requesting support.
+
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/error-flow-e2e.test.ts" name="End-to-End Error Flow &gt; Complete Error Flow Integration &gt; should respect user consent settings" time="0.016618991">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/error-flow-e2e.test.ts" name="End-to-End Error Flow &gt; Complete Error Flow Integration &gt; should handle custom endpoints for specific modules" time="0.005176089">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Module &apos;custom-endpoint-module&apos; registered successfully
+  - Context provider: Yes
+  - Error filter: No
+  - Custom endpoint: Yes
+
+🚨 Error reported to monitoring service | Module: custom-endpoint-module | Event ID: test-event-123
+   Users can reference this ID when reporting issues or requesting support.
+
+Errors and Echoes: Cleared 1 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/error-flow-e2e.test.ts" name="End-to-End Error Flow &gt; Complete Error Flow Integration &gt; should handle Promise rejection errors" time="0.006023933">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Module &apos;promise-module&apos; registered successfully
+  - Context provider: Yes
+  - Error filter: No
+  - Custom endpoint: No
+
+🚨 Error reported to monitoring service | Module: promise-module | Event ID: test-event-123
+   Users can reference this ID when reporting issues or requesting support.
+
+Errors and Echoes: Cleared 1 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/error-flow-e2e.test.ts" name="End-to-End Error Flow &gt; Error Context Enhancement &gt; should merge system context with module context" time="0.005128079">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Module &apos;context-module&apos; registered successfully
+  - Context provider: Yes
+  - Error filter: No
+  - Custom endpoint: No
+
+🚨 Error reported to monitoring service | Module: context-module | Event ID: test-event-123
+   Users can reference this ID when reporting issues or requesting support.
+
+Errors and Echoes: Cleared 1 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/error-flow-e2e.test.ts" name="End-to-End Error Flow &gt; Error Context Enhancement &gt; should handle context provider errors gracefully" time="0.007132194">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Module &apos;error-context-module&apos; registered successfully
+  - Context provider: No
+  - Error filter: No
+  - Custom endpoint: No
+
+🚨 Error reported to monitoring service | Module: error-context-module | Event ID: test-event-123
+   Users can reference this ID when reporting issues or requesting support.
+
+Errors and Echoes: Cleared 1 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/error-flow-e2e.test.ts" name="End-to-End Error Flow &gt; Privacy Level Handling &gt; should respect minimal privacy level" time="0.003662915">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Module &apos;privacy-module&apos; registered successfully
+  - Context provider: Yes
+  - Error filter: No
+  - Custom endpoint: No
+
+🚨 Error reported to monitoring service | Module: privacy-module | Event ID: test-event-123
+   Users can reference this ID when reporting issues or requesting support.
+
+Errors and Echoes: Cleared 1 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/error-flow-e2e.test.ts" name="End-to-End Error Flow &gt; Privacy Level Handling &gt; should respect detailed privacy level" time="0.003730622">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+🚨 Error reported to monitoring service | Module: @vitest | Event ID: test-event-123
+   Users can reference this ID when reporting issues or requesting support.
+
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/error-flow-e2e.test.ts" name="End-to-End Error Flow &gt; Error Capture Integration &gt; should handle window error events" time="0.006417316">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Module &apos;window-error-module&apos; registered successfully
+  - Context provider: Yes
+  - Error filter: No
+  - Custom endpoint: No
+Errors and Echoes: Starting error capture (errors will remain visible)
+
+Errors and Echoes: Cleared 1 module registrations
+Errors and Echoes: Stopping error capture
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/error-flow-e2e.test.ts" name="End-to-End Error Flow &gt; Error Capture Integration &gt; should handle unhandled promise rejections" time="0.003283642">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Module &apos;promise-rejection-module&apos; registered successfully
+  - Context provider: Yes
+  - Error filter: No
+  - Custom endpoint: No
+Errors and Echoes: Starting error capture (errors will remain visible)
+
+Errors and Echoes: Cleared 1 module registrations
+Errors and Echoes: Stopping error capture
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/error-flow-e2e.test.ts" name="End-to-End Error Flow &gt; Error Flow Statistics &gt; should track error reporting statistics" time="0.004175729">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+🚨 Error reported to monitoring service | Module: test-module | Event ID: test-event-123
+   Users can reference this ID when reporting issues or requesting support.
+
+🚨 Error reported to monitoring service | Module: test-module | Event ID: test-event-123
+   Users can reference this ID when reporting issues or requesting support.
+
+🚨 Error reported to monitoring service | Module: test-module | Event ID: test-event-123
+   Users can reference this ID when reporting issues or requesting support.
+
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/error-flow-e2e.test.ts" name="End-to-End Error Flow &gt; Error Flow Statistics &gt; should track module registration statistics" time="0.002822996">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Module &apos;stats-module-1&apos; registered successfully
+  - Context provider: Yes
+  - Error filter: Yes
+  - Custom endpoint: No
+Errors and Echoes: Module &apos;stats-module-2&apos; registered successfully
+  - Context provider: No
+  - Error filter: No
+  - Custom endpoint: Yes
+
+Errors and Echoes: Cleared 2 module registrations
+
+            </system-out>
+        </testcase>
+    </testsuite>
+    <testsuite name="test/error-reporter.test.ts" timestamp="2025-09-28T21:54:11.945Z" hostname="runnervm3ublj" tests="6" failures="0" errors="0" skipped="0" time="0.052474746">
+        <testcase classname="test/error-reporter.test.ts" name="ErrorReporter &gt; should export ErrorReporter class" time="0.008359424">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/error-reporter.test.ts" name="ErrorReporter &gt; should generate report statistics" time="0.005754166">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/error-reporter.test.ts" name="ErrorReporter &gt; should clear statistics" time="0.00366041">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/error-reporter.test.ts" name="ErrorReporter &gt; should test endpoint connectivity" time="0.015140523">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+✅ Endpoint test successful | Event ID: test-event-123
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/error-reporter.test.ts" name="ErrorReporter &gt; should handle failed endpoint tests" time="0.010165174">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+            <system-err>
+Endpoint test failed: Network error Error: Network error
+    at [90m/home/runner/work/fvtt-errors-and-echoes/fvtt-errors-and-echoes/[39mtest/error-reporter.test.ts:80:46
+[90m    at processTicksAndRejections (node:internal/process/task_queues:95:5)[39m
+    at [90mfile:///home/runner/work/fvtt-errors-and-echoes/fvtt-errors-and-echoes/[39mnode_modules/[4m@vitest[24m/runner/dist/chunk-hooks.js:752:20
+
+            </system-err>
+        </testcase>
+        <testcase classname="test/error-reporter.test.ts" name="ErrorReporter &gt; should build payload with correct structure" time="0.00777762">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+🚨 Error reported to monitoring service | Module: test-module | Event ID: test-event-123
+   Users can reference this ID when reporting issues or requesting support.
+
+            </system-out>
+        </testcase>
+    </testsuite>
+    <testsuite name="test/hook-registration.test.ts" timestamp="2025-09-28T21:54:11.948Z" hostname="runnervm3ublj" tests="9" failures="0" errors="0" skipped="0" time="0.018548535">
+        <testcase classname="test/hook-registration.test.ts" name="Hook-Based Registration System &gt; errorsAndEchoesReady Hook &gt; should call errorsAndEchoesReady hook when E&amp;E is ready" time="0.004143889">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/hook-registration.test.ts" name="Hook-Based Registration System &gt; errorsAndEchoesReady Hook &gt; should allow modules to register via hook handler" time="0.00202199">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/hook-registration.test.ts" name="Hook-Based Registration System &gt; errorsAndEchoesReady Hook &gt; should handle multiple modules registering via hook" time="0.001499058">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/hook-registration.test.ts" name="Hook-Based Registration System &gt; errorsAndEchoesReady Hook &gt; should handle hook registration errors gracefully" time="0.001816664">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/hook-registration.test.ts" name="Hook-Based Registration System &gt; Integration Examples &gt; should demonstrate Seasons &amp; Stars registration pattern" time="0.001446119">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/hook-registration.test.ts" name="Hook-Based Registration System &gt; Integration Examples &gt; should demonstrate Simple Weather registration pattern" time="0.001589788">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/hook-registration.test.ts" name="Hook-Based Registration System &gt; Integration Examples &gt; should demonstrate generic module registration pattern" time="0.001202991">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/hook-registration.test.ts" name="Hook-Based Registration System &gt; Hook Timing Benefits &gt; should eliminate init vs ready timing issues" time="0.001333036">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/hook-registration.test.ts" name="Hook-Based Registration System &gt; Hook Timing Benefits &gt; should work even if modules register hooks after E&amp;E is ready" time="0.001448152">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+    </testsuite>
+    <testsuite name="test/integration-examples.test.ts" timestamp="2025-09-28T21:54:11.951Z" hostname="runnervm3ublj" tests="11" failures="0" errors="0" skipped="0" time="0.018575936">
+        <testcase classname="test/integration-examples.test.ts" name="Integration Examples &gt; Journeys and Jamborees Integration &gt; should register successfully with context provider" time="0.009767099">
+        </testcase>
+        <testcase classname="test/integration-examples.test.ts" name="Integration Examples &gt; Journeys and Jamborees Integration &gt; should provide correct context data" time="0.001535607">
+        </testcase>
+        <testcase classname="test/integration-examples.test.ts" name="Integration Examples &gt; Journeys and Jamborees Integration &gt; should filter errors correctly" time="0.001174848">
+        </testcase>
+        <testcase classname="test/integration-examples.test.ts" name="Integration Examples &gt; Simple Weather Integration &gt; should register successfully with weather context" time="0.001028033">
+        </testcase>
+        <testcase classname="test/integration-examples.test.ts" name="Integration Examples &gt; Simple Weather Integration &gt; should handle missing weather API gracefully" time="0.00038844">
+        </testcase>
+        <testcase classname="test/integration-examples.test.ts" name="Integration Examples &gt; Generic Module Integration &gt; should work with minimal configuration" time="0.000438264">
+        </testcase>
+        <testcase classname="test/integration-examples.test.ts" name="Integration Examples &gt; Generic Module Integration &gt; should work with full configuration" time="0.000750731">
+        </testcase>
+        <testcase classname="test/integration-examples.test.ts" name="Integration Examples &gt; Registration Statistics &gt; should track registration statistics correctly" time="0.000464162">
+        </testcase>
+        <testcase classname="test/integration-examples.test.ts" name="Integration Examples &gt; Registration Statistics &gt; should track context and filter call counts" time="0.000593456">
+        </testcase>
+        <testcase classname="test/integration-examples.test.ts" name="Integration Examples &gt; Error Handling &gt; should handle context provider errors gracefully" time="0.000301877">
+        </testcase>
+        <testcase classname="test/integration-examples.test.ts" name="Integration Examples &gt; Error Handling &gt; should handle error filter errors gracefully" time="0.000247906">
+        </testcase>
+    </testsuite>
+    <testsuite name="test/integration.test.ts" timestamp="2025-09-28T21:54:11.954Z" hostname="runnervm3ublj" tests="4" failures="0" errors="0" skipped="0" time="0.043324904">
+        <testcase classname="test/integration.test.ts" name="Registration API Integration &gt; should provide complete registration API workflow" time="0.027077106">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Module &apos;test-module&apos; registered successfully
+  - Context provider: Yes
+  - Error filter: Yes
+  - Custom endpoint: Yes
+
+🚨 Error reported to monitoring service | Module: test-module | Event ID: test-event-123
+   Users can reference this ID when reporting issues or requesting support.
+
+Errors and Echoes: Error filtered by module &apos;test-module&apos; error filter
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/integration.test.ts" name="Registration API Integration &gt; should handle registration errors gracefully" time="0.009014491">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Module &apos;test-module&apos; registered successfully
+  - Context provider: No
+  - Error filter: No
+  - Custom endpoint: No
+
+            </system-out>
+            <system-err>
+Errors and Echoes: Cannot register module &apos;non-existent-module&apos; - module not found in game.modules
+Errors and Echoes: Context provider for &apos;test-module&apos; must return an object - disabling context provider
+
+            </system-err>
+        </testcase>
+        <testcase classname="test/integration.test.ts" name="Registration API Integration &gt; should provide registry statistics" time="0.002946027">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Module &apos;test-module&apos; registered successfully
+  - Context provider: Yes
+  - Error filter: No
+  - Custom endpoint: No
+Errors and Echoes: Module &apos;another-module&apos; registered successfully
+  - Context provider: No
+  - Error filter: Yes
+  - Custom endpoint: Yes
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/integration.test.ts" name="Registration API Integration &gt; should handle custom endpoints for registered modules" time="0.002413035">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Module &apos;test-module&apos; registered successfully
+  - Context provider: No
+  - Error filter: No
+  - Custom endpoint: Yes
+
+            </system-out>
+        </testcase>
+    </testsuite>
+    <testsuite name="test/module-registry.test.ts" timestamp="2025-09-28T21:54:11.956Z" hostname="runnervm3ublj" tests="14" failures="0" errors="0" skipped="0" time="0.047597327">
+        <testcase classname="test/module-registry.test.ts" name="ModuleRegistry &gt; should register a module with basic configuration" time="0.005615399">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Module &apos;test-module&apos; registered successfully
+  - Context provider: No
+  - Error filter: No
+  - Custom endpoint: No
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/module-registry.test.ts" name="ModuleRegistry &gt; should register a module with context provider" time="0.003148328">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Module &apos;test-module&apos; registered successfully
+  - Context provider: Yes
+  - Error filter: No
+  - Custom endpoint: No
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/module-registry.test.ts" name="ModuleRegistry &gt; should register a module with error filter" time="0.002215273">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Module &apos;test-module&apos; registered successfully
+  - Context provider: No
+  - Error filter: Yes
+  - Custom endpoint: No
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/module-registry.test.ts" name="ModuleRegistry &gt; should reject invalid context providers" time="0.002359145">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Module &apos;test-module&apos; registered successfully
+  - Context provider: No
+  - Error filter: No
+  - Custom endpoint: No
+
+            </system-out>
+            <system-err>
+Errors and Echoes: Context provider for &apos;test-module&apos; must return an object - disabling context provider
+
+            </system-err>
+        </testcase>
+        <testcase classname="test/module-registry.test.ts" name="ModuleRegistry &gt; should handle context provider errors gracefully" time="0.010687586">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Module &apos;test-module&apos; registered successfully
+  - Context provider: No
+  - Error filter: No
+  - Custom endpoint: No
+
+            </system-out>
+            <system-err>
+Errors and Echoes: Context provider for &apos;test-module&apos; threw an error during test - disabling context provider: Error: Context provider error
+    at Object.throwingContextProvider [as contextProvider] [90m(/home/runner/work/fvtt-errors-and-echoes/fvtt-errors-and-echoes/[39mtest/module-registry.test.ts:125:13[90m)[39m
+    at Function.register [90m(/home/runner/work/fvtt-errors-and-echoes/fvtt-errors-and-echoes/[39msrc/module-registry.ts:73:38[90m)[39m
+    at [90m/home/runner/work/fvtt-errors-and-echoes/fvtt-errors-and-echoes/[39mtest/module-registry.test.ts:133:20
+[90m    at processTicksAndRejections (node:internal/process/task_queues:95:5)[39m
+    at [90mfile:///home/runner/work/fvtt-errors-and-echoes/fvtt-errors-and-echoes/[39mnode_modules/[4m@vitest[24m/runner/dist/chunk-hooks.js:752:20
+
+            </system-err>
+        </testcase>
+        <testcase classname="test/module-registry.test.ts" name="ModuleRegistry &gt; should reject invalid error filters" time="0.001979892">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Module &apos;test-module&apos; registered successfully
+  - Context provider: No
+  - Error filter: No
+  - Custom endpoint: No
+
+            </system-out>
+            <system-err>
+Errors and Echoes: Error filter for &apos;test-module&apos; must return a boolean - disabling error filter
+
+            </system-err>
+        </testcase>
+        <testcase classname="test/module-registry.test.ts" name="ModuleRegistry &gt; should handle error filter errors gracefully" time="0.002161933">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Module &apos;test-module&apos; registered successfully
+  - Context provider: No
+  - Error filter: No
+  - Custom endpoint: No
+
+            </system-out>
+            <system-err>
+Errors and Echoes: Error filter for &apos;test-module&apos; threw an error during test - disabling error filter: Error: Filter error
+    at Object.throwingErrorFilter [as errorFilter] [90m(/home/runner/work/fvtt-errors-and-echoes/fvtt-errors-and-echoes/[39mtest/module-registry.test.ts:167:13[90m)[39m
+    at Function.register [90m(/home/runner/work/fvtt-errors-and-echoes/fvtt-errors-and-echoes/[39msrc/module-registry.ts:93:33[90m)[39m
+    at [90m/home/runner/work/fvtt-errors-and-echoes/fvtt-errors-and-echoes/[39mtest/module-registry.test.ts:175:20
+[90m    at processTicksAndRejections (node:internal/process/task_queues:95:5)[39m
+    at [90mfile:///home/runner/work/fvtt-errors-and-echoes/fvtt-errors-and-echoes/[39mnode_modules/[4m@vitest[24m/runner/dist/chunk-hooks.js:752:20
+
+            </system-err>
+        </testcase>
+        <testcase classname="test/module-registry.test.ts" name="ModuleRegistry &gt; should register module with custom endpoint" time="0.004388602">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Module &apos;test-module&apos; registered successfully
+  - Context provider: No
+  - Error filter: No
+  - Custom endpoint: Yes
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/module-registry.test.ts" name="ModuleRegistry &gt; should return empty context for unregistered modules" time="0.002879229">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/module-registry.test.ts" name="ModuleRegistry &gt; should not filter errors for unregistered modules" time="0.001678608">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/module-registry.test.ts" name="ModuleRegistry &gt; should provide accurate statistics" time="0.001956689">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Module &apos;test-module&apos; registered successfully
+  - Context provider: Yes
+  - Error filter: No
+  - Custom endpoint: No
+Errors and Echoes: Module &apos;another-module&apos; registered successfully
+  - Context provider: No
+  - Error filter: Yes
+  - Custom endpoint: No
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/module-registry.test.ts" name="ModuleRegistry &gt; should unregister modules" time="0.001763615">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Module &apos;test-module&apos; registered successfully
+  - Context provider: No
+  - Error filter: No
+  - Custom endpoint: No
+Errors and Echoes: Module &apos;test-module&apos; unregistered
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/module-registry.test.ts" name="ModuleRegistry &gt; should clear all registrations" time="0.002682141">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+Errors and Echoes: Module &apos;test-module&apos; registered successfully
+  - Context provider: No
+  - Error filter: No
+  - Custom endpoint: No
+Errors and Echoes: Module &apos;another-module&apos; registered successfully
+  - Context provider: No
+  - Error filter: No
+  - Custom endpoint: No
+Errors and Echoes: Cleared 2 module registrations
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/module-registry.test.ts" name="ModuleRegistry &gt; should reject registration for non-existent modules" time="0.002603972">
+            <system-out>
+Errors and Echoes: Cleared 0 module registrations
+
+Errors and Echoes: Cleared 0 module registrations
+
+            </system-out>
+            <system-err>
+Errors and Echoes: Cannot register module &apos;non-existent-module&apos; - module not found in game.modules
+
+            </system-err>
+        </testcase>
+    </testsuite>
+</testsuites>
