@@ -22,8 +22,9 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '24'
           registry-url: 'https://npm.pkg.github.com'
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
@@ -31,7 +32,10 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run security audit
-        run: npm audit --audit-level moderate
+        run: npm audit --audit-level high
+
+      - name: Check for outdated dependencies
+        run: npm outdated || true
 
       - name: Check for known vulnerabilities
         uses: aquasecurity/trivy-action@master
@@ -72,8 +76,9 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '24'
           registry-url: 'https://npm.pkg.github.com'
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
@@ -86,4 +91,4 @@ jobs:
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
         with:
-          category: "/language:${{matrix.language}}"
+          category: '/language:${{matrix.language}}'

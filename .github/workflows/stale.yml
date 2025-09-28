@@ -16,7 +16,7 @@ jobs:
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           
-          # Stale issue configuration (4 months + 4 weeks)
+          # Stale issue configuration
           stale-issue-message: |
             This issue has been automatically marked as stale because it has not had recent activity. 
             
@@ -30,7 +30,7 @@ jobs:
           days-before-stale: 120
           days-before-close: 28
           
-          # Stale PR configuration (3 months + 4 weeks)
+          # Stale PR configuration  
           stale-pr-message: |
             This pull request has been automatically marked as stale because it has not had recent activity.
             
@@ -45,16 +45,16 @@ jobs:
           days-before-pr-close: 28
           
           # Labels to exempt from stale processing
-          exempt-issue-labels: 'bug,enhancement,help-wanted,good-first-issue,foundry-v13,compatibility'
+          exempt-issue-labels: 'bug,enhancement,help-wanted,good-first-issue,user-experience,migration'
           exempt-pr-labels: 'work-in-progress,blocked'
           
           # Custom configuration
           close-issue-message: |
-            This issue was closed because it has been stale for 28 days with no activity.
+            This issue was closed because it has been stale for 14 days with no activity.
             
             If this is still relevant, please open a new issue with updated information.
           close-pr-message: |
-            This pull request was closed because it has been stale for 28 days with no activity.
+            This pull request was closed because it has been stale for 14 days with no activity.
             
             If you'd like to continue this work, please open a new PR with the latest changes.
           
