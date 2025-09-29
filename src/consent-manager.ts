@@ -23,7 +23,12 @@ export class ConsentManager {
    */
   static getPrivacyLevel(): PrivacyLevel {
     if (!game?.settings) return 'standard';
-    return getSetting<PrivacyLevel>('privacyLevel', 'standard');
+    const level = getSetting<string>('privacyLevel', 'standard');
+    // Validate the privacy level and default to 'standard' for invalid values
+    if (level === 'minimal' || level === 'standard' || level === 'detailed') {
+      return level as PrivacyLevel;
+    }
+    return 'standard';
   }
 
   /**
@@ -82,6 +87,11 @@ export class ConsentManager {
   static async setEndpointConsent(endpointUrl: string, enabled: boolean): Promise<void> {
     if (!game?.settings) {
       console.warn('Errors and Echoes: Cannot set endpoint consent - game.settings not available');
+      return;
+    }
+
+    if (!endpointUrl || endpointUrl.trim() === '') {
+      console.warn('Errors and Echoes: Cannot set endpoint consent - invalid endpoint URL');
       return;
     }
 

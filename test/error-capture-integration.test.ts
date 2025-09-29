@@ -528,10 +528,13 @@ describe('ErrorCapture Integration (Real Implementation)', () => {
 
   describe('statistics and monitoring', () => {
     it('should track captured errors in statistics', async () => {
+      // Ensure we start with a clean slate for this test
+      ErrorReporter.clearStats();
       ErrorCapture.startListening();
 
       const initialStats = ErrorReporter.getReportStats();
       const initialCount = initialStats.totalReports;
+      expect(initialCount).toBe(0); // Should start at 0 after clearing
 
       // Trigger an error event
       const errorEvent = new ErrorEvent('error', {
@@ -547,7 +550,7 @@ describe('ErrorCapture Integration (Real Implementation)', () => {
       await new Promise(resolve => setTimeout(resolve, 10));
 
       const updatedStats = ErrorReporter.getReportStats();
-      expect(updatedStats.totalReports).toBe(initialCount + 1);
+      expect(updatedStats.totalReports).toBe(initialCount + 1); // Should increase by exactly 1
       expect(updatedStats.lastReportTime).toBeDefined();
     });
 

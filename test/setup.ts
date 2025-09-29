@@ -98,13 +98,24 @@ export function resetMocks() {
     // Default settings values
     const defaults = {
       'errors-and-echoes': {
-        globalEnabled: true,
+        globalEnabled: false,
         privacyLevel: 'standard',
         endpoints: [],
         endpointConsent: {},
+        hasShownWelcome: false,
+        consentDate: null,
       },
     };
     return defaults[module]?.[key];
+  });
+
+  // Set up the set method to update storage
+  mockGame.settings.set.mockImplementation(async (module: string, key: string, value: any) => {
+    if (!mockSettingsStorage.has(module)) {
+      mockSettingsStorage.set(module, new Map());
+    }
+    mockSettingsStorage.get(module)!.set(key, value);
+    return Promise.resolve();
   });
 
   // Reset modules map
@@ -136,13 +147,24 @@ export function setMockSetting(module: string, key: string, value: any) {
     // Return defaults for other settings
     const defaults = {
       'errors-and-echoes': {
-        globalEnabled: true,
+        globalEnabled: false,
         privacyLevel: 'standard',
         endpoints: [],
         endpointConsent: {},
+        hasShownWelcome: false,
+        consentDate: null,
       },
     };
     return defaults[mod]?.[k];
+  });
+
+  // Update the set mock to use the storage
+  mockGame.settings.set.mockImplementation(async (mod: string, k: string, val: any) => {
+    if (!mockSettingsStorage.has(mod)) {
+      mockSettingsStorage.set(mod, new Map());
+    }
+    mockSettingsStorage.get(mod)!.set(k, val);
+    return Promise.resolve();
   });
 }
 

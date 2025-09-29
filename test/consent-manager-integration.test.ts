@@ -158,10 +158,10 @@ describe('ConsentManager Integration (Real Implementation)', () => {
       expect(ConsentManager.getPrivacyLevel()).toBe('detailed');
     });
 
-    it('should return what the settings system returns (even if invalid)', () => {
-      // The actual implementation returns whatever getSetting returns, no validation
+    it('should validate and return standard for invalid privacy levels', () => {
+      // The actual implementation validates and returns 'standard' for invalid values
       setMockSetting('errors-and-echoes', 'privacyLevel', 'invalid');
-      expect(ConsentManager.getPrivacyLevel()).toBe('invalid');
+      expect(ConsentManager.getPrivacyLevel()).toBe('standard');
 
       setMockSetting('errors-and-echoes', 'privacyLevel', null);
       expect(ConsentManager.getPrivacyLevel()).toBe('standard'); // fallback default
