@@ -1,203 +1,151 @@
-# Claude Development Memory: Errors & Echoes
+# CLAUDE.md
 
-## 📂 Documentation Organization
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-**CRITICAL**: Follow universal documentation standards to keep repositories clean and professional.
+## Development Commands
 
-### **Documentation Locations**
-- **Repository**: Public documentation only (README files, user guides, API docs)
-- **Local-docs** (`../local-docs/fvtt-errors-and-echoes/`): All private development documentation
-- **Shared Standards**: [[../shared/DOCUMENTATION-STANDARDS.md]] - Universal standards for all modules
+### Core Development
+- **`npm run dev`** - Start development with watch mode (Rollup)
+- **`npm run build`** - Production build
+- **`npm run clean`** - Remove dist directory
+- **`npm run validate`** - Run all checks (lint, format, typecheck, test, build)
 
-### **Documentation Rules** 
-**❌ NEVER add to repository**:
-- Development planning documents (`PHASE-*.md`, `*-IMPLEMENTATION.md`)
-- Session logs and completion summaries
-- Linear ticket references or internal planning details
-- AI assistant instructions or development context
-- Beta testing strategies or recruitment materials
+### Testing
+- **`npm test`** or **`npm run test:run`** - Run full test suite (142 tests)
+- **`npm run test:watch`** - Run tests in watch mode
+- **`npm run test:ui`** - Open Vitest UI
+- **`npm run test:coverage`** - Generate coverage report
+- **`npm run test:coverage:junit`** - CI-compatible test run with coverage
 
-**✅ ADD to local-docs instead**:
-- **development/**: Implementation docs, AI context, technical details
-- **planning/**: Release plans, beta strategies, conversion approaches  
-- **architecture/**: Technical decisions, integration patterns
-- **sessions/**: Development logs with ticket references and decisions
+### Code Quality
+- **`npm run lint`** - ESLint check
+- **`npm run lint:fix`** - Auto-fix ESLint issues
+- **`npm run typecheck`** - TypeScript type checking
+- **`npm run format`** - Prettier formatting
+- **`npm run format:check`** - Check formatting
 
-**✅ Repository documentation should**:
-- Focus on user and developer value
-- Use generic version references ("Added in v0.2.0")
-- Reference public documentation only
-- Acknowledge limitations honestly without internal context
+## Architecture Overview
 
-### **File Organization Pattern**
-```
-Repository:                    Local-docs:
-├── README.md                 ├── development/CLAUDE.md (symlinked)
-├── CHANGELOG.md              ├── planning/PRE-RELEASE-CHECKLIST.md
-├── API-REFERENCE.md          ├── architecture/SENTRY-RELAY-INTEGRATION.md
-└── CONTRIBUTING.md           └── sessions/2025-06-04-*.md
-```
+### Core Components
+This module implements a privacy-first error reporting system with the following architecture:
 
-## Project Overview
-**Errors & Echoes** is a privacy-respecting error reporting and debugging module for FoundryVTT that helps module developers provide better support to their users while maintaining strict privacy controls.
+- **ErrorCapture** (`src/error-capture.ts`) - Global error listeners (window.onerror, unhandledrejection, console hooks)
+- **ErrorAttribution** (`src/error-attribution.ts`) - Advanced stack trace analysis to identify source modules
+- **ErrorReporter** (`src/error-reporter.ts`) - HTTP reporting with rate limiting and deduplication
+- **ConsentManager** (`src/consent-manager.ts`) - Privacy controls and user consent
+- **ModuleRegistry** (`src/module-registry.ts`) - Module registration and configuration
+- **WelcomeDialog** (`src/welcome-dialog.ts`) - First-run consent UI
 
-## Core Architecture
+### API Design Pattern
+The module exposes both:
+1. **Global API** via `window.ErrorsAndEchoes.API`
+2. **Module API** via `game.modules.get('errors-and-echoes').api`
+3. **Hook Integration** via `Hooks.on('errorsAndEchoesReady', api => {})`
 
-### Key Components
-- **Error Reporter** (`error-reporter.ts`) - Central error collection and reporting system
-- **Consent Manager** (`consent-manager.ts`) - Privacy-first consent handling
-- **Module Registry** (`module-registry.ts`) - Registration system for participating modules
-- **Error Attribution** (`error-attribution.ts`) - Intelligent error categorization
-- **Privacy Details Dialog** (`privacy-details-dialog.ts`) - User transparency interface
-
-### API System
-- **Registration API** - Allows modules to register for enhanced error reporting
-- **Reporting API** - Structured error submission with context
-- **Attribution API** - Automatic error source identification
-- **Privacy API** - User consent and data control
-
-## Current Status
-
-### Module State
-- **Version**: Latest stable release available on GitHub
-- **Compatibility**: FoundryVTT v11+ (designed for modern Foundry versions)
-- **Privacy Compliance**: GDPR-compliant with opt-in telemetry
-- **Integration**: Works with any FoundryVTT module via registration API
-
-### Key Features
-- **Privacy-First Design**: All error reporting is opt-in with clear user control
-- **Module Integration**: Easy registration API for module developers
-- **Error Attribution**: Intelligent identification of error sources
-- **User Transparency**: Clear privacy details and data control
-- **Developer Tools**: Enhanced debugging capabilities for registered modules
-
-## Integration Patterns
-
-### Module Registration
-```typescript
-// Register module with Errors & Echoes
-if (game.modules.get('errors-and-echoes')?.active) {
-  game.errorsAndEchoes?.registerModule({
-    id: 'module-id',
-    name: 'Module Name',
-    version: 'x.y.z',
-    author: 'Author Name',
-    supportEmail: 'support@example.com'
-  });
-}
-```
-
-### Error Reporting
-```typescript
-// Report errors with context
-try {
-  await riskyOperation();
-} catch (error) {
-  game.errorsAndEchoes?.reportError(error, {
-    module: 'module-id',
-    component: 'component-name',
-    action: 'action-name',
-    context: { additionalData: 'value' }
-  });
-  throw error; // Re-throw for normal error handling
-}
-```
-
-## Privacy Design
-
-### Core Principles
-- **Opt-in Only**: No data collection without explicit user consent
-- **Transparent**: Users see exactly what data is being collected
-- **User Control**: Complete control over data sharing and deletion
-- **Minimal Data**: Only collect what's necessary for debugging
-- **No PII**: Personal information is never collected or transmitted
-
-### Consent Management
-- **Welcome Dialog**: Clear explanation of error reporting benefits
-- **Privacy Details**: Comprehensive privacy policy and data handling
-- **Settings Integration**: Easy opt-in/opt-out controls
-- **Module-Specific**: Users can control reporting per module
-
-## Development Environment
-
-### Build System
-- **Rollup**: Module bundling with TypeScript support
-- **Vitest**: Unit testing framework
-- **CSS**: Standard CSS for styling
-- **Node.js**: Development toolchain
+### Privacy-First Architecture
+All error reporting follows privacy-by-design:
+- **Opt-in only** - No data collection without explicit consent
+- **Three privacy levels** - minimal, standard, detailed
+- **Per-endpoint consent** - Users control which endpoints receive data
+- **No PII collection** - Personal information is actively filtered out
 
 ### Testing Strategy
-- **Unit Tests**: Core error handling and privacy logic
-- **Integration Tests**: Module registration and reporting workflows
-- **Privacy Tests**: Consent management and data handling
-- **Mock Framework**: FoundryVTT API mocking for isolated testing
+- **Unit Tests** - Individual component testing with Vitest
+- **Integration Tests** - Component interaction testing
+- **E2E Tests** - Full workflow validation
+- **Foundry Mocks** - `@rayners/foundry-test-utils` for isolation
+- **Coverage Targets** - 80% minimum across all metrics
 
-## File Structure
-```
-src/
-  error-reporter.ts       # Central error collection
-  consent-manager.ts      # Privacy and consent handling
-  module-registry.ts      # Module registration system
-  error-attribution.ts    # Error source identification
-  error-capture.ts        # Error interception system
-  privacy-details-dialog.ts # Privacy transparency UI
-  settings-ui.ts          # User settings interface
-  author-utils.ts         # Module author utilities
-templates/
-  privacy-details.hbs     # Privacy information dialog
-  settings-config.hbs     # Settings configuration
-  welcome-dialog.hbs      # Welcome and consent dialog
-examples/
-  generic-module.js       # Basic integration example
-  journeys-and-jamborees.js # Advanced integration example
-  simple-weather.js       # Real-world integration example
+## Key Integration Patterns
+
+### Module Registration
+Modules register via the API to enable enhanced error reporting:
+```typescript
+game.errorsAndEchoes?.register({
+  id: 'module-id',
+  name: 'Module Name',
+  version: '1.0.0',
+  author: 'Author Name',
+  supportEmail: 'support@example.com'
+});
 ```
 
-## Future Considerations
+### Error Attribution Logic
+The system uses sophisticated stack trace analysis to identify which module caused an error:
+1. **Stack trace parsing** - Extract file paths from error stacks
+2. **Module path matching** - Match `/modules/module-id/` patterns
+3. **Hook context detection** - Identify errors during Foundry hook execution
+4. **Confidence scoring** - Rate attribution accuracy
 
-### Enhanced Features
-- **Advanced Error Analytics**: Pattern recognition for common issues
-- **Automated Issue Creation**: GitHub integration for automatic bug reports
-- **Performance Monitoring**: Optional performance data collection
-- **Error Trends**: Aggregate error trend reporting for developers
+### Endpoint Resolution
+Error reports are routed to endpoints based on:
+1. **Module-specific endpoints** - Registered via ModuleRegistry
+2. **Author matching** - Configured endpoints that match module authors
+3. **Explicit module lists** - Endpoints with specific module allowlists
 
-### Integration Opportunities
-- **J&J Integration**: Enhanced party management error reporting
-- **S&S Integration**: Calendar operation error handling
-- **Module Ecosystem**: Integration with other rayners modules
-- **Community Modules**: API adoption by community developers
+## Build System
 
-## Development Patterns
+### Rollup Configuration
+Uses `@rayners/foundry-dev-tools` for standardized Foundry module builds:
+- **CSS handling** - Plain CSS (no SCSS processing)
+- **Copy targets** - Examples and styles directories
+- **ES modules** - Modern module output for Foundry v12+
+
+### TypeScript Configuration
+- **Strict mode** enabled except `noImplicitAny: false` for Foundry compatibility
+- **ES2020 target** for broad browser compatibility
+- **ESNext modules** with Node resolution
+
+## Development Notes
 
 ### Error Handling Philosophy
-- **Fail Gracefully**: Errors in E&E should never break host modules
-- **Silent Degradation**: Missing E&E should not affect module functionality
-- **Clear Attribution**: Always identify the true source of errors
-- **User-Friendly**: Error messages should be actionable for users
+- **Never swallow errors** - All errors remain visible to users
+- **Fail gracefully** - E&E failures don't break host modules
+- **Silent degradation** - Missing E&E doesn't affect module functionality
 
-### Privacy-First Development
-- **Assume No Consent**: Default to no data collection
-- **Transparent Processing**: Users understand what data is collected
-- **Minimal Collection**: Only collect data needed for specific purposes
-- **User Control**: Users can modify or delete their data at any time
+### Testing Requirements
+- All new error handling code must have unit tests
+- Integration tests required for API changes
+- Coverage must not drop below 80% on any metric
+- Foundry API interactions must be mocked for CI
 
-## Documentation Standards Applied
+### Privacy Compliance
+- All data collection must be opt-in
+- User consent required before any HTTP requests
+- PII filtering enforced at collection time
+- Transparent data handling in UI
 
-### Repository Documentation (Public)
-- **API-REFERENCE.md**: Complete developer integration guide
-- **COMMUNITY-FAQ.md**: User questions and answers
-- **CONTRIBUTING.md**: Developer contribution guidelines
-- **FOUNDRY-COMPATIBILITY.md**: Version compatibility information
-- **LEGAL-COMPLIANCE.md**: Legal and privacy compliance
-- **PRIVACY-POLICY.md**: User privacy rights and data handling
-- **README.md & README_FOUNDRY.md**: Project overview and usage
-- **REGISTRATION-API-EXAMPLES.md**: Integration examples
-- **SECURITY.md**: Security practices and reporting
+## Development Context
 
-### Local-docs Organization (Private)
-- **architecture/**: Technical architecture and integration patterns
-- **development/**: Implementation details and development context
-- **planning/**: Release planning and internal coordination
-- **sessions/**: Development logs and session summaries
+For comprehensive development standards and patterns, see:
+- [Development Context Reference](../dev-context/README.md)
 
-This organization ensures clean, professional repositories focused on user and developer value while maintaining comprehensive development documentation in local-docs for persistence across sessions.
+Specific areas:
+- Development workflow: [../dev-context/foundry-development-practices.md](../dev-context/foundry-development-practices.md)
+- Testing standards: [../dev-context/testing-practices.md](../dev-context/testing-practices.md)
+- Architecture patterns: [../dev-context/module-architecture-patterns.md](../dev-context/module-architecture-patterns.md)
+- Documentation standards: [../dev-context/documentation-standards.md](../dev-context/documentation-standards.md)
+- Automation infrastructure: [../dev-context/automation-infrastructure.md](../dev-context/automation-infrastructure.md)
+
+### Quick Reference from Dev Context
+
+**CRITICAL FIRST**: Always read [AI Code Access Restrictions](../dev-context/ai-code-access-restrictions.md) to understand security boundaries around FoundryVTT proprietary code.
+
+**Pre-Commit Workflow**:
+1. `npm run lint` - ESLint validation
+2. `npm run typecheck` - TypeScript validation
+3. `npm run test:run` - Full test suite (NEVER `npm run test:workspaces`)
+4. `npm run build` - Production build validation
+
+**Quality Standards Applied**:
+- **Documentation Accuracy**: All claims must be verifiable in code
+- **No Hyperbole**: Avoid "works with all systems", "fully tested", "production ready"
+- **TDD Workflow**: Tests first, then implementation for new features
+- **90%+ Coverage**: Required for core business logic
+- **System-Agnostic Design**: Graceful degradation across game systems
+
+**Architecture Principles**:
+- **Provider Pattern**: System-agnostic integration adapters
+- **Feature Detection**: Runtime capability discovery
+- **Error Resilience**: Comprehensive fallback strategies
+- **Clean Separation**: Never modify target systems directly
