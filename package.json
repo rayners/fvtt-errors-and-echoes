@@ -16,6 +16,7 @@
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
+    "test:coverage:junit": "vitest run --coverage --reporter=junit --reporter=default",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
     "format": "prettier --write \"src/**/*.{ts,js,json}\" \"*.{js,json,md}\"",
@@ -40,12 +41,14 @@
   },
   "homepage": "https://github.com/rayners/fvtt-errors-and-echoes#readme",
   "devDependencies": {
+    "@eslint/js": "^9.36.0",
     "@rayners/foundry-dev-tools": "^1.2.0",
     "@rayners/foundry-test-utils": "^1.0.0",
     "@types/node": "^20.10.4",
     "@vitest/ui": "^3.1.0",
     "rollup": "^4.7.0",
     "typescript": "^5.3.3",
+    "typescript-eslint": "^8.44.1",
     "vitest": "^3.1.0"
   },
   "engines": {

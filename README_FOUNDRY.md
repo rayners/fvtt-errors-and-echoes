@@ -82,14 +82,12 @@ Error reports are used exclusively to:
 ## 📦 Installation
 
 1. **Install via Foundry VTT:**
-
    - Open the Add-on Modules tab in your Foundry setup
    - Click "Install Module"
    - Search for "Errors and Echoes"
    - Click Install
 
 2. **Enable the Module:**
-
    - In your world, go to Settings → Manage Modules
    - Enable "Errors and Echoes"
    - Save Module Settings
@@ -265,13 +263,11 @@ This is why many users choose to enable error reporting - it creates a feedback 
 ### Verify Your Privacy Settings
 
 1. **Check Current Settings:**
-
    - Go to Settings → Module Settings → Errors and Echoes
    - Verify your privacy level is correct
    - Confirm error reporting is enabled only if desired
 
 2. **Test Error Reporting:**
-
    - In the Configure Endpoints dialog, use the "Test" button
    - This sends a test report using your current privacy settings
    - Verify the test succeeds only if you want it to

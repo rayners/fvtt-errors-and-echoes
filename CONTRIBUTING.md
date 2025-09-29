@@ -191,19 +191,16 @@ All pull requests automatically run:
 Before submitting PRs, verify:
 
 1. **Privacy Controls**
-
    - [ ] All privacy levels work correctly
    - [ ] Consent can be granted and withdrawn
    - [ ] No PII is transmitted at any privacy level
 
 2. **Error Reporting**
-
    - [ ] Errors are correctly attributed to modules
    - [ ] Endpoints receive properly formatted data
    - [ ] Failed transmissions are handled gracefully
 
 3. **FoundryVTT Integration**
-
    - [ ] Module loads without errors in v12 and v13+
    - [ ] Settings UI functions correctly
    - [ ] No conflicts with other modules
@@ -249,7 +246,6 @@ describe('ErrorReporter', () => {
 ### Before Submitting
 
 1. **Automated Checks**
-
    - [ ] All tests pass (`npm run test`)
    - [ ] Linting passes (`npm run lint`)
    - [ ] Formatting is correct (`npm run format:check`)
@@ -257,21 +253,18 @@ describe('ErrorReporter', () => {
    - [ ] Full validation passes (`npm run validate`)
 
 2. **Code Quality**
-
    - [ ] TypeScript compilation passes (`npm run typecheck`)
    - [ ] Code follows style guidelines
    - [ ] All public APIs documented with JSDoc
    - [ ] Test coverage for new functionality
 
 3. **Privacy Review**
-
    - [ ] No new PII collection introduced
    - [ ] Privacy implications documented
    - [ ] Consent mechanisms respected
    - [ ] Data collection follows privacy levels
 
 4. **FoundryVTT Compatibility**
-
    - [ ] Tested with Foundry v12 and v13
    - [ ] No breaking changes to FoundryVTT APIs
    - [ ] Graceful handling of missing dependencies
@@ -296,21 +289,18 @@ Please include:
 ### Review Process
 
 1. **Automated Checks**: Full CI pipeline with comprehensive validation
-
    - Multi-node testing (Node 18 & 20)
    - Security scanning and dependency analysis
    - Bundle size impact assessment
    - Code quality and formatting verification
 
 2. **Code Review**: Focus on privacy, security, and code quality
-
    - Privacy-first approach verification
    - FoundryVTT best practices compliance
    - TypeScript usage and type safety
    - Performance impact assessment
 
 3. **Testing**: Manual verification of functionality
-
    - Cross-browser compatibility
    - Multiple FoundryVTT version testing
    - Game system compatibility
@@ -329,14 +319,12 @@ Please include:
 Please include:
 
 1. **Environment**
-
    - FoundryVTT version
    - Browser and version
    - Operating system
    - Module version
 
 2. **Steps to Reproduce**
-
    - Detailed steps to trigger the issue
    - Expected vs. actual behavior
    - Screenshots if helpful
@@ -395,13 +383,11 @@ Consider:
 ### Documentation Types
 
 1. **User Documentation** (README_FOUNDRY.md)
-
    - Installation and setup
    - Privacy controls explanation
    - Troubleshooting
 
 2. **Developer Documentation** (README.md, API-REFERENCE.md)
-
    - Integration examples
    - API reference
    - Architecture overview
