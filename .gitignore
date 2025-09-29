@@ -101,10 +101,7 @@ jspm_packages/
 # Data/
 # Config/
 
-# Internal documentation (moved to ../local-docs/)
-CLAUDE.md
-FOUNDRY-COMPATIBILITY.md
-
 # Test artifacts and development context
 test-results/
-dev-context/
+dev-context
+!CLAUDE.md
