@@ -1,6 +1,6 @@
 /**
  * Test setup for Errors & Echoes
- * 
+ *
  * This file sets up the Foundry VTT mocking environment for testing
  * E&E components in isolation.
  */
@@ -29,25 +29,25 @@ const mockGame = {
   user: {
     isGM: true,
     id: 'test-user-id',
-    name: 'Test User'
+    name: 'Test User',
   },
   system: {
     id: 'dnd5e',
-    version: '2.0.0'
+    version: '2.0.0',
   },
   scenes: {
     active: {
-      name: 'Test Scene'
-    }
-  }
+      name: 'Test Scene',
+    },
+  },
 };
 
 const mockUI = {
   notifications: {
     info: vi.fn(),
     warn: vi.fn(),
-    error: vi.fn()
-  }
+    error: vi.fn(),
+  },
 };
 
 // Store original values for restoration
@@ -56,29 +56,29 @@ let originalGlobal = {};
 export function setupMocks() {
   // Set up basic Foundry mocks from our test utils
   setupFoundryMocks();
-  
+
   // Add console.debug polyfill if it doesn't exist (Node.js compatibility)
   if (!console.debug) {
     console.debug = console.log;
   }
-  
+
   // Store originals
   originalGlobal = {
     game: (global as any).game,
-    ui: (global as any).ui
+    ui: (global as any).ui,
   };
-  
+
   // Override with our specific mocks, preserving version from foundry-test-utils
   (global as any).game = {
     ...(global as any).game,
     ...mockGame,
-    version: (global as any).game?.version || '13.331'  // Preserve version from foundry-test-utils
+    version: (global as any).game?.version || '13.331', // Preserve version from foundry-test-utils
   };
   (global as any).ui = {
     ...(global as any).ui,
-    ...mockUI
+    ...mockUI,
   };
-  
+
   // Clear any existing registrations
   ModuleRegistry.clearAll();
 }
@@ -86,24 +86,27 @@ export function setupMocks() {
 export function resetMocks() {
   // Reset all mocked functions
   vi.clearAllMocks();
-  
+
   // Reset module registry
   ModuleRegistry.clearAll();
-  
+
+  // Clear settings storage
+  mockSettingsStorage.clear();
+
   // Reset game settings mock responses
   mockGame.settings.get.mockImplementation((module: string, key: string) => {
     // Default settings values
     const defaults = {
       'errors-and-echoes': {
-        'globalEnabled': true,
-        'privacyLevel': 'standard',
-        'endpoints': [],
-        'endpointConsent': {}
-      }
+        globalEnabled: true,
+        privacyLevel: 'standard',
+        endpoints: [],
+        endpointConsent: {},
+      },
     };
     return defaults[module]?.[key];
   });
-  
+
   // Reset modules map
   mockGame.modules.clear();
 }
@@ -114,19 +117,30 @@ export function teardownMocks() {
   (global as any).ui = originalGlobal.ui;
 }
 
+// Storage for custom setting values
+const mockSettingsStorage = new Map<string, Map<string, any>>();
+
 export function setMockSetting(module: string, key: string, value: any) {
+  if (!mockSettingsStorage.has(module)) {
+    mockSettingsStorage.set(module, new Map());
+  }
+  mockSettingsStorage.get(module)!.set(key, value);
+
+  // Update the mock implementation to use the storage
   mockGame.settings.get.mockImplementation((mod: string, k: string) => {
-    if (mod === module && k === key) {
-      return value;
+    // Check if we have a custom value stored
+    if (mockSettingsStorage.has(mod) && mockSettingsStorage.get(mod)!.has(k)) {
+      return mockSettingsStorage.get(mod)!.get(k);
     }
+
     // Return defaults for other settings
     const defaults = {
       'errors-and-echoes': {
-        'globalEnabled': true,
-        'privacyLevel': 'standard',
-        'endpoints': [],
-        'endpointConsent': {}
-      }
+        globalEnabled: true,
+        privacyLevel: 'standard',
+        endpoints: [],
+        endpointConsent: {},
+      },
     };
     return defaults[mod]?.[k];
   });
@@ -136,7 +150,7 @@ export function setMockModule(moduleId: string, moduleData: any) {
   const mockModule = {
     id: moduleId,
     active: true,
-    ...moduleData
+    ...moduleData,
   };
   mockGame.modules.set(moduleId, mockModule);
 }

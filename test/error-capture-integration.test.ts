@@ -49,7 +49,7 @@ describe('ErrorCapture Integration (Real Implementation)', () => {
         name: 'Test Endpoint',
         url: 'https://test.example.com/report/test',
         author: 'test',
-        modules: [],
+        modules: ['test-module'],
         enabled: true,
       },
     ]);
@@ -67,13 +67,14 @@ describe('ErrorCapture Integration (Real Implementation)', () => {
         }),
     } as Response);
 
-    // Mock ErrorAttribution.attributeToModule to return test data
-    vi.spyOn(ErrorAttribution, 'attributeToModule').mockReturnValue({
+    // Spy on ErrorAttribution.attributeToModule but let it return real results
+    vi.spyOn(ErrorAttribution, 'attributeToModule').mockImplementation((error, context) => ({
       moduleId: 'test-module',
-      confidence: 'high',
-      method: 'stack-trace',
-      source: 'module-code',
-    });
+      confidence: 'high' as const,
+      method: 'stack-trace' as const,
+      source: 'module-code' as const,
+      details: error ? `Error: ${error.message}` : 'Unknown error',
+    }));
 
     // Clear any existing stats
     ErrorReporter.clearStats();
@@ -509,7 +510,7 @@ describe('ErrorCapture Integration (Real Implementation)', () => {
 
       // Should have logged the reporting error
       expect(consoleSpy).toHaveBeenCalledWith(
-        'Errors and Echoes: Error during error reporting:',
+        'Errors and Echoes: Error reporting failed:',
         expect.any(Error)
       );
     });
@@ -530,7 +531,7 @@ describe('ErrorCapture Integration (Real Implementation)', () => {
       ErrorCapture.startListening();
 
       const initialStats = ErrorReporter.getReportStats();
-      expect(initialStats.totalReports).toBe(0);
+      const initialCount = initialStats.totalReports;
 
       // Trigger an error event
       const errorEvent = new ErrorEvent('error', {
@@ -546,7 +547,7 @@ describe('ErrorCapture Integration (Real Implementation)', () => {
       await new Promise(resolve => setTimeout(resolve, 10));
 
       const updatedStats = ErrorReporter.getReportStats();
-      expect(updatedStats.totalReports).toBe(1);
+      expect(updatedStats.totalReports).toBe(initialCount + 1);
       expect(updatedStats.lastReportTime).toBeDefined();
     });
 

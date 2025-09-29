@@ -10,6 +10,7 @@ import { setupMocks, resetMocks, setMockSetting, setMockModule } from './setup.j
 import { ModuleRegistry } from '../src/module-registry.js';
 import { ConsentManager } from '../src/consent-manager.js';
 import { ErrorReporter } from '../src/error-reporter.js';
+import { ErrorAttribution } from '../src/error-attribution.js';
 
 // Note: We'll manually set up the API since importing module.js
 // requires Foundry hooks that don't exist in test environment
@@ -60,7 +61,7 @@ describe('Module API Integration (Real Implementation)', () => {
         }
       },
 
-      report: (error: Error, options: any = {}) => {
+      report: async (error: Error, options: any = {}) => {
         try {
           if (!error || !(error instanceof Error)) {
             console.warn('Errors and Echoes: report() requires an Error object as first parameter');
@@ -72,16 +73,24 @@ describe('Module API Integration (Real Implementation)', () => {
             return;
           }
 
-          // Mock the actual reporting - in real code this would call ErrorReporter.sendReport
-          console.log(
-            `API: Reporting error for module ${options.module || 'unknown'}: ${error.message}`
-          );
+          // Use real ErrorReporter.sendReport implementation
+          const attribution = ErrorAttribution.attributeToModule(error, {
+            source: 'api',
+            timestamp: Date.now(),
+          });
+
+          const endpoints: any[] = game.settings.get('errors-and-echoes', 'endpoints') || [];
+          const endpoint = endpoints.find(ep => ep.enabled);
+
+          if (endpoint) {
+            await ErrorReporter.sendReport(error, attribution, endpoint, options);
+          }
         } catch (reportError) {
           console.error('Errors and Echoes: API report() failed:', reportError);
         }
       },
 
-      submitBug: (bugReport: any) => {
+      submitBug: async (bugReport: any) => {
         try {
           if (!bugReport || typeof bugReport !== 'object') {
             console.warn('Errors and Echoes: submitBug() requires a bug report object');
@@ -113,10 +122,21 @@ describe('Module API Integration (Real Implementation)', () => {
             return;
           }
 
-          // Mock the actual submission - in real code this would call ErrorReporter.sendReport
-          console.log(
-            `API: Submitting bug report '${bugReport.title}' for module ${bugReport.module || 'unknown'}`
-          );
+          // Use real ErrorReporter.sendReport implementation for bug submission
+          // Create a synthetic error for bug reporting
+          const syntheticError = new Error(`Bug Report: ${bugReport.title}`);
+
+          const attribution = ErrorAttribution.attributeToModule(syntheticError, {
+            source: 'api',
+            timestamp: Date.now(),
+          });
+
+          const endpoints: any[] = game.settings.get('errors-and-echoes', 'endpoints') || [];
+          const endpoint = endpoints.find(ep => ep.enabled);
+
+          if (endpoint) {
+            await ErrorReporter.sendReport(syntheticError, attribution, endpoint, {}, bugReport);
+          }
         } catch (submitError) {
           console.error('Errors and Echoes: API submitBug() failed:', submitError);
         }
@@ -165,7 +185,7 @@ describe('Module API Integration (Real Implementation)', () => {
       expect(api).toBeDefined();
 
       const config = {
-        id: 'test-module',
+        moduleId: 'test-module',
         name: 'Test Module',
         version: '1.0.0',
         author: 'test',
@@ -178,8 +198,8 @@ describe('Module API Integration (Real Implementation)', () => {
       // Verify it was actually registered in ModuleRegistry
       expect(ModuleRegistry.isRegistered('test-module')).toBe(true);
 
-      const registryStats = ModuleRegistry.getRegistryStats();
-      expect(registryStats.totalModules).toBe(1);
+      const registryStats = ModuleRegistry.getStats();
+      expect(registryStats.totalRegistered).toBe(1);
     });
 
     it('should handle registration errors gracefully', () => {
@@ -203,20 +223,19 @@ describe('Module API Integration (Real Implementation)', () => {
       const mockModule = (global as any).game.modules.get('errors-and-echoes');
       const api = mockModule.api;
 
-      const consoleSpy = vi.spyOn(console, 'error');
+      const consoleSpy = vi.spyOn(console, 'warn');
 
       const config = {
-        id: 'non-existent-module',
+        moduleId: 'non-existent-module',
         name: 'Non-existent Module',
         version: '1.0.0',
       };
 
       api.register(config);
 
-      // Should have logged an error due to module not existing
+      // Should have logged a warning due to module not existing
       expect(consoleSpy).toHaveBeenCalledWith(
-        'Errors and Echoes: API register() failed:',
-        expect.any(Error)
+        "Errors and Echoes: Cannot register module 'non-existent-module' - module not found in game.modules"
       );
 
       // The registration should fail because module doesn't exist in game.modules
@@ -250,10 +269,7 @@ describe('Module API Integration (Real Implementation)', () => {
       };
 
       // This should trigger real error reporting logic
-      api.report(testError, options);
-
-      // Give it a moment for async operations
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await api.report(testError, options);
 
       // Verify fetch was called with proper error report
       expect(global.fetch).toHaveBeenCalledWith(
@@ -343,10 +359,7 @@ describe('Module API Integration (Real Implementation)', () => {
         context: { theme: 'light' },
       };
 
-      api.submitBug(bugReport);
-
-      // Give it a moment for async operations
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await api.submitBug(bugReport);
 
       // Verify fetch was called with bug report data
       expect(global.fetch).toHaveBeenCalledWith(
