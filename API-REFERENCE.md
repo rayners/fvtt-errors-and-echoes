@@ -9,11 +9,12 @@ Complete API reference for integrating with the Errors and Echoes error reportin
 1. [Main API Interface](#main-api-interface)
 2. [Module Registration](#module-registration)
 3. [Error Reporting](#error-reporting)
-4. [Consent Management](#consent-management)
-5. [TypeScript Interfaces](#typescript-interfaces)
-6. [Testing and Debugging](#testing-and-debugging)
-7. [Error Handling](#error-handling)
-8. [Integration Examples](#integration-examples)
+4. [Manual Bug Submission](#manual-bug-submission)
+5. [Consent Management](#consent-management)
+6. [TypeScript Interfaces](#typescript-interfaces)
+7. [Testing and Debugging](#testing-and-debugging)
+8. [Error Handling](#error-handling)
+9. [Integration Examples](#integration-examples)
 
 ## Main API Interface
 
@@ -30,6 +31,7 @@ const api = errorReporter?.active ? errorReporter.api : null;
 interface ErrorsAndEchoesAPI {
   register(config: ModuleRegistrationConfig): void;
   report(error: Error, options?: ReportOptions): void;
+  submitBug(bugReport: BugReportSubmission): void;
   hasConsent(): boolean;
   getPrivacyLevel(): PrivacyLevel;
   getStats(): ReportStats;
@@ -266,6 +268,192 @@ class ModuleFeature {
 }
 ```
 
+## Manual Bug Submission
+
+### `api.submitBug(bugReport: BugReportSubmission): void`
+
+Submit a manual bug report with user-provided description and reproduction steps. This allows users to provide detailed context about issues they've encountered, even if those issues don't generate automatic error reports.
+
+#### Parameters
+
+```typescript
+interface BugReportSubmission {
+  title: string; // Brief title/summary (required)
+  description: string; // User description of the bug (required)
+  stepsToReproduce?: string; // Optional steps to reproduce
+  expectedBehavior?: string; // What should happen
+  actualBehavior?: string; // What actually happens
+  severity?: 'low' | 'medium' | 'high' | 'critical';
+  category?: 'ui' | 'functionality' | 'performance' | 'integration' | 'other';
+  module?: string; // Override module detection
+  context?: Record<string, any>; // Additional context
+}
+```
+
+#### Usage Examples
+
+**Basic Bug Submission:**
+
+```javascript
+const errorReporter = game.modules.get('errors-and-echoes');
+if (errorReporter?.active && errorReporter.api) {
+  errorReporter.api.submitBug({
+    title: 'Token movement not working',
+    description: 'When I try to move my character token, it snaps back to the original position.',
+    stepsToReproduce:
+      '1. Select token\n2. Drag to new position\n3. Release mouse\n4. Token snaps back',
+    expectedBehavior: 'Token should stay in the new position',
+    actualBehavior: 'Token returns to original position',
+    severity: 'medium',
+    category: 'functionality',
+  });
+}
+```
+
+**Detailed Bug Report with Context:**
+
+```javascript
+function submitDetailedBugReport() {
+  const currentScene = canvas.scene?.name || 'unknown';
+  const selectedTokens = canvas.tokens.controlled.map(t => t.name);
+
+  errorReporter.api.submitBug({
+    title: 'Combat tracker not updating initiative',
+    description: 'The combat tracker shows incorrect initiative order after adding new combatants.',
+    stepsToReproduce:
+      '1. Start combat encounter\n' +
+      '2. Roll initiative for existing combatants\n' +
+      '3. Add new combatant mid-combat\n' +
+      '4. Roll initiative for new combatant\n' +
+      '5. Notice incorrect ordering',
+    expectedBehavior: 'New combatant should be inserted in correct initiative order',
+    actualBehavior: 'New combatant appears at bottom regardless of initiative roll',
+    severity: 'high',
+    category: 'functionality',
+    module: 'my-combat-module',
+    context: {
+      sceneId: canvas.scene?.id,
+      sceneName: currentScene,
+      selectedTokens,
+      combatActive: game.combat?.active || false,
+      combatRound: game.combat?.round || 0,
+      timestamp: Date.now(),
+      foundryVersion: game.version,
+      systemId: game.system.id,
+    },
+  });
+}
+```
+
+**User Feedback Integration:**
+
+```javascript
+// In a settings dialog or feedback form
+class BugReportDialog extends Dialog {
+  static async show() {
+    return new BugReportDialog({
+      title: 'Report a Bug',
+      content: await renderTemplate('modules/my-module/templates/bug-report.html'),
+      buttons: {
+        submit: {
+          icon: '<i class="fas fa-bug"></i>',
+          label: 'Submit Bug Report',
+          callback: html => this.submitReport(html),
+        },
+        cancel: {
+          icon: '<i class="fas fa-times"></i>',
+          label: 'Cancel',
+        },
+      },
+    }).render(true);
+  }
+
+  static submitReport(html) {
+    const formData = new FormData(html[0].querySelector('form'));
+
+    const errorReporter = game.modules.get('errors-and-echoes');
+    if (errorReporter?.active && errorReporter.api) {
+      errorReporter.api.submitBug({
+        title: formData.get('title'),
+        description: formData.get('description'),
+        stepsToReproduce: formData.get('steps'),
+        expectedBehavior: formData.get('expected'),
+        actualBehavior: formData.get('actual'),
+        severity: formData.get('severity'),
+        category: formData.get('category'),
+        context: {
+          reportedBy: game.user.name,
+          userAgent: navigator.userAgent,
+          timestamp: Date.now(),
+        },
+      });
+
+      ui.notifications.info('Bug report submitted. Thank you for your feedback!');
+    }
+  }
+}
+```
+
+#### Best Practices
+
+**Required Fields:**
+
+- Always provide meaningful `title` and `description`
+- Title should be concise but descriptive
+- Description should explain the issue clearly
+
+**Optional Enhancement:**
+
+- Include `stepsToReproduce` when possible - this is extremely valuable for debugging
+- Set appropriate `severity` to help prioritize issues
+- Use `category` to help organize different types of issues
+
+**Context Enrichment:**
+
+- Add relevant context about the current game state
+- Include information about what the user was doing when the issue occurred
+- Provide version information for system and modules when relevant
+
+**Privacy Considerations:**
+
+- Bug submission respects user consent - reports are only sent if user has opted in
+- Avoid including sensitive user data in context
+- Follow the same privacy levels as automatic error reporting
+
+#### Integration Patterns
+
+**Hook-Based Registration:**
+
+```javascript
+Hooks.on('errorsAndEchoesReady', api => {
+  // API is ready for bug submissions
+  window.MyModule.submitBug = bugData => api.submitBug(bugData);
+});
+```
+
+**Conditional Availability:**
+
+```javascript
+function trySubmitBug(bugReport) {
+  const errorReporter = game.modules.get('errors-and-echoes');
+
+  if (!errorReporter?.active) {
+    console.warn('Errors and Echoes not available - bug report not submitted');
+    return false;
+  }
+
+  if (!errorReporter.api?.hasConsent()) {
+    ui.notifications.warn(
+      'Error reporting disabled - enable in Errors and Echoes settings to submit bug reports'
+    );
+    return false;
+  }
+
+  errorReporter.api.submitBug(bugReport);
+  return true;
+}
+```
+
 ## Consent Management
 
 ### `api.hasConsent(): boolean`
@@ -335,6 +523,7 @@ if (stats.lastReportTime) {
 interface ErrorsAndEchoesAPI {
   register(config: ModuleRegistrationConfig): void;
   report(error: Error, options?: ReportOptions): void;
+  submitBug(bugReport: BugReportSubmission): void;
   hasConsent(): boolean;
   getPrivacyLevel(): PrivacyLevel;
   getStats(): ReportStats;
@@ -352,6 +541,19 @@ interface ModuleRegistrationConfig {
 interface ReportOptions {
   module?: string;
   context?: Record<string, any>;
+}
+
+// Manual Bug Submission
+interface BugReportSubmission {
+  title: string; // Brief title/summary (required)
+  description: string; // User description of the bug (required)
+  stepsToReproduce?: string; // Optional steps to reproduce
+  expectedBehavior?: string; // What should happen
+  actualBehavior?: string; // What actually happens
+  severity?: 'low' | 'medium' | 'high' | 'critical';
+  category?: 'ui' | 'functionality' | 'performance' | 'integration' | 'other';
+  module?: string; // Override module detection
+  context?: Record<string, any>; // Additional context
 }
 
 // Endpoint Configuration
