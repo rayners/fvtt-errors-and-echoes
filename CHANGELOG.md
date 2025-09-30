@@ -5,6 +5,16 @@ All notable changes to the Errors and Echoes module will be documented in this f
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.2](https://github.com/rayners/fvtt-errors-and-echoes/compare/v0.2.1...v0.2.2) (2025-09-30)
+
+
+### Bug Fixes
+
+* apply Seasons & Stars release-please lessons to prevent tag/build conflicts ([ae96a78](https://github.com/rayners/fvtt-errors-and-echoes/commit/ae96a78e8c8578f7297c066a8cd77b0bfbe212c6))
+* format code with prettier ([9c348ea](https://github.com/rayners/fvtt-errors-and-echoes/commit/9c348ea1f594dc3a19a24489f156fd8f16654fa5))
+* modernize release-please configuration and clean up release workflow ([5f03fb8](https://github.com/rayners/fvtt-errors-and-echoes/commit/5f03fb8a97024c692fa314ac9288ed929fe0655f))
+* update package-lock.json for foundry-dev-tools v1.2.0 ([864e0ce](https://github.com/rayners/fvtt-errors-and-echoes/commit/864e0ce81f6e328f5c60e6c1be3da7dc4d88f18d))
+
 ## [0.2.1] - 2025-06-08
 
 ### Fixed
