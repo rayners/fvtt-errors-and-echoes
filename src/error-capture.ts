@@ -83,7 +83,9 @@ export class ErrorCapture {
         timestamp: Date.now(),
       };
 
-      this.handleError(event.error, context);
+      // Create synthetic Error if event.error is null (older browsers)
+      const error = event.error || new Error(event.message || 'Unknown error');
+      this.handleError(error, context);
     } catch (reportingError) {
       console.warn('Errors and Echoes: Error reporting failed:', reportingError);
     }

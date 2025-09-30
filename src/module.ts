@@ -14,12 +14,13 @@ import { EndpointConfigDialog } from './settings-ui.js';
 import { moduleMatchesAuthor } from './author-utils.js';
 import { ModuleRegistry, type ModuleRegistrationConfig } from './module-registry.js';
 import { safeExecute, getModule, debugLog } from './utils.js';
-import type { EndpointConfig } from './types.js';
+import type { EndpointConfig, BugReportSubmission } from './types.js';
 
 // Types for the module
 interface ErrorsAndEchoesAPI {
   register: (config: ModuleRegistrationConfig) => void;
   report: (error: Error, options?: ReportOptions) => void;
+  submitBug: (bugReport: BugReportSubmission) => void;
   hasConsent: () => boolean;
   getPrivacyLevel: () => PrivacyLevel;
   getStats: () => ReportStats;
@@ -246,6 +247,75 @@ function setupPublicAPI(): void {
         }
       } catch (reportError) {
         console.error('Errors and Echoes: API report() failed:', reportError);
+        console.error('  - This error has been contained and should not affect your module');
+      }
+    },
+
+    // For manual bug submission
+    submitBug: (bugReport: BugReportSubmission): void => {
+      try {
+        // Validate bug report object exists
+        if (!bugReport || typeof bugReport !== 'object') {
+          console.warn('Errors and Echoes: submitBug() requires a bug report object');
+          return;
+        }
+
+        // Validate required fields
+        if (
+          !bugReport.title ||
+          typeof bugReport.title !== 'string' ||
+          bugReport.title.trim().length === 0
+        ) {
+          console.warn('Errors and Echoes: submitBug() requires a non-empty title');
+          return;
+        }
+
+        if (
+          !bugReport.description ||
+          typeof bugReport.description !== 'string' ||
+          bugReport.description.trim().length === 0
+        ) {
+          console.warn('Errors and Echoes: submitBug() requires a non-empty description');
+          return;
+        }
+
+        // Check consent before any processing
+        if (!ConsentManager.hasConsent()) {
+          console.debug(
+            'Errors and Echoes: Manual bug submission skipped - user has not consented'
+          );
+          return;
+        }
+
+        const moduleId = bugReport.module || getCallingModule();
+
+        // Create a synthetic error for compatibility with existing pipeline
+        const syntheticError = new Error(`[Manual Bug Report] ${bugReport.title}`);
+        syntheticError.stack = `Manual bug submission from module: ${moduleId}`;
+
+        const attribution = {
+          moduleId,
+          confidence: 'manual' as const,
+          method: 'api-call' as const,
+          source: 'manual-submission' as const,
+        };
+
+        const endpoint = getEndpointForModule(moduleId);
+        if (endpoint) {
+          ErrorReporter.sendReport(
+            syntheticError,
+            attribution,
+            endpoint,
+            bugReport.context || {},
+            bugReport
+          );
+        } else {
+          console.debug(
+            `Errors and Echoes: No endpoint found for manual bug submission from module '${moduleId}'`
+          );
+        }
+      } catch (submitError) {
+        console.error('Errors and Echoes: API submitBug() failed:', submitError);
         console.error('  - This error has been contained and should not affect your module');
       }
     },

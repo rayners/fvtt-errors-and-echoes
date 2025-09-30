@@ -8,7 +8,7 @@
 import { ConsentManager, type PrivacyLevel } from './consent-manager.js';
 import { ModuleRegistry } from './module-registry.js';
 import type { Attribution } from './error-attribution.js';
-import type { EndpointConfig, ErrorReportResponse } from './types.js';
+import type { EndpointConfig, ErrorReportResponse, BugReportSubmission } from './types.js';
 import { debugLog } from './utils.js';
 
 interface ReportPayload {
@@ -41,6 +41,17 @@ interface ReportPayload {
     reporterVersion: string;
   };
   moduleContext?: Record<string, any>;
+  bugReport?: {
+    type: 'manual-submission';
+    title: string;
+    description: string;
+    stepsToReproduce?: string;
+    expectedBehavior?: string;
+    actualBehavior?: string;
+    severity?: string;
+    category?: string;
+    submissionMethod: 'api';
+  };
 }
 
 interface ReportStats {
@@ -55,6 +66,7 @@ export class ErrorReporter {
   private static lastReportTime: string | null = null;
   private static readonly maxReportsPerHour = 50; // Rate limiting
   private static readonly deduplicationWindow = 60000; // 1 minute
+  private static readonly manualSubmissionDeduplicationWindow = 86400000; // 24 hours
 
   /**
    * Send an error report to the specified endpoint
@@ -63,10 +75,11 @@ export class ErrorReporter {
     error: Error,
     attribution: Attribution,
     endpoint: EndpointConfig,
-    moduleContext: Record<string, any> = {}
+    moduleContext: Record<string, any> = {},
+    bugReportData?: BugReportSubmission
   ): Promise<void> {
     // Check rate limiting
-    if (!this.shouldSendReport(error, attribution)) {
+    if (!this.shouldSendReport(error, attribution, !!bugReportData)) {
       return;
     }
 
@@ -91,7 +104,13 @@ export class ErrorReporter {
     }
 
     const privacyLevel = ConsentManager.getPrivacyLevel();
-    const payload = this.buildPayload(error, attribution, privacyLevel, enhancedContext);
+    const payload = this.buildPayload(
+      error,
+      attribution,
+      privacyLevel,
+      enhancedContext,
+      bugReportData
+    );
 
     try {
       const response = await fetch(endpoint.url, {
@@ -130,7 +149,8 @@ export class ErrorReporter {
     error: Error,
     attribution: Attribution,
     privacyLevel: PrivacyLevel,
-    moduleContext: Record<string, any>
+    moduleContext: Record<string, any>,
+    bugReportData?: BugReportSubmission
   ): ReportPayload {
     const payload: ReportPayload = {
       // Always included - core error information
@@ -190,18 +210,42 @@ export class ErrorReporter {
       payload.moduleContext = moduleContext;
     }
 
+    // Add manual bug report data if this is a manual submission
+    if (bugReportData) {
+      payload.bugReport = {
+        type: 'manual-submission',
+        title: bugReportData.title,
+        description: bugReportData.description,
+        stepsToReproduce: bugReportData.stepsToReproduce,
+        expectedBehavior: bugReportData.expectedBehavior,
+        actualBehavior: bugReportData.actualBehavior,
+        severity: bugReportData.severity,
+        category: bugReportData.category,
+        submissionMethod: 'api',
+      };
+    }
+
     return payload;
   }
 
   /**
    * Check if this error should be reported (rate limiting and deduplication)
    */
-  private static shouldSendReport(error: Error, attribution: Attribution): boolean {
+  private static shouldSendReport(
+    error: Error,
+    attribution: Attribution,
+    isManualSubmission = false
+  ): boolean {
     // Deduplication - don't send identical errors repeatedly
     const errorKey = `${attribution.moduleId}:${error.message}:${this.getStackSignature(error.stack)}`;
     const lastSent = this.recentReports.get(errorKey);
 
-    if (lastSent && Date.now() - lastSent < this.deduplicationWindow) {
+    // Use longer deduplication window for manual submissions
+    const deduplicationWindow = isManualSubmission
+      ? this.manualSubmissionDeduplicationWindow
+      : this.deduplicationWindow;
+
+    if (lastSent && Date.now() - lastSent < deduplicationWindow) {
       return false;
     }
 
