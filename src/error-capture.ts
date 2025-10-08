@@ -25,6 +25,9 @@ export class ErrorCapture {
   private static originalConsoleWarn: typeof console.warn | null = null;
   private static originalHooksCall: typeof Hooks.call | null = null;
   private static originalHooksCallAll: typeof Hooks.callAll | null = null;
+  private static boundWindowErrorHandler: ((event: ErrorEvent) => void) | null = null;
+  private static boundUnhandledRejectionHandler: ((event: PromiseRejectionEvent) => void) | null =
+    null;
 
   /**
    * Start listening for errors - CRITICAL: NEVER preventDefault()
@@ -34,11 +37,15 @@ export class ErrorCapture {
 
     debugLog('Errors and Echoes: Starting error capture (errors will remain visible)');
 
+    // Create bound handlers for proper removal later
+    this.boundWindowErrorHandler = this.handleWindowError.bind(this);
+    this.boundUnhandledRejectionHandler = this.handleUnhandledRejection.bind(this);
+
     // JavaScript errors - NEVER preventDefault()
-    window.addEventListener('error', this.handleWindowError.bind(this));
+    window.addEventListener('error', this.boundWindowErrorHandler);
 
     // Promise rejections - NEVER preventDefault()
-    window.addEventListener('unhandledrejection', this.handleUnhandledRejection.bind(this));
+    window.addEventListener('unhandledrejection', this.boundUnhandledRejectionHandler);
 
     // Console.error patching (preserve original behavior)
     this.patchConsoleError();
@@ -60,9 +67,15 @@ export class ErrorCapture {
 
     debugLog('Errors and Echoes: Stopping error capture');
 
-    // Remove error listeners
-    window.removeEventListener('error', this.handleWindowError);
-    window.removeEventListener('unhandledrejection', this.handleUnhandledRejection);
+    // Remove error listeners using bound references
+    if (this.boundWindowErrorHandler) {
+      window.removeEventListener('error', this.boundWindowErrorHandler);
+      this.boundWindowErrorHandler = null;
+    }
+    if (this.boundUnhandledRejectionHandler) {
+      window.removeEventListener('unhandledrejection', this.boundUnhandledRejectionHandler);
+      this.boundUnhandledRejectionHandler = null;
+    }
 
     // Restore original console methods
     this.restoreConsoleError();

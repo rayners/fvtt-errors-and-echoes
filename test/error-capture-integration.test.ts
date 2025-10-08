@@ -89,6 +89,9 @@ describe('ErrorCapture Integration (Real Implementation)', () => {
     console.error = originalConsoleError;
     console.warn = originalConsoleWarn;
 
+    // Clear stats to ensure test isolation
+    ErrorReporter.clearStats();
+
     vi.restoreAllMocks();
   });
 
@@ -528,13 +531,10 @@ describe('ErrorCapture Integration (Real Implementation)', () => {
 
   describe('statistics and monitoring', () => {
     it('should track captured errors in statistics', async () => {
-      // Ensure we start with a clean slate for this test
-      ErrorReporter.clearStats();
       ErrorCapture.startListening();
 
       const initialStats = ErrorReporter.getReportStats();
       const initialCount = initialStats.totalReports;
-      expect(initialCount).toBe(0); // Should start at 0 after clearing
 
       // Trigger an error event
       const errorEvent = new ErrorEvent('error', {
