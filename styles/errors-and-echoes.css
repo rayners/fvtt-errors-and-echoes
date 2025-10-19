@@ -1401,3 +1401,57 @@
     max-height: 200px;
   }
 }
+
+/* Dark Mode Support - Override text colors for better visibility */
+@media (prefers-color-scheme: dark) {
+  .errors-and-echoes-config .config-section h2,
+  .errors-and-echoes-config .form-group label,
+  .errors-and-echoes-config .endpoint-header h4,
+  .errors-and-echoes-config .endpoint-controls .checkbox-label,
+  .errors-and-echoes-config .module-info strong,
+  .errors-and-echoes-config .module-header h4,
+  .endpoints-header h3,
+  .errors-and-echoes-welcome .data-included h3,
+  .errors-and-echoes-welcome .data-excluded h3,
+  .errors-and-echoes-welcome .privacy-level-option strong,
+  .errors-and-echoes-privacy-details .privacy-header h2,
+  .errors-and-echoes-privacy-details .section h3,
+  .errors-and-echoes-privacy-details .privacy-level h4,
+  .registered-modules-section h3,
+  .monitored-modules-section h3,
+  .module-card.registered .module-header h4,
+  .registration-details strong,
+  .no-registered-modules .info-box h4 {
+    color: #f0f0f0;
+  }
+
+  .errors-and-echoes-config .config-description,
+  .errors-and-echoes-config .form-group .hint,
+  .errors-and-echoes-config .module-info small,
+  .errors-and-echoes-config .module-details,
+  .errors-and-echoes-welcome .privacy-note,
+  .errors-and-echoes-welcome .privacy-preview,
+  .errors-and-echoes-privacy-details .privacy-level li,
+  .errors-and-echoes-privacy-details .section li:not(.privacy-level li),
+  .registration-details p,
+  .usage-stat,
+  .no-registered-modules .info-box p,
+  .module-version {
+    color: #b0b0b0;
+  }
+
+  .errors-and-echoes-config .form-group input[type="text"],
+  .errors-and-echoes-config .form-group input[type="url"],
+  .errors-and-echoes-config .form-group textarea,
+  .module-search {
+    color: #f0f0f0;
+  }
+
+  .stat-item {
+    color: #f0f0f0;
+  }
+
+  .editable-indicator {
+    color: #888;
+  }
+}
